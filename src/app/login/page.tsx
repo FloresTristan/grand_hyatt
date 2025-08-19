@@ -45,15 +45,19 @@ export default function Login() {
 //   }
 
   return (
-    <main className="p-6 max-w-sm mx-auto">
-      <h1 className="text-xl mb-4">Sign in</h1>
-      <form onSubmit={emailPass} className="flex flex-col gap-2">
-        <input name="email" placeholder="email" className="border p-2" />
-        <input name="password" type="password" placeholder="password" className="border p-2" />
-        <button disabled={loading} className="border p-2">{loading ? '...' : 'Sign in'}</button>
-      </form>
+    <main className="p-6 bg-red-800 min-h-screen min-w-screen flex items-center justify-center ">
+        <div className=" w-[30%] bg-white p-8 rounded-xl">
+            {/* <div > */}
+                <h1 className="text-xl mb-4">Sign in</h1>
+                <form onSubmit={emailPass} className="flex flex-col gap-2">
+                    <input name="email" placeholder="email" className="border p-2" />
+                    <input name="password" type="password" placeholder="password" className="border p-2" />
+                    <button disabled={loading} className="border p-2">{loading ? '...' : 'Sign in'}</button>
+                </form>
+                {err && <p className="text-red-600 text-sm mt-2">{err}</p>}
+            {/* </div> */}
+        </div>
       {/* <button onClick={google} className="mt-3 border p-2 w-full">Sign in with Google</button> */}
-      {err && <p className="text-red-600 text-sm mt-2">{err}</p>}
     </main>
   );
 }

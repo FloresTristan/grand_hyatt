@@ -4,6 +4,8 @@ import { cookies } from 'next/headers';
 import { redirect, notFound } from 'next/navigation';
 import { adminAuth } from '../../../lib/firebase/admin.ts';
 import type { DecodedIdToken } from 'firebase-admin/auth';
+import NavBar from '../../../components/navbar';
+
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const cookieStore = await cookies();                         // ✅ await
@@ -21,5 +23,9 @@ export default async function AdminLayout({ children }: { children: ReactNode })
 //   const isAdmin = (decoded as unknown)?.role === 'admin' || (decoded as unknown)?.admin === true;
 //   if (!isAdmin) notFound();
 
-  return <>{children}</>;
+  return(
+    <>
+        <NavBar/>
+        {children}
+    </>);
 }
