@@ -2,13 +2,12 @@ import { initializeApp, getApps } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB_11tcDfTf6K9mD70lTFG6EHTPuTdgoN0",
-  authDomain: "grandhyatt-71946.firebaseapp.com",
-  projectId: "grandhyatt-71946",
-  storageBucket: "grandhyatt-71946.firebasestorage.app",
-  messagingSenderId: "327834275928",
-  appId: "1:327834275928:web:e2ec1b59882fed5ff47a2d",
-  measurementId: "G-J1H03Y1NBX"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
 export const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
