@@ -1,9 +1,11 @@
-import CMSPage from '../../components/cmsPage';
+
+import Image from 'next/image';
+import sheraton from "../../src/app/assets/sheraton.png"
 
 export default function Home() {
   return (
     <div className="">
-      <CMSPage/>
+      <Image src={sheraton} alt="sample" placeholder="blur" />
     </div>
   );
 }

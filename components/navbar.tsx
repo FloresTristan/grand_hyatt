@@ -37,14 +37,14 @@ export default function NavBar() {
             <ul className="flex space-x-4 font-[family-name:var(--font-geist-sans)] ">
                 <li>
                     <Link
-                        href="/content"
+                        href="/admin/content-editor"
                         className=" duration-300 ease-in-out border-2 border-transparent p-2 hover:border-blue-500 rounded-md ">
                             Content
                     </Link>
                 </li>
                 <li>
                     <Link
-                        href="/seasons"
+                        href="/admin/seasons"
                         className=" duration-300 ease-in-out border-2 border-transparent p-2 hover:border-blue-500 rounded-md ">
                             Seasons
                     </Link>
