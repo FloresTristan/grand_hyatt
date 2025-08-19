@@ -1,6 +1,8 @@
 'use client'
 import Link from "next/link";
 import React, {useState, useEffect} from "react";
+import Image from 'next/image';
+import grandhyattmodel from '../src/app/assets/grandhyatt.png'
 
 export default function NavBar() {
     const [isMobile, setIsMobile] = useState(false);
@@ -32,7 +34,8 @@ export default function NavBar() {
     return(
         <nav className={`sticky z-50 top-0 shadow-md text-white p-6 flex justify-between items-center ease-in-out duration-300 bg-[#212e3f]  ${isScrolled ? 'bg-opacity-90 bg-[#212e3f] backdrop-blur-md text-white' : ''} `}>
             <Link href="/" className="flex items-center">
-                <span className={`ml-2 text-xl font-[family-name:var(--font-flatline)] tracking-wider font-semibold ${ isMobile ? 'hidden': '' } `}>Grand Hyatt</span>
+                {/* <span className={`ml-2 text-xl font-[family-name:var(--font-flatline)] tracking-wider font-semibold ${ isMobile ? 'hidden': '' } `}>Grand Hyatt</span> */}
+                <Image src={grandhyattmodel} alt="sample" placeholder="blur" quality={100} width={100} />
             </Link>
             <ul className="flex space-x-4 font-[family-name:var(--font-geist-sans)] ">
                 <li>

@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { auth } from '../../../lib/firebase/client.ts';
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useState } from 'react';
+import Image from 'next/image';
+import grandhyatt from '../assets/grandhyatt.png'
 
 export default function Login() {
   const r = useRouter();
@@ -45,17 +47,31 @@ export default function Login() {
 //   }
 
   return (
-    <main className="p-6 bg-red-800 min-h-screen min-w-screen flex items-center justify-center ">
-        <div className=" w-[30%] bg-white p-8 rounded-xl">
-            {/* <div > */}
-                <h1 className="text-xl mb-4">Sign in</h1>
-                <form onSubmit={emailPass} className="flex flex-col gap-2">
-                    <input name="email" placeholder="email" className="border p-2" />
-                    <input name="password" type="password" placeholder="password" className="border p-2" />
-                    <button disabled={loading} className="border p-2">{loading ? '...' : 'Sign in'}</button>
+    <main className="p-6 bg-[#151c2f] min-h-screen w-full min-w-screen flex flex-col items-center justify-center ">
+        <div className="">
+            <Image src={grandhyatt} alt="sample" placeholder="blur" width={300} />
+        </div>
+        <div className=" shadow-xl w-[80%] md:w-[25%] bg-[#212e3f] p-4 md:p-8 rounded-xl">
+            <div >
+                {/* <h1 className="text-xl text-white mb-4">Sign in</h1> */}
+                <form onSubmit={emailPass} className="flex text-white flex-col gap-4">
+                    <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm" htmlFor="email">Email</label>
+                            <input name="email"  className="rounded-lg bg-[#151c2f] focus:outline-none border border-[#151c2f] focus:border-blue-500 p-2" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm" htmlFor="password">Password</label>
+                            <input name="password" type="password" className="rounded-lg  bg-[#151c2f] focus:outline-none border border-[#151c2f] focus:border-blue-500 p-2" />
+                        </div>
+                    </div>
+                    <div className="w-full flex justify-end items-center gap-x-2">
+                        <span className="text-blue-400">Forgot password?</span>
+                        <button disabled={loading} className=" md:w-[20%] rounded-lg bg-blue-600 p-2">{loading ? '...' : 'Log in'}</button>
+                    </div>
                 </form>
                 {err && <p className="text-red-600 text-sm mt-2">{err}</p>}
-            {/* </div> */}
+            </div>
         </div>
       {/* <button onClick={google} className="mt-3 border p-2 w-full">Sign in with Google</button> */}
     </main>

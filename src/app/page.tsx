@@ -1,11 +1,11 @@
 
 import Image from 'next/image';
-import sheraton from "../../src/app/assets/sheraton.png"
+import grandhyattmodel from "../app/assets/grandhyatt-resized.png"
 
 export default function Home() {
   return (
     <div className="">
-      <Image src={sheraton} alt="sample" placeholder="blur" />
+      <Image src={grandhyattmodel} alt="sample" placeholder="blur" quality={100} objectFit="cover" layout="fill" />
     </div>
   );
 }
