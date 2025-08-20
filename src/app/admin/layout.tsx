@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 import { redirect, notFound } from 'next/navigation';
 import { adminAuth } from '../../../lib/firebase/admin.ts';
 import type { DecodedIdToken } from 'firebase-admin/auth';
-import NavBar from '../../../components/navbar';
+import NavBar from '../components/navbar';
 
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {

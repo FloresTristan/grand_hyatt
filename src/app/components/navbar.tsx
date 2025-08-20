@@ -2,8 +2,8 @@
 import Link from "next/link";
 import React, {useState, useEffect} from "react";
 import Image from 'next/image';
-import grandhyattmodel from '../src/app/assets/grandhyatt.png'
-import { auth } from '../lib/firebase/client';
+import grandhyattmodel from '../assets/grandhyatt.png'
+import { auth } from '../../../lib/firebase/client';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 
@@ -19,6 +19,7 @@ export default function NavBar() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+  console.log("isMobile",isMobile)
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 0);
