@@ -1,19 +1,21 @@
 'use client';
 
+import Image from 'next/image';
+
 type Props = {
   open: boolean;
   onClose: () => void;
 
   imageUrl?: string;
   title: string;
+  subheading?: string;     
   description?: string;
-  dateRange?: string;  // e.g. "Aug 28–30, 2025"
-  timeText?: string;   // e.g. "4:00 AM"
+  dateRange?: string;
+  timeText?: string;
 
   ctaLabel?: string;
   ctaHref?: string;
 
-  /** Where to position the overlay. "contained" = absolute overlay (use inside a relative wrapper). "fullscreen" = fixed to viewport. */
   container?: 'contained' | 'fullscreen';
 };
 
@@ -22,10 +24,11 @@ export default function EventModalOverlay({
   onClose,
   imageUrl,
   title,
+  subheading,         
   description,
   dateRange,
   timeText,
-  ctaLabel = 'LEARN MORE',
+  ctaLabel,
   ctaHref,
   container = 'contained',
 }: Props) {
@@ -36,12 +39,13 @@ export default function EventModalOverlay({
 
   return (
     <div className={`${pos} inset-0 ${z} flex items-center justify-center`}>
-      {/* Backdrop */}
-      <div className={`${pos} inset-0 bg-black/60 backdrop-blur-[1px]`} />
+      <div className={`${pos} inset-0 bg-black/60 backdrop-blur-[1px]`}
+        onClick={onClose}
+      />  
 
-      {/* Card */}
-      <div className="relative z-10 w-full max-w-[560px] rounded-2xl bg-white shadow-2xl">
-        {/* Close */}
+      <div className="relative z-10 w-full max-w-[560px] rounded-2xl bg-white shadow-2xl"
+        onClick={(e)=> e.stopPropagation()}
+      >
         <button
           onClick={onClose}
           aria-label="Close"
@@ -51,18 +55,28 @@ export default function EventModalOverlay({
         </button>
 
         <div className="px-5 pb-5 pt-6">
-          {/* Banner image */}
           {imageUrl && (
-            <div className="mx-auto mb-4 h-32 w-full overflow-hidden rounded-xl sm:h-36">
-              {/* <img> keeps things simple inside iframes */}
-              <img src={imageUrl} alt="" className="h-full w-full object-cover" />
+            <div className="relative mx-auto mb-4 h-32 w-full overflow-hidden rounded-xl sm:h-36">
+              <Image
+                src={imageUrl}
+                alt=""
+                fill
+                unoptimized
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, 560px"
+                priority
+              />
             </div>
           )}
 
           {/* Title */}
-          <h2 className="text-center text-3xl font-semibold tracking-tight">{title}</h2>
+          <h2 className="text-center text-neutral-600 text-3xl font-semibold tracking-tight whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">{title}</h2>
 
-          {/* Meta row */}
+          {/* Subheading */}
+          {!!subheading && (
+            <p className="mt-1 text-center text-sm text-neutral-600 whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">{subheading}</p>
+          )}
+
           {(dateRange || timeText) && (
             <div className="mt-2 flex items-center justify-center gap-5 text-sm text-neutral-700">
               {dateRange && (
@@ -80,14 +94,15 @@ export default function EventModalOverlay({
             </div>
           )}
 
-          {/* Body */}
           {!!description && (
-            <p className="mt-4 text-sm leading-relaxed text-neutral-800 whitespace-pre-wrap">
-              {description}
-            </p>
+            <div className="mt-4 max-h-56 overflow-y-auto">
+              <p className="text-sm leading-relaxed text-neutral-800
+                          whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">
+                {description}
+              </p>
+            </div>
           )}
 
-          {/* CTA */}
           {(ctaLabel || ctaHref) && (
             <div className="mt-6 flex justify-center">
               {ctaHref ? (
@@ -106,15 +121,6 @@ export default function EventModalOverlay({
               )}
             </div>
           )}
-
-          {/* Dots (static sample) */}
-          {/* <div className="mt-4 flex items-center justify-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-neutral-900" />
-            <span className="h-2 w-2 rounded-full bg-neutral-300" />
-            <span className="h-2 w-2 rounded-full bg-neutral-300" />
-            <span className="h-2 w-2 rounded-full bg-neutral-300" />
-            <span className="h-2 w-2 rounded-full bg-neutral-300" />
-          </div> */}
         </div>
       </div>
     </div>

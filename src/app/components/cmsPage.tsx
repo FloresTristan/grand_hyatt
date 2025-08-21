@@ -20,7 +20,7 @@ export default function CMSPage() {
   // Modal controls (preview/editor only)
   const [publishModal, setPublishModal] = useState(true);
   const [forceOpen, setForceOpen] = useState(true);
-  const [ctaLabel, setCtaLabel] = useState('LEARN MORE');
+  const [ctaLabel, setCtaLabel] = useState('');
   const [ctaHref, setCtaHref] = useState('');
 
   const DRAFT_KEY = 'cmsDraft_v1';
@@ -41,7 +41,7 @@ export default function CMSPage() {
       setStartTime(s.startTime || '');
       setPublishModal(s.publishModal ?? true);
       setForceOpen(s.forceOpen ?? true);
-      setCtaLabel(s.ctaLabel || 'LEARN MORE');
+      setCtaLabel(s.ctaLabel || '');
       setCtaHref(s.ctaHref || '');
       if (s.imageDataUrl) setImageUrl(s.imageDataUrl);
     } catch {}
@@ -130,13 +130,26 @@ export default function CMSPage() {
     setTitle(''); setSubheading(''); setDescription('');
     setStartDate(''); setEndDate(''); setStartTime('');
     setPublishModal(true); setForceOpen(true);
-    setCtaLabel('LEARN MORE'); setCtaHref('');
+    setCtaLabel(''); setCtaHref('');
     setImageFile(null); setImageUrl(null);
     localStorage.removeItem(DRAFT_KEY);
   }
 
   async function onSave() {
-    alert('no api yet');
+    const imageDataUrl = imageUrl?.startsWith('data:') ? imageUrl : null; 
+    const res = await fetch('../api/events/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title, subheading, description, startDate, endDate, startTime, ctaLabel, ctaHref, imageDataUrl
+      }),
+    });
+    if (!res.ok) {
+      const t = await res.text();
+      alert('Save failed: ' + t);
+      return;
+    }
+    alert('Saved!');
   }
 
   const dateError =
@@ -149,7 +162,7 @@ export default function CMSPage() {
   return (
     <div className="font-sans flex flex-col gap-4 md:flex-row min-h-screen p-8 pb-20 md:gap-8 sm:px-20 bg-[#151c2f]">
       {/* LEFT: editor */}
-      <div className="md:w-[30%] text-white h-[50%] overflow-scroll md:overflow-auto shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-4">
+      <div className="md:w-[30%] text-white h-[50%] overflow-scroll md:overflow-auto shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-3">
         {/* Image upload */}
         <div
           className="border border-dashed rounded-xl h-48 flex items-center justify-center relative hover:border-white/60 transition-colors cursor-pointer group"
@@ -173,7 +186,7 @@ export default function CMSPage() {
         {/* Text fields */}
         <LabeledInput label="Title" value={title} onChange={setTitle} placeholder="Enter title" />
         <LabeledInput label="Subheading" value={subheading} onChange={setSubheading} placeholder="Optional subheading" />
-        <LabeledTextarea label="Description" value={description} onChange={setDescription} placeholder="Write a short description..." rows={6} />
+        <LabeledTextarea label="Description" value={description} onChange={setDescription} placeholder="Write a short description..." rows={2} />
 
         {/* Dates/time */}
         <div className="grid grid-cols-2 gap-2">
@@ -194,13 +207,13 @@ export default function CMSPage() {
 
         {/* CTA */}
         <div className="grid grid-cols-2 gap-2">
-          <LabeledInput label="CTA label" value={ctaLabel} onChange={setCtaLabel} placeholder="LEARN MORE" />
+          <LabeledInput label="CTA label" value={ctaLabel} onChange={setCtaLabel} placeholder="Learn More" />
           <LabeledInput label="CTA link" value={ctaHref} onChange={setCtaHref} placeholder="https://example.com" />
         </div>
 
         {/* footer */}
         <div className="text-xs text-white/60"><div className="mt-1">{description.length} chars</div></div>
-        <div className="flex gap-2 pt-2">
+        <div className="flex gap-2 pt-2 ">
           <button onClick={onSave} className="px-3 py-2 rounded-lg bg-emerald-500/90 hover:bg-emerald-500 text-black font-medium">Save</button>
           <button onClick={resetAll} className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white">Reset</button>
         </div>
@@ -210,15 +223,16 @@ export default function CMSPage() {
       <div className="md:w-[70%] h-[50%] overflow-scroll md:overflow-auto text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
         <div className="mb-2 text-sm text-white/60">Live preview from website</div>
 
-        <div className="relative w-full h-[720px] rounded-xl border border-white/10 bg-white">
+        <div className="relative w-full h-[720px] border border-white/10 bg-white">
           {/* Actual site */}
-          <iframe ref={previewRef} src="/" title="Website Live Preview" className="absolute inset-0 w-full h-full rounded-xl" />
+          <iframe ref={previewRef} src="/" title="Website Live Preview" className="absolute inset-0 w-full h-full " />
           <EventModalOverlay
             container="contained"
             open={modalOpen}
             onClose={() => setForceOpen(false)}
             imageUrl={imageUrl || undefined}
-            title={title || 'Event Title'}
+            title={title}
+            subheading={subheading}
             description={description}
             dateRange={formatDateRange(startDate, endDate)}
             timeText={to12h(startTime)}
@@ -232,10 +246,10 @@ export default function CMSPage() {
             <input type="checkbox" checked={publishModal} onChange={(e) => setPublishModal(e.target.checked)} />
             <span>Publish event popup (preview)</span>
           </label>
-          <label className="flex items-center gap-2 text-sm">
+          {/* <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={forceOpen} onChange={(e) => setForceOpen(e.target.checked)} />
             <span>Force open in preview (ignore dates)</span>
-          </label>
+          </label> */}
         </div>
       </div>
     </div>
