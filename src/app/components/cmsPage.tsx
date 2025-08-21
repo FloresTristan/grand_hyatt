@@ -12,6 +12,8 @@ export default function CMSPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
+  const [eventId, setEventId] = useState<string | null>(null);
+
   // Schedule/time
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -136,21 +138,46 @@ export default function CMSPage() {
   }
 
   async function onSave() {
-    const imageDataUrl = imageUrl?.startsWith('data:') ? imageUrl : null; 
-    const res = await fetch('../api/events/save', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title, subheading, description, startDate, endDate, startTime, ctaLabel, ctaHref, imageDataUrl
-      }),
-    });
-    if (!res.ok) {
-      const t = await res.text();
-      alert('Save failed: ' + t);
-      return;
+      const payload = {
+      title, subheading, description,
+      startDate, endDate, startTime,
+      ctaLabel, ctaHref,
+      imageDataUrl: imageUrl?.startsWith('data:') ? imageUrl : null, // blob: URLs can't be saved
+      status: 'draft',
+    };
+
+    let res, data;
+    if (!eventId) {
+      // CREATE (auto-ID)
+      res = await fetch('/api/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      data = await res.json();
+      if (!res.ok) throw new Error(data?.error || 'Create failed');
+      // setEventId(data.id); // not yet sa ni
+
+      const raw = localStorage.getItem('cmsDraft_v1');
+      const s = raw ? JSON.parse(raw) : {};
+      localStorage.setItem('cmsDraft_v1', JSON.stringify({ ...s, eventId: data.id }));
+      // console.log(data.id)
+    } else {
+      // UPDATE
+      res = await fetch(`/api/events/${eventId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      data = await res.json();
+      if (!res.ok) throw new Error(data?.error || 'Update failed');
     }
+
     alert('Saved!');
+    resetAll();
   }
+
+  console.log('id', eventId)
 
   const dateError =
     startDate && endDate && new Date(endDate) < new Date(startDate)
@@ -186,7 +213,7 @@ export default function CMSPage() {
         {/* Text fields */}
         <LabeledInput label="Title" value={title} onChange={setTitle} placeholder="Enter title" />
         <LabeledInput label="Subheading" value={subheading} onChange={setSubheading} placeholder="Optional subheading" />
-        <LabeledTextarea label="Description" value={description} onChange={setDescription} placeholder="Write a short description..." rows={2} />
+        <LabeledTextarea label="Description" value={description} onChange={setDescription} placeholder="Write a short description..." rows={3} />
 
         {/* Dates/time */}
         <div className="grid grid-cols-2 gap-2">

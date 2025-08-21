@@ -1,31 +1,33 @@
-import 'server-only';
-import type { ReactNode } from 'react';
+
+import { ReactNode } from 'react';
 import { cookies } from 'next/headers';
 import { redirect, notFound } from 'next/navigation';
-import { adminAuth } from '../../../lib/firebase/admin.ts';
-import type { DecodedIdToken } from 'firebase-admin/auth';
+import { adminAuth, adminDb } from '../../../lib/firebase/admin';
 import NavBar from '../components/navbar';
 
-
 export default async function AdminLayout({ children }: { children: ReactNode }) {
-  const cookieStore = await cookies();                         // ✅ await
-  const session = cookieStore.get('session')?.value ?? null;
+  // First-run check
+  const anyUser = await adminDb.collection('users').limit(1).get();
+  if (anyUser.empty) {
+    redirect('/signup');
+  }
+
+  // Normal auth gate
+  const cookieStore = await cookies();
+  const session = cookieStore.get('session')?.value;
   if (!session) redirect('/login');
 
-  let decoded: DecodedIdToken | null = null;
-  try {
-    decoded = await adminAuth.verifySessionCookie(session, true);
-  } catch {
-    redirect('/login');
-  }
+  const decoded = await adminAuth.verifySessionCookie(session, true).catch(() => null);
   if (!decoded) redirect('/login');
 
-//   const isAdmin = (decoded as unknown)?.role === 'admin' || (decoded as unknown)?.admin === true;
-//   if (!isAdmin) notFound();
+  const claims = decoded as unknown;
+  const isAdmin = claims.admin === true || claims.role === 'admin';
+  if (!isAdmin) notFound();
 
   return(
     <>
-        <NavBar/>
-        {children}
-    </>);
+      <NavBar/>
+      {children}
+    </>
+  );
 }
