@@ -4,32 +4,44 @@
 import { useEffect, useRef, useState } from 'react';
 import EventModalOverlay from '@/app/components/EventModalOverlay';
 
+// MUI
+import {
+  Tabs, Tab, Box, Select, MenuItem, List, ListItem, ListItemText,
+  IconButton, CircularProgress, Button
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import RefreshIcon from '@mui/icons-material/Refresh';
+
 export default function CMSPage() {
-  // Base content
   const [title, setTitle] = useState('');
   const [subheading, setSubheading] = useState('');
   const [description, setDescription] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  const [eventId, setEventId] = useState<string | null>(null);
-
   // Schedule/time
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [startTime, setStartTime] = useState(''); // "HH:mm"
-
+  const [startTime, setStartTime] = useState(''); 
+  
   // Modal controls (preview/editor only)
   const [publishModal, setPublishModal] = useState(true);
   const [forceOpen, setForceOpen] = useState(true);
   const [ctaLabel, setCtaLabel] = useState('');
   const [ctaHref, setCtaHref] = useState('');
+  
+  const [eventId, setEventId] = useState<string | null>(null);
+  const [tab, setTab] = useState(0); // 0=create, 1=update, 2=delete
+  const [events, setEvents] = useState([]);
+  const [loadingEvents, setLoadingEvents] = useState(false);
+  const [selectedUpdateId, setSelectedUpdateId] = useState<string>('');
+  const [selectedEvent, setSelectedEvent] = useState({});
 
   const DRAFT_KEY = 'cmsDraft_v1';
   const inputRef = useRef<HTMLInputElement | null>(null);
   const previewRef = useRef<HTMLIFrameElement | null>(null);
 
-  /** Load once from localStorage */
+  /**  from localStorage */
   useEffect(() => {
     try {
       const raw = localStorage.getItem(DRAFT_KEY);
@@ -135,46 +147,134 @@ export default function CMSPage() {
     setCtaLabel(''); setCtaHref('');
     setImageFile(null); setImageUrl(null);
     localStorage.removeItem(DRAFT_KEY);
+    setSelectedUpdateId('');
+    setSelectedEvent({});
+  }
+  
+  async function fetchEvents() {
+    setLoadingEvents(true);
+    try {
+      const res = await fetch('/api/events', { cache: 'no-store' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || 'Failed to load events');
+      setEvents(data.items || []);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingEvents(false);
+    }
+  }
+  useEffect(() => { if (tab !== 0) fetchEvents(); }, [tab]);
+  // fetchEvents()
+  console.log(events)
+
+  function comparePayloadToSelectedEvent(payload, selectedEvent){
+    // delete selectedEvent.id
+    // delete selectedEvent.createdAt
+    // delete selectedEvent.createdBy
+    // delete selectedEvent.updatedAt
+    // delete selectedEvent.updatedBy
+    // if (payload !== selectedEvent) {
+    //   console.log('over here', payload)
+    //   console.log(selectedEvent)
+    // }
+    console.log(payload, 'payload here')
+    const differingKeys = [];
+    const payLoadKeys = Object.keys(payload)
+    const eventKeys = Object.keys(selectedEvent)
+
+    for (const key of eventKeys) {
+      // Check if the key exists in the second object
+      if (Object.prototype.hasOwnProperty.call(payload, key)) {
+        // Compare values
+        if (selectedEvent[key] !== payload[key]) {
+          // Special handling for NaN
+          if (Number.isNaN(payload[key]) && Number.isNaN(selectedEvent[key])) {
+            // Both are NaN, consider them equal for this comparison
+            continue;
+          }
+          differingKeys.push(key);
+        }
+      } else {
+        console.warn(`Key '${key}' exists in payload but not in selectedEvent.`);
+      }
+    }
+
+    for (const key of payLoadKeys) {
+      if (!Object.prototype.hasOwnProperty.call(selectedEvent, key)) {
+        console.warn(`Key '${key}' exists in payload but not in selectedEvent.`);
+      }
+    }
+
+    if (differingKeys.length > 0) {
+      return `Values differ for keys: ${differingKeys.join(', ')}`;
+    } else {
+      return "All common key values are identical.";
+    }
+
   }
 
   async function onSave() {
+    try {
       const payload = {
-      title, subheading, description,
-      startDate, endDate, startTime,
-      ctaLabel, ctaHref,
-      imageDataUrl: imageUrl?.startsWith('data:') ? imageUrl : null, // blob: URLs can't be saved
-      status: 'draft',
-    };
+        title, subheading, description,
+        startDate, endDate, startTime,
+        ctaLabel, ctaHref,
+        imageDataUrl: imageUrl?.startsWith('data:') ? imageUrl : null,
+        status: 'draft',
+      };
 
-    let res, data;
-    if (!eventId) {
-      // CREATE (auto-ID)
-      res = await fetch('/api/events', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      data = await res.json();
-      if (!res.ok) throw new Error(data?.error || 'Create failed');
-      // setEventId(data.id); // not yet sa ni
-
-      const raw = localStorage.getItem('cmsDraft_v1');
-      const s = raw ? JSON.parse(raw) : {};
-      localStorage.setItem('cmsDraft_v1', JSON.stringify({ ...s, eventId: data.id }));
-      // console.log(data.id)
-    } else {
-      // UPDATE
-      res = await fetch(`/api/events/${eventId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      data = await res.json();
-      if (!res.ok) throw new Error(data?.error || 'Update failed');
+      if (title=='' || title == null){
+        alert("Title needed")
+        return
+      }
+      let res, data;
+      if (!eventId || tab === 0) {
+        // CREATE
+        res = await fetch('/api/events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        data = await res.json();
+        if (!res.ok) throw new Error(data?.error || 'Create failed');
+        // setEventId(data.id);
+        // keep draft id
+        const raw = localStorage.getItem(DRAFT_KEY);
+        const s = raw ? JSON.parse(raw) : {};
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...s, eventId: data.id }));
+        if (tab === 0) alert('Created!');
+      } else {
+        // UPDATE
+        comparePayloadToSelectedEvent(payload, selectedEvent)
+        // res = await fetch(`/api/events/${eventId}`, {
+        //   method: 'PATCH',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify(payload),
+        // });
+        // data = await res.json();
+        // if (!res.ok) throw new Error(data?.error || 'Update failed');
+        alert('Updated!');
+      }
+      if (tab !== 0) fetchEvents();
+    } catch (e: unknown) {
+      alert(e.message || 'Save failed');
     }
-
-    alert('Saved!');
     resetAll();
+  }
+  console.log(selectedEvent)
+
+  async function onDelete(id: string) {
+    if (!confirm('Delete this event?')) return;
+    try {
+      const res = await fetch(`/api/events/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || 'Delete failed');
+      setEvents(prev => prev.filter(e => e.id !== id));
+      if (eventId === id) { setEventId(null); }
+    } catch (e: unknown) {
+      alert(e.message || 'Delete failed');
+    }
   }
 
   console.log('id', eventId)
@@ -186,79 +286,232 @@ export default function CMSPage() {
 
   const modalOpen = shouldShowModal({ publishModal, forceOpen, startDate, endDate });
 
+  const canShowForm = tab === 0 || (tab === 1 && !!selectedUpdateId);
   return (
-    <div className="font-sans flex flex-col gap-4 md:flex-row min-h-screen p-8 pb-20 md:gap-8 sm:px-20 bg-[#151c2f]">
-      {/* LEFT: editor */}
-      <div className="md:w-[30%] text-white h-[50%] overflow-scroll md:overflow-auto shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-3">
-        {/* Image upload */}
-        <div
-          className="border border-dashed rounded-xl h-48 flex items-center justify-center relative hover:border-white/60 transition-colors cursor-pointer group"
-          onClick={onPickClick}
-          onDrop={onDrop}
-          onDragOver={onDragOver}
-          title="Click, drag & drop, or paste an image"
-        >
-          {!imageUrl ? (
-            <div className="text-center text-white/70 px-4">
-              <div className="text-sm">Image Upload</div>
-              <div className="text-xs mt-1 opacity-80">Click, drag & drop, or paste</div>
+    <div className="font-sans flex flex-col gap-4 md:flex-row min-h-screen md:h-screen p-8 pb-20 md:gap-8 sm:px-20 bg-[#151c2f]">
+      {/* editor side ni */}
+      <div className="md:w-[30%] text-white h-[90%] md:overflow-scroll custom-scrollbar md:overflow-auto shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-4">
+        {/* tabs header */}
+        <Box sx={{ borderBottom: 1, borderColor: 'rgba(255,255,255,0.1)' }}>
+          <Tabs
+            value={tab}
+            onChange={(_, v) => {
+              setTab(v);
+              resetAll();
+              setSelectedUpdateId('')
+              if (v === 0) setEventId(null);
+            }}
+            variant="fullWidth"
+            sx={{
+              '& .MuiTab-root': { color: 'rgba(255,255,255,0.7)' },
+              '& .Mui-selected': { color: '#fff' },
+              '& .MuiTabs-indicator': { backgroundColor: '#60a5fa' },
+            }}
+          >
+            <Tab label="Create" />
+            <Tab label="Update" />
+            <Tab label="Delete" />
+          </Tabs>
+        </Box>
+
+        {/* Update tab controls */}
+        {tab === 1 && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Select
+                fullWidth
+                displayEmpty
+                size="small"
+                value={selectedUpdateId}
+                onChange={(e) => {
+                  const id = String(e.target.value);
+                  setSelectedUpdateId(id);
+                  const ev = events.find(x => x.id === id);
+                  if (ev) {
+                    setSelectedEvent(ev);
+                    setEventId(ev.id);
+                    setTitle(ev.title || '');
+                    setSubheading(ev.subheading || '');
+                    setDescription(ev.description || '');
+                    setStartDate(ev.startDate || '');
+                    setEndDate(ev.endDate || '');
+                    setStartTime(ev.startTime || '');
+                    setCtaLabel(ev.ctaLabel || '');
+                    setCtaHref(ev.ctaHref || '');
+                    setImageUrl(ev.imageDataUrl || null);
+                  }
+                }}
+                sx={{
+                  color: '#fff',
+                  '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.15)' },
+                  '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.3)' },
+                }}
+                renderValue={(val) =>
+                  val ? (events.find(e => e.id === val)?.title + ' hi' || '---') : 'Select event…'
+                }
+              >
+                {loadingEvents && (
+                  <MenuItem disabled>
+                    <CircularProgress size={16} sx={{ mr: 1 }} /> Loading…
+                  </MenuItem>
+                )}
+                {!loadingEvents && events.length === 0 && (
+                  <MenuItem disabled>No events yet</MenuItem>
+                )}
+                {events.map(e => (
+                  <MenuItem key={e.id} value={e.id}>
+                    {e.title || '(untitled)'}
+                  </MenuItem>
+                ))}
+              </Select>
+              <IconButton size="small" 
+                onClick={()=>{
+                  setSelectedUpdateId('')
+                  resetAll()
+                  fetchEvents()
+                  }}>
+                <RefreshIcon htmlColor="#9ca3af" fontSize="small" />
+              </IconButton>
             </div>
-          ) : (
-            <img src={imageUrl} alt="Preview" className="absolute inset-0 w-full h-full object-cover rounded-xl" />
-          )}
-          <div className="absolute inset-0 rounded-xl ring-0 group-hover:ring-2 ring-white/10 pointer-events-none" />
-          <input ref={inputRef} type="file" accept="image/*" onChange={onFileSelect} className="hidden" />
-        </div>
+            <div className="text-xs text-white/60">
+              {selectedUpdateId ? `Editing: ${selectedUpdateId}` : 'Pick an event to edit'}
+            </div>
+          </div>
+        )}
 
-        {/* Text fields */}
-        <LabeledInput label="Title" value={title} onChange={setTitle} placeholder="Enter title" />
-        <LabeledInput label="Subheading" value={subheading} onChange={setSubheading} placeholder="Optional subheading" />
-        <LabeledTextarea label="Description" value={description} onChange={setDescription} placeholder="Write a short description..." rows={3} />
+        {/* Delete tab content */}
+        {tab === 2 && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-white/80">Delete events</div>
+              <IconButton size="small" onClick={()=>{
+                fetchEvents()
+                resetAll()
+              }}>
+                <RefreshIcon htmlColor="#9ca3af" fontSize="small" />
+              </IconButton>
+            </div>
+            {loadingEvents ? (
+              <div className="flex justify-center py-4"><CircularProgress size={20} /></div>
+            ) : (
+              <List dense sx={{ bgcolor: 'transparent' }}>
+                {events.map(e => (
+                  <ListItem
+                    className=''
+                    key={e.id}
+                    secondaryAction={
+                      <IconButton edge="end" aria-label="delete" onClick={() => {
+                        onDelete(e.id)
+                      }
+                      }>
+                        <DeleteIcon htmlColor="#fca5a5" />
+                      </IconButton>
+                    }
+                    onClick={()=>{
+                      const id = e.id
+                      setSelectedUpdateId(id);
+                      const ev = events.find(x => x.id === id);
+                      if (ev) {
+                        setEventId(ev.id);
+                        setTitle(ev.title || '');
+                        setSubheading(ev.subheading || '');
+                        setDescription(ev.description || '');
+                        setStartDate(ev.startDate || '');
+                        setEndDate(ev.endDate || '');
+                        setStartTime(ev.startTime || '');
+                        setCtaLabel(ev.ctaLabel || '');
+                        setCtaHref(ev.ctaHref || '');
+                        setImageUrl(ev.imageDataUrl || null);
+                      }
+                      console.log(e.id)
+                    }}
+                  >
+                    <ListItemText
+                      primary={e.title || '(untitled)'}
+                      secondary={e.id}
+                      primaryTypographyProps={{ color: '#fff' }}
+                      secondaryTypographyProps={{ color: 'rgba(255,255,255,0.5)' }}
+                    />
+                  </ListItem>
+                ))}
+                {events.length === 0 && (
+                  <div className="text-white/60 text-sm px-2 py-4">No events yet.</div>
+                )}
+              </List>
+            )}
+          </div>
+        )}
 
-        {/* Dates/time */}
-        <div className="grid grid-cols-2 gap-2">
-          <LabeledDate label="Start date" value={startDate} onChange={setStartDate} />
-          <LabeledDate label="End date" value={endDate} onChange={setEndDate} min={startDate || undefined} />
-        </div>
-        <label className="block">
-          <div className="text-sm mb-1 text-white/80">Start time</div>
-          <input
-            type="time"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-            className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
-          />
-        </label>
-        {dateError && <div className="text-xs text-red-300">{dateError}</div>}
+        {canShowForm && (
+          <>
+            <div
+              className="border border-dashed rounded-xl h-48 flex items-center justify-center relative hover:border-white/60 transition-colors cursor-pointer group"
+              onClick={onPickClick}
+              onDrop={onDrop}
+              onDragOver={onDragOver}
+              title="Click, drag & drop, or paste an image"
+            >
+              {!imageUrl ? (
+                <div className="text-center text-white/70 px-4">
+                  <div className="text-sm">Image Upload</div>
+                  <div className="text-xs mt-1 opacity-80">Click, drag & drop, or paste</div>
+                </div>
+              ) : (
+                <img src={imageUrl} alt="Preview" className="absolute inset-0 w-full h-full object-cover rounded-xl" />
+              )}
+              <div className="absolute inset-0 rounded-xl ring-0 group-hover:ring-2 ring-white/10 pointer-events-none" />
+              <input ref={inputRef} type="file" accept="image/*" onChange={onFileSelect} className="hidden" />
+            </div>
 
+            <LabeledInput label="Title" value={title} onChange={setTitle} placeholder="Enter title" />
+            <LabeledInput label="Subheading" value={subheading} onChange={setSubheading} placeholder="Optional subheading" />
+            <LabeledTextarea label="Description" value={description} onChange={setDescription} placeholder="Write a short description..." rows={3} />
 
-        {/* CTA */}
-        <div className="grid grid-cols-2 gap-2">
-          <LabeledInput label="CTA label" value={ctaLabel} onChange={setCtaLabel} placeholder="Learn More" />
-          <LabeledInput label="CTA link" value={ctaHref} onChange={setCtaHref} placeholder="https://example.com" />
-        </div>
+            <div className="grid grid-cols-2 gap-2">
+              <LabeledDate label="Start date" value={startDate} onChange={setStartDate} />
+              <LabeledDate label="End date" value={endDate} onChange={setEndDate} min={startDate || undefined} />
+            </div>
+            <label className="block">
+              <div className="text-sm mb-1 text-white/80">Start time</div>
+              <input
+                type="time"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+              />
+            </label>
+            {dateError && <div className="text-xs text-red-300">{dateError}</div>}
 
-        {/* footer */}
-        <div className="text-xs text-white/60"><div className="mt-1">{description.length} chars</div></div>
-        <div className="flex gap-2 pt-2 ">
-          <button onClick={onSave} className="px-3 py-2 rounded-lg bg-emerald-500/90 hover:bg-emerald-500 text-black font-medium">Save</button>
-          <button onClick={resetAll} className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white">Reset</button>
-        </div>
+            <div className="grid grid-cols-2 gap-2">
+              <LabeledInput label="CTA label" value={ctaLabel} onChange={setCtaLabel} placeholder="Learn More" />
+              <LabeledInput label="CTA link" value={ctaHref} onChange={setCtaHref} placeholder="https://example.com" />
+            </div>
+
+            <div className="text-xs text-white/60"><div className="mt-1">{description.length} chars</div></div>
+
+            <div className="flex gap-2 pt-2">
+              <button onClick={onSave} className="px-3 py-2 rounded-lg bg-emerald-500/90 hover:bg-emerald-500 text-black font-medium">
+                {tab === 0 || !eventId ? 'Create' : 'Update'}
+              </button>
+              <button onClick={resetAll} className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white">
+                Clear
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
-      {/* RIGHT: website preview + overlay */}
-      <div className="md:w-[70%] h-[50%] overflow-scroll md:overflow-auto text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
+      {/* RIGHT: live website preview + modal overlay */}
+      <div className="md:w-[70%] h-[90%] md:overflow-scroll custom-scrollbar md:overflow-auto text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
         <div className="mb-2 text-sm text-white/60">Live preview from website</div>
-
-        <div className="relative w-full h-[720px] border border-white/10 bg-white">
-          {/* Actual site */}
-          <iframe ref={previewRef} src="/" title="Website Live Preview" className="absolute inset-0 w-full h-full " />
+        <div className="relative w-full h-[720px] md:h-full border border-white/10 bg-white rounded-xl overflow-hidden">
+          <iframe ref={previewRef} src="/" title="Website Live Preview" className="absolute inset-0 w-full h-full" />
           <EventModalOverlay
             container="contained"
             open={modalOpen}
-            onClose={() => setForceOpen(false)}
+            onClose={() => setDismissed(true)}
             imageUrl={imageUrl || undefined}
-            title={title}
+            title={title || ''}
             subheading={subheading}
             description={description}
             dateRange={formatDateRange(startDate, endDate)}
@@ -267,8 +520,8 @@ export default function CMSPage() {
             ctaHref={ctaHref}
           />
         </div>
-      {/* Toggles */}
-        <div className="mt-3 flex justify-around space-y-2 border-t border-white/10 pt-3">
+
+        <div className="mt-3 flex justify-between items-center border-t border-white/10 pt-3">
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={publishModal} onChange={(e) => setPublishModal(e.target.checked)} />
             <span>Publish event popup (preview)</span>

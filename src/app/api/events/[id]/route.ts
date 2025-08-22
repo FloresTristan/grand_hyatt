@@ -41,3 +41,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     return NextResponse.json({ error: e?.message || 'Server error' }, { status: 500 });
   }
 }
+
+export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+  try {
+    await requireAdmin();
+    await adminDb.collection('events').doc(params.id).delete();
+    return NextResponse.json({ ok: true });
+  } catch (e: unknown) {
+    if (e instanceof Response) return e;
+    return NextResponse.json({ error: e?.message || 'Server error' }, { status: 500 });
+  }
+}

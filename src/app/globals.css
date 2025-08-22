@@ -28,3 +28,24 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 0.5px; /* Adjust width as needed */
+}
+
+/* Target the scrollbar track (background) */
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f100; /* Light gray track */
+  border-radius: 10px;
+}
+
+/* Target the scrollbar thumb (draggable part) */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888; /* Dark gray thumb */
+  border-radius: 20px;
+}
+
+/* Optional: Style on hover */
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Even darker gray on hover */
+}
