@@ -33,38 +33,47 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const user = await requireAdmin();
+    const c = await cookies();
+    const session = c.get('session')?.value;
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const decoded = await adminAuth.verifySessionCookie(session, true);
+    const isAdmin = (decoded as unknown)?.admin === true || (decoded as unknown)?.role === 'admin';
+    if (!isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
     const body = await req.json();
+    if (!body?.title) return NextResponse.json({ error: 'Title required' }, { status: 400 });
 
-    if (!body?.title || typeof body.title !== 'string') {
-      return NextResponse.json({ error: 'Title is required' }, { status: 400 });
-    }
+    const id = await adminDb.runTransaction(async (tx) => {
+      const lastSnap = await tx.get(
+        adminDb.collection('events').orderBy('order', 'desc').limit(1)
+      );
+      const nextOrder = lastSnap.empty ? 0 : ((lastSnap.docs[0].data()?.order ?? -1) + 1);
 
-    const now = Date.now();
+      const docRef = adminDb.collection('events').doc(); // auto-id
+      tx.set(docRef, {
+        title: body.title,
+        subheading: body.subheading ?? '',
+        description: body.description ?? '',
+        startDate: body.startDate ?? null,
+        endDate: body.endDate ?? null,
+        startTime: body.startTime ?? null,
+        ctaLabel: body.ctaLabel ?? '',
+        ctaHref: body.ctaHref ?? '',
+        imageDataUrl: body.imageDataUrl ?? null, 
+        status: body.status ?? 'draft',
+        order: nextOrder,                        
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        createdBy: decoded.uid,
+        updatedBy: decoded.uid,
+      });
 
-    const data = {
-      title: body.title as string,
-      subheading: (body.subheading ?? '') as string,
-      description: (body.description ?? '') as string,
-      startDate: body.startDate || null,   
-      endDate: body.endDate || null,      
-      startTime: body.startTime || null,  
-      ctaLabel: body.ctaLabel || '',
-      ctaHref: body.ctaHref || '',
-      imageDataUrl: body.imageDataUrl ?? null, 
-      status: body.status ?? 'draft',      
-      createdAt: now,
-      createdBy: (user as unknown).uid,
-      updatedAt: now,
-      updatedBy: (user as unknown).uid,
-    };
+      return docRef.id;
+    });
 
-    
-    const docRef = await adminDb.collection('events').add(data);
-
-    return NextResponse.json({ ok: true, id: docRef.id });
+    return NextResponse.json({ ok: true, id });
   } catch (e: unknown) {
-    if (e instanceof Response) return e;
     return NextResponse.json({ error: e?.message || 'Server error' }, { status: 500 });
   }
 }

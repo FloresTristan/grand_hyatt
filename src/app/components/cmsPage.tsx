@@ -11,6 +11,8 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 export default function CMSPage() {
   const [title, setTitle] = useState('');
@@ -36,6 +38,7 @@ export default function CMSPage() {
   const [loadingEvents, setLoadingEvents] = useState(false);
   const [selectedUpdateId, setSelectedUpdateId] = useState<string>('');
   const [selectedEvent, setSelectedEvent] = useState({});
+  const [hasOrderChanges, setHasOrderChanges] = useState(false);
 
   const DRAFT_KEY = 'cmsDraft_v1';
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -115,13 +118,16 @@ export default function CMSPage() {
   }, [title, subheading, description, startDate, endDate, startTime, publishModal, forceOpen, ctaLabel, ctaHref, imageUrl]);
 
   function onPickClick() { inputRef.current?.click(); }
+
   function onFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0]; if (f) handleNewImageFile(f);
   }
+
   function onDrop(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault(); const f = e.dataTransfer.files?.[0];
     if (f && f.type.startsWith('image/')) handleNewImageFile(f);
   }
+
   function onDragOver(e: React.DragEvent<HTMLDivElement>) { e.preventDefault(); }
   useEffect(() => {
     function onPaste(e: ClipboardEvent) {
@@ -157,11 +163,47 @@ export default function CMSPage() {
       const res = await fetch('/api/events', { cache: 'no-store' });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || 'Failed to load events');
-      setEvents(data.items || []);
+      const items = (data.items || []).sort(
+      (a: unknown, b: unknown) => (a.order ?? 0) - (b.order ?? 0)
+    );
+      setEvents(items);
     } catch (e) {
       console.error(e);
     } finally {
       setLoadingEvents(false);
+    }
+  }
+
+  function onDragEnd(result: DropResult) {
+    if (!result.destination) return;
+    const src = result.source.index;
+    const dst = result.destination.index;
+    if (src === dst) return;
+
+    setEvents(prev => {
+      const next = [...prev];
+      const [moved] = next.splice(src, 1);
+      next.splice(dst, 0, moved);
+      return next;
+    });
+    setHasOrderChanges(true);
+  }
+
+// Save new order to Firestore
+  async function saveOrder() {
+    try {
+      const ids = events.map(e => e.id);
+      const res = await fetch('/api/events/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || 'Reorder failed');
+      setHasOrderChanges(false);
+      alert('Order saved');
+    } catch (e: unknown) {
+      alert(e.message || 'Save failed');
     }
   }
   useEffect(() => { if (tab !== 0) fetchEvents(); }, [tab]);
@@ -246,14 +288,14 @@ export default function CMSPage() {
         if (tab === 0) alert('Created!');
       } else {
         // UPDATE
-        comparePayloadToSelectedEvent(payload, selectedEvent)
-        // res = await fetch(`/api/events/${eventId}`, {
-        //   method: 'PATCH',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(payload),
-        // });
-        // data = await res.json();
-        // if (!res.ok) throw new Error(data?.error || 'Update failed');
+        // comparePayloadToSelectedEvent(payload, selectedEvent)
+        res = await fetch(`/api/events/${eventId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        data = await res.json();
+        if (!res.ok) throw new Error(data?.error || 'Update failed');
         alert('Updated!');
       }
       if (tab !== 0) fetchEvents();
@@ -310,6 +352,7 @@ export default function CMSPage() {
           >
             <Tab label="Create" />
             <Tab label="Update" />
+            <Tab label="Order"/>
             <Tab label="Delete" />
           </Tabs>
         </Box>
@@ -379,8 +422,73 @@ export default function CMSPage() {
           </div>
         )}
 
-        {/* Delete tab content */}
         {tab === 2 && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-white/80">Reorder events (drag rows)</div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={saveOrder}
+                  disabled={!hasOrderChanges}
+                  className="rounded-md bg-blue-500/90 hover:bg-blue-500 px-3 py-1.5 text-sm disabled:opacity-50"
+                >
+                  Save
+                </button>
+                <IconButton size="small" onClick={fetchEvents}>
+                  <RefreshIcon htmlColor="#9ca3af" fontSize="small" />
+                </IconButton>
+              </div>
+            </div>
+
+            {loadingEvents ? (
+              <div className="flex justify-center py-4"><CircularProgress size={20} /></div>
+            ) : (
+              <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId="events-order">
+                  {(provided) => (
+                    <ul
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="divide-y divide-white/10 rounded-lg h-[150px] md:h-[550px] overflow-scroll custom-scrollbar"
+                    >
+                      {events.map((e, index) => (
+                        <Draggable key={e.id} draggableId={e.id} index={index}>
+                          {(prov) => (
+                            <li
+                              ref={prov.innerRef}
+                              {...prov.draggableProps}
+                              className="flex items-center justify-between even:bg-[#151c2f] p-2  hover:bg-white/10"
+                            >
+                              <div className="flex items-center gap-3">
+                                <span
+                                  {...prov.dragHandleProps}
+                                  className="text-white/60 cursor-grab active:cursor-grabbing"
+                                  title="Drag to reorder"
+                                >
+                                  <DragIndicatorIcon fontSize="small" />
+                                </span>
+                                <span className="w-6 text-white/60 text-xs tabular-nums">{index + 1}</span>
+                                <span className="text-white">{e.title || '(untitled)'}</span>
+                              </div>
+                              <span className="text-xs text-white/40">{e.id}</span>
+                            </li>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                      {events.length === 0 && (
+                        <li className="p-3 text-sm text-white/60">No events yet.</li>
+                      )}
+                    </ul>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            )}
+          </div>
+        )}
+
+        {/* Delete tab content */}
+        {tab === 3 && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="text-sm text-white/80">Delete events</div>
@@ -394,7 +502,9 @@ export default function CMSPage() {
             {loadingEvents ? (
               <div className="flex justify-center py-4"><CircularProgress size={20} /></div>
             ) : (
-              <List dense sx={{ bgcolor: 'transparent' }}>
+              <List dense 
+                className="h-[150px] md:h-[600px] overflow-scroll custom-scrollbar"
+              >
                 {events.map(e => (
                   <ListItem
                     className=''
