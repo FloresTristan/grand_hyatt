@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   const admin = await requireAdmin();
   if (!admin) return new NextResponse(null, { status: 403 });
 
-  const { email, password, name, role = 'USER' } = await req.json();
+  const { email, password, name, role = 'editor' } = await req.json();
   if (!email || !password) return new NextResponse('Missing fields', { status: 400 });
 
   // 1) create user
