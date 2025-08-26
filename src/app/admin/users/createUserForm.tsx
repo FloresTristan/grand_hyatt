@@ -4,7 +4,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 
-// ---- Types that match your API shape ----
 type Role = 'admin' | 'editor' ;
 type UserRow = {
   uid: string;
@@ -19,12 +18,10 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  // modal state
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<'create' | 'edit'>('create');
   const [initial, setInitial] = useState<UserRow | null>(null);
 
-  // filters (optional)
   const [q, setQ] = useState('');
 
   useEffect(() => {
@@ -35,11 +32,9 @@ export default function UsersPage() {
     setErr(null);
     setLoading(true);
     try {
-      // Expect your server route: GET /api/admin/users  ->  { items: UserRow[] }
       const res = await fetch('/api/admin/users', { cache: 'no-store' });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || 'Failed to load users');
-      // sort newest first by createdAt (fallback to email)
       const sorted = [...(data.items as UserRow[])]
         .sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
       setUsers(sorted);
@@ -60,7 +55,6 @@ export default function UsersPage() {
     );
   }, [users, q]);
 
-  // Actions
   function onAdd() {
     setMode('create');
     setInitial(null);
@@ -77,14 +71,12 @@ export default function UsersPage() {
       const res = await fetch(`/api/admin/users/${user.uid}`, { method: 'DELETE' });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data?.error || 'Delete failed');
-      // remove locally
       setUsers(prev => prev.filter(u => u.uid !== user.uid));
     } catch (e: unknown) {
       alert(e?.message || 'Delete failed');
     }
   }
 
-  // Handle submit from modal
   async function handleSubmit(payload: CreateOrUpdatePayload, user?: UserRow | null) {
     try {
       if (mode === 'create') {
@@ -96,21 +88,17 @@ export default function UsersPage() {
             password: payload.password,
             name: payload.displayName,
             role: payload.role,
-            disabled: payload.disabled,
           }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data?.error || 'Create failed');
 
-        // Re-load so we have the fresh list (and createdAt)
         await loadUsers();
       } else {
         const uid = user!.uid;
         const body: unknown = {
-          // Only include fields that were edited; this is simple & safe:
           displayName: payload.displayName,
           role: payload.role,
-          disabled: payload.disabled,
         };
         if (payload.newPassword && payload.newPassword.length >= 6) {
           body.password = payload.newPassword; // optional password reset
@@ -123,9 +111,8 @@ export default function UsersPage() {
         const data = await res.json();
         if (!res.ok) throw new Error(data?.error || 'Update failed');
 
-        // Update locally (or reload)
         setUsers(prev => prev.map(u => (u.uid === uid
-          ? { ...u, displayName: payload.displayName, role: payload.role, disabled: payload.disabled }
+          ? { ...u, displayName: payload.displayName, role: payload.role}
           : u)));
       }
 
@@ -217,7 +204,6 @@ export default function UsersPage() {
   );
 }
 
-/* --------------- Small presentational bits --------------- */
 
 function Th({ children, align = 'left' }: { children: React.ReactNode; align?: 'left' | 'right' }) {
   return (
@@ -245,15 +231,13 @@ function RoleBadge({ role }: { role?: Role }) {
   return <span className={`rounded-full px-2 py-0.5 text-xs ${styles[r]}`}>{r}</span>;
 }
 
-/* --------------- Modal --------------- */
 
 type CreateOrUpdatePayload = {
   email: string;
   displayName: string;
   role: Role;
-  disabled: boolean;
-  password?: string;     // create only
-  newPassword?: string;  // edit optional
+  password?: string;     
+  newPassword?: string;  
 };
 
 function UserFormModal({
@@ -272,7 +256,6 @@ function UserFormModal({
   const [email, setEmail] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [role, setRole] = useState<Role>('editor');
-  const [disabled, setDisabled] = useState(false);
   const [password, setPassword] = useState('');     // create
   const [newPassword, setNewPassword] = useState(''); // edit
   const [busy, setBusy] = useState(false);
@@ -286,14 +269,12 @@ function UserFormModal({
         setEmail(initial.email || '');
         setDisplayName(initial.displayName || '');
         setRole((initial.role as Role) || 'editor');
-        setDisabled(!!initial.disabled);
         setPassword('');
         setNewPassword('');
       } else {
         setEmail('');
         setDisplayName('');
         setRole('editor');
-        setDisabled(false);
         setPassword('');
         setNewPassword('');
       }
@@ -309,7 +290,7 @@ function UserFormModal({
         throw new Error('Password must be at least 6 characters.');
       }
       await onSubmit({
-        email, displayName, role, disabled,
+        email, displayName, role,
         ...(mode === 'create' ? { password } : {}),
         ...(mode === 'edit' ? { newPassword } : {}),
       });
@@ -338,7 +319,7 @@ function UserFormModal({
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  disabled={mode === 'edit'} // keep email immutable during edit
+                  disabled={mode === 'edit'}
                   required
                   className="w-full rounded-lg border border-neutral-200 px-3 py-2 outline-none focus:border-neutral-400 disabled:bg-neutral-100"
                 />
@@ -366,15 +347,6 @@ function UserFormModal({
                     <option value="editor" className="bg-[#212e3f]">editor</option>
                   </select>
                 </label>
-
-                {/* <label className="flex items-end gap-2">
-                  <input
-                    type="checkbox"
-                    checked={disabled}
-                    onChange={(e) => setDisabled(e.target.checked)}
-                  />
-                  <span className="text-sm ">Disabled</span>
-                </label> */}
               </div>
 
               {mode === 'create' ? (
