@@ -1,35 +1,39 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { adminAuth } from '../../../../../../lib/firebase/admin';
+import { createClient } from '@supabase/supabase-js';
 
-async function requireAdmin() {
-  const c = cookies().get('session')?.value;
-  if (!c) return null;
-  const decoded = await adminAuth.verifySessionCookie(c, true).catch(() => null);
-  if (!decoded) return null;
-  const isAdmin = (decoded as unknown).role === 'admin' || (decoded as unknown).admin === true;
-  return isAdmin ? decoded : null;
-}
+export const runtime = 'nodejs';
+const supa = () => createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
 export async function POST(req: Request) {
-  const admin = await requireAdmin();
-  if (!admin) return new NextResponse(null, { status: 403 });
+  try {
+    const { email, password, name, role = 'editor', disabled = false } = await req.json();
 
-  const { email, password, name, role = 'editor' } = await req.json();
-  if (!email || !password) return new NextResponse('Missing fields', { status: 400 });
+    // Bootstrap: if no profiles, this becomes admin
+    const admin = supa();
+    const { data: pc, error: pe } = await admin.from('profiles').select('id', { count: 'exact', head: true });
+    if (pe) throw pe;
+    const isBootstrap = (pc as unknown)?.count === 0;
 
-  // 1) create user
-  const userRecord = await adminAuth.createUser({
-    email, password, displayName: name,
-  });
+    const { data, error } = await admin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      app_metadata: { role: isBootstrap ? 'admin' : String(role).toLowerCase() },
+      user_metadata: { display_name: name },
+      ban_duration: disabled ? '100y' : undefined, // crude "disabled"
+    });
+    if (error) throw error;
 
-  // 2) set role claim
-  await adminAuth.setCustomUserClaims(userRecord.uid, {
-    role: role.toString().toLowerCase(), // 'user' | 'admin'
-  });
+    // create profile row
+    await admin.from('profiles').upsert({
+      id: data.user!.id,
+      display_name: name,
+      role: isBootstrap ? 'admin' : String(role).toLowerCase(),
+      disabled: !!disabled,
+    });
 
-  // (Optional) force refresh of tokens if this user is currently logged in elsewhere.
-  await adminAuth.revokeRefreshTokens(userRecord.uid);
-
-  return NextResponse.json({ uid: userRecord.uid, email: userRecord.email, role });
+    return NextResponse.json({ uid: data.user!.id, email, role: isBootstrap ? 'admin' : role });
+  } catch (e: unknown) {
+    return NextResponse.json({ error: e.message || 'Server error' }, { status: 500 });
+  }
 }

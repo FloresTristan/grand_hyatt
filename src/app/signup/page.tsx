@@ -1,10 +1,8 @@
-
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signInWithCustomToken } from 'firebase/auth';
-import { auth } from '../../../lib/firebase/client';
+import { supabase } from '../../../lib/supabase/client';
 
 export default function FirstUserPage() {
   const r = useRouter();
@@ -19,27 +17,20 @@ export default function FirstUserPage() {
     setErr(null);
     setBusy(true);
     try {
-      const res = await fetch('../api/bootstrap/create-first-admin', {
+      const res = await fetch('/api/bootstrap/create-first-admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, displayName }),
+        body: JSON.stringify({ email, password, name: displayName }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || 'Failed');
+      if (!res.ok) throw new Error(data?.error || 'Failed to create admin');
 
-      await signInWithCustomToken(auth, data.customToken);
-
-      const idToken = await auth.currentUser!.getIdToken();
-      const sres = await fetch('/api/auth/sessionLogin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken }),
-      });
-      if (!sres.ok) throw new Error('Failed to set session');
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
 
       r.replace('/admin');
     } catch (e: unknown) {
-      setErr(e.message);
+      setErr(e?.message || 'Something went wrong');
     } finally {
       setBusy(false);
     }

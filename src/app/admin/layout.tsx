@@ -1,24 +1,22 @@
+
 import { ReactNode } from 'react';
-import { cookies } from 'next/headers';
 import { redirect, notFound } from 'next/navigation';
-import { adminAuth, adminDb } from '../../../lib/firebase/admin';
 import NavBar from '../components/navbar';
+import { createSupabaseServer } from '../../../lib/supabase/server.ts';
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
-  const anyUser = await adminDb.collection('users').limit(1).get();
-  if (anyUser.empty) redirect('/signup');
+  const supabase = await createSupabaseServer(); // <-- await
 
-  const cookieStore = await cookies();
-  const session = cookieStore.get('session')?.value;
-  if (!session) redirect('/login');
+  // bootstrap check
+  const { count } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+  if ((count ?? 0) === 0) redirect('/signup');
 
-  const decoded = await adminAuth.verifySessionCookie(session, true).catch(() => null);
-  if (!decoded) redirect('/login');
+  // auth
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/login');
 
-  const claims = decoded as Record<string, unknown>;
-  const isAdmin =
-    claims['admin'] === true || claims['role'] === 'admin';
-  if (!isAdmin) notFound();
+  const role = (user.app_metadata as unknown)?.role ?? 'user';
+  if (role !== 'admin') notFound();
 
   return (
     <>

@@ -1,46 +1,34 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { adminAuth } from '../../../../../lib/firebase/admin';
+import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'nodejs';
 
-function toMs(t?: string | null) {
-  if (!t) return undefined;
-  const ms = new Date(t).getTime();
-  return Number.isNaN(ms) ? undefined : ms;
+function adminClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY! // server-only!
+  );
 }
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    const c = (await cookies()).get('session')?.value;
-    if (!c) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const supa = adminClient();
+    const { data, error } = await supa.auth.admin.listUsers();
+    if (error) throw error;
 
-    const decoded = await adminAuth.verifySessionCookie(c, true).catch(() => null);
-    const claims = decoded as unknown;
-    const isAdmin = !!claims && (claims.role === 'admin' || claims.admin === true);
-    if (!isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-
-    const { searchParams } = new URL(req.url);
-    const limit = Math.min(Math.max(Number(searchParams.get('limit') || 100), 1), 1000);
-    const pageToken = searchParams.get('pageToken') || undefined;
-
-    const res = await adminAuth.listUsers(limit, pageToken);
-
-    const items = res.users.map(u => ({
-      uid: u.uid,
-      email: u.email || '',
-      displayName: u.displayName || '',
-      role: (u.customClaims?.role as string) || 'user',
-      disabled: u.disabled === true,
-      createdAt: toMs(u.metadata?.creationTime),
-      lastLoginAt: toMs(u.metadata?.lastSignInTime),
+    // map to your table shape
+    const items = data.users.map(u => ({
+      uid: u.id,
+      email: u.email!,
+      displayName: (u.user_metadata as unknown)?.display_name || '',
+      role: (u.app_metadata as unknown)?.role || 'user',
+      disabled: u.banned_until ? true : false,
+      createdAt: u.created_at ? new Date(u.created_at).getTime() : undefined,
+      lastLoginAt: u.last_sign_in_at ? new Date(u.last_sign_in_at).getTime() : undefined,
     }));
 
-    return NextResponse.json({
-      items,
-      nextPageToken: res.pageToken || null,
-    });
+    return NextResponse.json({ items });
   } catch (e: unknown) {
-    return NextResponse.json({ error: e?.message || 'Server error' }, { status: 500 });
+    return NextResponse.json({ error: e.message || 'Server error' }, { status: 500 });
   }
 }

@@ -1,57 +1,52 @@
-export const runtime = 'nodejs';
-
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { adminAuth, adminDb } from '../../../../../lib/firebase/admin';
+import { createSupabaseServer } from '../../../../../lib/supabase/server';
 
-async function requireAdmin() {
-  const c = await cookies();
-  const session = c.get('session')?.value;
-  if (!session) throw new Response('Unauthorized', { status: 401 });
-  const decoded = await adminAuth.verifySessionCookie(session, true);
-  const claims = decoded as unknown;
-  const isAdmin = claims?.admin === true || claims?.role === 'admin';
-  if (!isAdmin) throw new Response('Forbidden', { status: 403 });
-  return decoded;
+export const runtime = 'nodejs';
+type Ctx = { params: Promise<{ id: string }> };
+
+export async function GET(_req: Request, ctx: Ctx) {
+  const { id } = await ctx.params;
+  const supabase = await createSupabaseServer();
+  const { data, error } = await supabase.from('events').select('*').eq('id', id).single();
+  if (error) return NextResponse.json({ error: error.message }, { status: 404 });
+  return NextResponse.json({ item: data });
 }
 
-// 👇 Note the ctx type: { params: Promise<{ id: string }> } and the await
-export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
-  try {
-    const user = await requireAdmin();
-    const { id } = await ctx.params;     // <-- await params
-    const body = await req.json();
+export async function PATCH(req: Request, ctx: Ctx) {
+  const { id } = await ctx.params;
+  const supabase = await createSupabaseServer();
+  const body = await req.json();
 
-    const allowed = [
-      'title','subheading','description',
-      'startDate','endDate','startTime',
-      'ctaLabel','ctaHref','status','imageDataUrl'
-    ] as const;
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const update: Record<string, unknown> = {
-      updatedAt: Date.now(),
-      updatedBy: (user as unknown).uid,
-    };
-    for (const k of allowed) {
-      if (k in body) update[k] = body[k];
-    }
+  const update: unknown = {
+    title: body.title,
+    subheading: body.subheading,
+    description: body.description,
+    start_date: body.startDate,
+    end_date: body.endDate,
+    start_time: body.startTime,
+    cta_label: body.ctaLabel,
+    cta_href: body.ctaHref,
+    image_url: body.imageUrl,
+    status: body.status,
+    order: typeof body.order === 'number' ? body.order : undefined,
+    updated_at: new Date().toISOString(),
+    updated_by: user.id,
+  };
 
-    await adminDb.collection('events').doc(id).set(update, { merge: true });
-    return NextResponse.json({ ok: true, id });
-  } catch (e: unknown) {
-    if (e instanceof Response) return e;
-    return NextResponse.json({ error: e?.message || 'Server error' }, { status: 500 });
-  }
+  Object.keys(update).forEach(k => update[k] === undefined && delete update[k]);
+
+  const { error } = await supabase.from('events').update(update).eq('id', id);
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json({ ok: true, id });
 }
 
-export async function DELETE(_req: Request, ctx: { params: Promise<{ id: string }> }) {
-  try {
-    await requireAdmin();
-    const { id } = await ctx.params;     // <-- await params
-    await adminDb.collection('events').doc(id).delete();
-    return NextResponse.json({ ok: true });
-  } catch (e: unknown) {
-    if (e instanceof Response) return e;
-    return NextResponse.json({ error: e?.message || 'Server error' }, { status: 500 });
-  }
+export async function DELETE(_req: Request, ctx: Ctx) {
+  const { id } = await ctx.params;
+  const supabase = await createSupabaseServer();
+  const { error } = await supabase.from('events').delete().eq('id', id);
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json({ ok: true });
 }

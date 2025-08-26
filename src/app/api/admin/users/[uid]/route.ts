@@ -1,64 +1,50 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { adminAuth } from '../../../../../../lib/firebase/admin';
+import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'nodejs';
+const admin = () => createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
-async function requireAdmin() {
-  const c = (await cookies()).get('session')?.value;
-  if (!c) return null;
+type Ctx = { params: Promise<{ uid: string }> };
 
-  const decoded = await adminAuth.verifySessionCookie(c, true).catch(() => null);
-  if (!decoded) return null;
-
-  const claims = decoded as unknown;
-  const isAdmin = claims.role === 'admin' || claims.admin === true;
-  return isAdmin ? decoded : null;
-}
-
-// Note the ctx type and the await ctx.params
-export async function PATCH(req: Request, ctx: { params: Promise<{ uid: string }> }) {
+export async function PATCH(req: Request, ctx: Ctx) {
   try {
-    const admin = await requireAdmin();
-    if (!admin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-
-    const { uid } = await ctx.params;          // ← IMPORTANT
+    const { uid } = await ctx.params;
     const body = await req.json();
 
-    const updates: Parameters<typeof adminAuth.updateUser>[1] = {};
-    if (typeof body.displayName === 'string') updates.displayName = body.displayName;
-    if (typeof body.disabled === 'boolean') updates.disabled = body.disabled;
+    const updates: unknown = {};
+    if (typeof body.displayName === 'string') updates.user_metadata = { display_name: body.displayName };
+    if (typeof body.role === 'string') updates.app_metadata = { role: String(body.role).toLowerCase() };
+    if (typeof body.disabled === 'boolean') updates.ban_duration = body.disabled ? '100y' : null;
     if (typeof body.password === 'string' && body.password.length >= 6) updates.password = body.password;
 
-    if (Object.keys(updates).length > 0) {
-      await adminAuth.updateUser(uid, updates);
+    if (Object.keys(updates).length) {
+      const { error } = await admin().auth.admin.updateUserById(uid, updates);
+      if (error) throw error;
     }
 
-    if (typeof body.role === 'string') {
-      const cur = await adminAuth.getUser(uid);
-      await adminAuth.setCustomUserClaims(uid, { ...(cur.customClaims || {}), role: String(body.role).toLowerCase() });
-    }
-
-    if (typeof body.password === 'string' && body.password.length >= 6) {
-      await adminAuth.revokeRefreshTokens(uid);
+    // mirror to profiles
+    const prof: unknown = { updated_at: new Date().toISOString() };
+    if (typeof body.displayName === 'string') prof.display_name = body.displayName;
+    if (typeof body.role === 'string') prof.role = String(body.role).toLowerCase();
+    if (typeof body.disabled === 'boolean') prof.disabled = body.disabled;
+    if (Object.keys(prof).length > 0) {
+      await admin().from('profiles').update(prof).eq('id', uid);
     }
 
     return NextResponse.json({ ok: true, uid });
   } catch (e: unknown) {
-    return NextResponse.json({ error: e?.message || 'Server error' }, { status: 500 });
+    return NextResponse.json({ error: e.message || 'Server error' }, { status: 500 });
   }
 }
 
-export async function DELETE(_req: Request, ctx: { params: Promise<{ uid: string }> }) {
+export async function DELETE(_req: Request, ctx: Ctx) {
   try {
-    const admin = await requireAdmin();
-    if (!admin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-
-    const { uid } = await ctx.params;          // ← IMPORTANT
-    await adminAuth.deleteUser(uid);
-
+    const { uid } = await ctx.params;
+    const { error } = await admin().auth.admin.deleteUser(uid);
+    if (error) throw error;
+    await admin().from('profiles').delete().eq('id', uid);
     return NextResponse.json({ ok: true });
   } catch (e: unknown) {
-    return NextResponse.json({ error: e?.message || 'Server error' }, { status: 500 });
+    return NextResponse.json({ error: e.message || 'Server error' }, { status: 500 });
   }
 }
