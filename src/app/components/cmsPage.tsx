@@ -260,7 +260,7 @@ export default function CMSPage() {
     try {
       const payload = {
         title, subheading, description,
-        startDate, endDate, startTime,
+        startDate: startDate || null, endDate: startDate||null, startTime: startTime||null,
         ctaLabel, ctaHref,
         imageDataUrl: imageUrl?.startsWith('data:') ? imageUrl : null,
         status: 'draft',
@@ -376,9 +376,9 @@ export default function CMSPage() {
                     setTitle(ev.title || '');
                     setSubheading(ev.subheading || '');
                     setDescription(ev.description || '');
-                    setStartDate(ev.startDate || '');
-                    setEndDate(ev.endDate || '');
-                    setStartTime(ev.startTime || '');
+                    setStartDate(ev.start_date || '');
+                    setEndDate(ev.end_date || '');
+                    setStartTime(ev.start_time || '');
                     setCtaLabel(ev.ctaLabel || '');
                     setCtaHref(ev.ctaHref || '');
                     setImageUrl(ev.imageDataUrl || null);
