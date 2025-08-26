@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { auth } from '../../../lib/firebase/client.ts';
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import Image from 'next/image';
 import grandhyatt from '../assets/grandhyatt.png'

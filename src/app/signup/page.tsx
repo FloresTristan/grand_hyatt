@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithCustomToken } from 'firebase/auth';
 import { auth } from '../../../lib/firebase/client';

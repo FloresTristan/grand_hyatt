@@ -1,8 +1,8 @@
 
 import Image from 'next/image';
 import grandhyattmodel from "../app/assets/grandhyatt-resized.png"
-import Modal from './components/modal';
-import EventModalOverlay from './components/EventModalOverlay';
+// import Modal from './components/modal';
+// import EventModalOverlay from './components/EventModalOverlay';
 
 export default function Home() {
   

@@ -9,14 +9,17 @@ async function requireAdmin() {
   const session = c.get('session')?.value;
   if (!session) throw new Response('Unauthorized', { status: 401 });
   const decoded = await adminAuth.verifySessionCookie(session, true);
-  const isAdmin = (decoded as unknown)?.admin === true || (decoded as unknown)?.role === 'admin';
+  const claims = decoded as unknown;
+  const isAdmin = claims?.admin === true || claims?.role === 'admin';
   if (!isAdmin) throw new Response('Forbidden', { status: 403 });
   return decoded;
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+// 👇 Note the ctx type: { params: Promise<{ id: string }> } and the await
+export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
   try {
     const user = await requireAdmin();
+    const { id } = await ctx.params;     // <-- await params
     const body = await req.json();
 
     const allowed = [
@@ -33,19 +36,19 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       if (k in body) update[k] = body[k];
     }
 
-    await adminDb.collection('events').doc(params.id).set(update, { merge: true });
-
-    return NextResponse.json({ ok: true, id: params.id });
+    await adminDb.collection('events').doc(id).set(update, { merge: true });
+    return NextResponse.json({ ok: true, id });
   } catch (e: unknown) {
     if (e instanceof Response) return e;
     return NextResponse.json({ error: e?.message || 'Server error' }, { status: 500 });
   }
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_req: Request, ctx: { params: Promise<{ id: string }> }) {
   try {
     await requireAdmin();
-    await adminDb.collection('events').doc(params.id).delete();
+    const { id } = await ctx.params;     // <-- await params
+    await adminDb.collection('events').doc(id).delete();
     return NextResponse.json({ ok: true });
   } catch (e: unknown) {
     if (e instanceof Response) return e;

@@ -39,7 +39,8 @@ export default function UsersPage() {
         .sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
       setUsers(sorted);
     } catch (e: unknown) {
-      setErr(e?.message || 'Load failed');
+      console.log(e)
+      setErr('Load failed');
     } finally {
       setLoading(false);
     }
@@ -73,7 +74,8 @@ export default function UsersPage() {
       if (!res.ok) throw new Error(data?.error || 'Delete failed');
       setUsers(prev => prev.filter(u => u.uid !== user.uid));
     } catch (e: unknown) {
-      alert(e?.message || 'Delete failed');
+      console.log(e)
+      alert('Delete failed');
     }
   }
 
@@ -101,7 +103,7 @@ export default function UsersPage() {
           role: payload.role,
         };
         if (payload.newPassword && payload.newPassword.length >= 6) {
-          body.password = payload.newPassword; // optional password reset
+          body.password = payload.newPassword;
         }
         const res = await fetch(`/api/admin/users/${uid}`, {
           method: 'PATCH',

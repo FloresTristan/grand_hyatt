@@ -7,7 +7,7 @@ import EventModalOverlay from '@/app/components/EventModalOverlay';
 // MUI
 import {
   Tabs, Tab, Box, Select, MenuItem, List, ListItem, ListItemText,
-  IconButton, CircularProgress, Button
+  IconButton, CircularProgress,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -210,51 +210,51 @@ export default function CMSPage() {
   // fetchEvents()
   console.log(events)
 
-  function comparePayloadToSelectedEvent(payload, selectedEvent){
-    // delete selectedEvent.id
-    // delete selectedEvent.createdAt
-    // delete selectedEvent.createdBy
-    // delete selectedEvent.updatedAt
-    // delete selectedEvent.updatedBy
-    // if (payload !== selectedEvent) {
-    //   console.log('over here', payload)
-    //   console.log(selectedEvent)
-    // }
-    console.log(payload, 'payload here')
-    const differingKeys = [];
-    const payLoadKeys = Object.keys(payload)
-    const eventKeys = Object.keys(selectedEvent)
+  // function comparePayloadToSelectedEvent(payload, selectedEvent){
+  //   // delete selectedEvent.id
+  //   // delete selectedEvent.createdAt
+  //   // delete selectedEvent.createdBy
+  //   // delete selectedEvent.updatedAt
+  //   // delete selectedEvent.updatedBy
+  //   // if (payload !== selectedEvent) {
+  //   //   console.log('over here', payload)
+  //   //   console.log(selectedEvent)
+  //   // }
+  //   console.log(payload, 'payload here')
+  //   const differingKeys = [];
+  //   const payLoadKeys = Object.keys(payload)
+  //   const eventKeys = Object.keys(selectedEvent)
 
-    for (const key of eventKeys) {
-      // Check if the key exists in the second object
-      if (Object.prototype.hasOwnProperty.call(payload, key)) {
-        // Compare values
-        if (selectedEvent[key] !== payload[key]) {
-          // Special handling for NaN
-          if (Number.isNaN(payload[key]) && Number.isNaN(selectedEvent[key])) {
-            // Both are NaN, consider them equal for this comparison
-            continue;
-          }
-          differingKeys.push(key);
-        }
-      } else {
-        console.warn(`Key '${key}' exists in payload but not in selectedEvent.`);
-      }
-    }
+  //   for (const key of eventKeys) {
+  //     // Check if the key exists in the second object
+  //     if (Object.prototype.hasOwnProperty.call(payload, key)) {
+  //       // Compare values
+  //       if (selectedEvent[key] !== payload[key]) {
+  //         // Special handling for NaN
+  //         if (Number.isNaN(payload[key]) && Number.isNaN(selectedEvent[key])) {
+  //           // Both are NaN, consider them equal for this comparison
+  //           continue;
+  //         }
+  //         differingKeys.push(key);
+  //       }
+  //     } else {
+  //       console.warn(`Key '${key}' exists in payload but not in selectedEvent.`);
+  //     }
+  //   }
 
-    for (const key of payLoadKeys) {
-      if (!Object.prototype.hasOwnProperty.call(selectedEvent, key)) {
-        console.warn(`Key '${key}' exists in payload but not in selectedEvent.`);
-      }
-    }
+  //   for (const key of payLoadKeys) {
+  //     if (!Object.prototype.hasOwnProperty.call(selectedEvent, key)) {
+  //       console.warn(`Key '${key}' exists in payload but not in selectedEvent.`);
+  //     }
+  //   }
 
-    if (differingKeys.length > 0) {
-      return `Values differ for keys: ${differingKeys.join(', ')}`;
-    } else {
-      return "All common key values are identical.";
-    }
+  //   if (differingKeys.length > 0) {
+  //     return `Values differ for keys: ${differingKeys.join(', ')}`;
+  //   } else {
+  //     return "All common key values are identical.";
+  //   }
 
-  }
+  // }
 
   async function onSave() {
     try {
