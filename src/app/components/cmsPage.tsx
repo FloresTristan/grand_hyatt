@@ -3,14 +3,16 @@
 
 import { useEffect, useRef, useState } from 'react';
 import EventModalOverlay from '@/app/components/EventModalOverlay';
+import { uploadEventImage } from '../../../lib/images/uploadEventImages.ts'
 
 // MUI
 import {
-  Tabs, Tab, Box, Select, MenuItem, List, ListItem, ListItemText,
+  Tabs, Tab, Box, Select, MenuItem,
   IconButton, CircularProgress,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import EditIcon from '@mui/icons-material/EditOutlined';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
@@ -39,6 +41,9 @@ export default function CMSPage() {
   const [selectedUpdateId, setSelectedUpdateId] = useState<string>('');
   const [selectedEvent, setSelectedEvent] = useState({});
   const [hasOrderChanges, setHasOrderChanges] = useState(false);
+
+  const [showUpdateView, setShowUpdateView] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   const DRAFT_KEY = 'cmsDraft_v1';
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -155,6 +160,7 @@ export default function CMSPage() {
     localStorage.removeItem(DRAFT_KEY);
     setSelectedUpdateId('');
     setSelectedEvent({});
+    setShowUpdateView(false)
   }
   
   async function fetchEvents() {
@@ -192,6 +198,7 @@ export default function CMSPage() {
 // Save new order to Firestore
   async function saveOrder() {
     try {
+      setButtonLoading(true)
       const ids = events.map(e => e.id);
       const res = await fetch('/api/events/reorder', {
         method: 'POST',
@@ -205,71 +212,46 @@ export default function CMSPage() {
     } catch (e: unknown) {
       alert(e.message || 'Save failed');
     }
+    setButtonLoading(false)
   }
   useEffect(() => { if (tab !== 0) fetchEvents(); }, [tab]);
   // fetchEvents()
   console.log(events)
 
-  // function comparePayloadToSelectedEvent(payload, selectedEvent){
-  //   // delete selectedEvent.id
-  //   // delete selectedEvent.createdAt
-  //   // delete selectedEvent.createdBy
-  //   // delete selectedEvent.updatedAt
-  //   // delete selectedEvent.updatedBy
-  //   // if (payload !== selectedEvent) {
-  //   //   console.log('over here', payload)
-  //   //   console.log(selectedEvent)
-  //   // }
-  //   console.log(payload, 'payload here')
-  //   const differingKeys = [];
-  //   const payLoadKeys = Object.keys(payload)
-  //   const eventKeys = Object.keys(selectedEvent)
-
-  //   for (const key of eventKeys) {
-  //     // Check if the key exists in the second object
-  //     if (Object.prototype.hasOwnProperty.call(payload, key)) {
-  //       // Compare values
-  //       if (selectedEvent[key] !== payload[key]) {
-  //         // Special handling for NaN
-  //         if (Number.isNaN(payload[key]) && Number.isNaN(selectedEvent[key])) {
-  //           // Both are NaN, consider them equal for this comparison
-  //           continue;
-  //         }
-  //         differingKeys.push(key);
-  //       }
-  //     } else {
-  //       console.warn(`Key '${key}' exists in payload but not in selectedEvent.`);
-  //     }
-  //   }
-
-  //   for (const key of payLoadKeys) {
-  //     if (!Object.prototype.hasOwnProperty.call(selectedEvent, key)) {
-  //       console.warn(`Key '${key}' exists in payload but not in selectedEvent.`);
-  //     }
-  //   }
-
-  //   if (differingKeys.length > 0) {
-  //     return `Values differ for keys: ${differingKeys.join(', ')}`;
-  //   } else {
-  //     return "All common key values are identical.";
-  //   }
-
-  // }
-
   async function onSave() {
     try {
-      const payload = {
-        title, subheading, description,
-        startDate: startDate || null, endDate: startDate||null, startTime: startTime||null,
-        ctaLabel, ctaHref,
-        imageDataUrl: imageUrl?.startsWith('data:') ? imageUrl : null,
-        status: 'draft',
-      };
-
       if (title=='' || title == null){
         alert("Title needed")
         return
       }
+
+      setButtonLoading(true)
+
+      let image_path: string | null = null;
+      let image_url: string | null = null;
+
+      const oldPath = (selectedEvent as unknown)?.image_path as string | undefined;
+
+      if (imageFile) {
+        const up = await uploadEventImage(imageFile, { oldPath });
+        image_path = up.path;
+        image_url = up.publicUrl; 
+      } else {
+        if (tab === 1 && eventId) {
+          image_path = (selectedEvent as unknown)?.image_path ?? null;
+          image_url  = (selectedEvent as unknown)?.image_url ?? null;
+        }
+      }
+
+      const payload = {
+        title, subheading, description,
+        startDate: startDate || null, endDate: endDate||null, startTime: startTime||null,
+        ctaLabel, ctaHref,
+        image_path,      
+        image_url, 
+        status: 'draft',
+      };
+
       let res, data;
       if (!eventId || tab === 0) {
         // CREATE
@@ -280,15 +262,12 @@ export default function CMSPage() {
         });
         data = await res.json();
         if (!res.ok) throw new Error(data?.error || 'Create failed');
-        // setEventId(data.id);
-        // keep draft id
+
         const raw = localStorage.getItem(DRAFT_KEY);
         const s = raw ? JSON.parse(raw) : {};
         localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...s, eventId: data.id }));
         if (tab === 0) alert('Created!');
       } else {
-        // UPDATE
-        // comparePayloadToSelectedEvent(payload, selectedEvent)
         res = await fetch(`/api/events/${eventId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -299,9 +278,11 @@ export default function CMSPage() {
         alert('Updated!');
       }
       if (tab !== 0) fetchEvents();
+      if (image_url) setImageUrl(image_url);
     } catch (e: unknown) {
       alert(e.message || 'Save failed');
     }
+    setButtonLoading(false)
     resetAll();
   }
   console.log(selectedEvent)
@@ -318,8 +299,19 @@ export default function CMSPage() {
       alert(e.message || 'Delete failed');
     }
   }
-
+  
   console.log('id', eventId)
+
+  const previewEvents = events.map(e => ({
+    imageUrl: e.image_url ?? undefined,
+    title: e.title ?? '(untitled)',
+    subheading: e.subheading ?? '',
+    description: e.description ?? '',
+    dateRange: formatDateRange(e.start_date, e.end_date),
+    timeText: to12h(e.start_time),
+    ctaLabel: e.cta_label ?? '',
+    ctaHref: e.cta_href ?? '',
+  }));
 
   const dateError =
     startDate && endDate && new Date(endDate) < new Date(startDate)
@@ -329,6 +321,8 @@ export default function CMSPage() {
   const modalOpen = shouldShowModal({ publishModal, forceOpen, startDate, endDate });
 
   const canShowForm = tab === 0 || (tab === 1 && !!selectedUpdateId);
+    
+
   return (
     <div className="font-sans flex flex-col gap-4 md:flex-row min-h-screen md:h-screen p-8 pb-20 md:gap-8 sm:px-20 bg-[#151c2f]">
       {/* editor side ni */}
@@ -352,13 +346,136 @@ export default function CMSPage() {
           >
             <Tab label="Create" />
             <Tab label="Update" />
-            <Tab label="Order"/>
-            <Tab label="Delete" />
           </Tabs>
         </Box>
 
-        {/* Update tab controls */}
         {tab === 1 && (
+          <div className={`space-y-3 ${showUpdateView? 'hidden': ''}`}>
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-white/80">Reorder events (drag rows)</div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={saveOrder}
+                  disabled={buttonLoading || !hasOrderChanges}
+                  className="rounded-md bg-blue-500/90 hover:bg-blue-500 px-3 py-1.5 text-sm disabled:opacity-50 hover:cursor-pointer disabled:cursor-not-allowed"
+                >
+                  {buttonLoading ? (
+                    <span className="inline-flex items-center px-2 gap-2">
+                      <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 004 12z"/>
+                      </svg>
+                    </span>
+                  ) : (
+                    'Save'
+                  )}
+                </button>
+                <IconButton size="small" 
+                  onClick={()=>{
+                    fetchEvents()
+                    resetAll()
+                  }}
+                >
+                  <RefreshIcon htmlColor="#9ca3af" fontSize="small" />
+                </IconButton>
+              </div>
+            </div>
+
+            {loadingEvents ? (
+              <div className="flex justify-center py-4"><CircularProgress size={20} /></div>
+            ) : (
+              <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId="events-order">
+                  {(provided) => (
+                    <ul
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="divide-y divide-white/10 rounded-lg h-[150px] md:h-[550px] overflow-scroll custom-scrollbar"
+                    >
+                      {events.map((e, index) => (
+                        <Draggable key={e.id} draggableId={e.id} index={index}>
+                          {(prov) => (
+                            <li
+                              ref={prov.innerRef}
+                              {...prov.draggableProps}
+                              className="flex items-center justify-between even:bg-[#151c2f] p-2  hover:bg-white/10"
+                            >
+                              <div className="flex items-center gap-3">
+                                <span
+                                  {...prov.dragHandleProps}
+                                  className="text-white/60 cursor-grab active:cursor-grabbing"
+                                  title="Drag to reorder"
+                                >
+                                  <DragIndicatorIcon fontSize="small" />
+                                </span>
+                                <span className="w-6 text-white/60 text-xs tabular-nums">{index + 1}</span>
+                                <span className="text-white hover:cursor-pointer"
+                                  onClick={()=>{
+                                    const id = e.id
+                                    const ev = events.find(x => x.id === id);
+                                    if (ev) {
+                                      setEventId(ev.id);
+                                      setTitle(ev.title || '');
+                                      setSubheading(ev.subheading || '');
+                                      setDescription(ev.description || '');
+                                      setStartDate(ev.start_date || '');
+                                      setEndDate(ev.end_date || '');
+                                      setStartTime(ev.start_time || '');
+                                      setCtaLabel(ev.cta_label || '');
+                                      setCtaHref(ev.cta_href || '');
+                                      setImageUrl(ev.image_url || null);
+                                    }
+                                    console.log(e.id)
+                                  }}
+                                >{e.title || '(untitled)'}</span>
+                              </div>
+                              <span className="text-xs text-white/40">
+                                <IconButton  aria-label="delete" onClick={() => {
+                                      setShowUpdateView(true)
+                                      setSelectedUpdateId(e.id)
+                                      const id = e.id
+                                      const ev = events.find(x => x.id === id);
+                                      if (ev) {
+                                        setEventId(ev.id);
+                                        setTitle(ev.title || '');
+                                        setSubheading(ev.subheading || '');
+                                        setDescription(ev.description || '');
+                                        setStartDate(ev.start_date || '');
+                                        setEndDate(ev.end_date || '');
+                                        setStartTime(ev.start_time || '');
+                                        setCtaLabel(ev.cta_label || '');
+                                        setCtaHref(ev.cta_href || '');
+                                        setImageUrl(ev.image_url || null);
+                                      }
+                                    }
+                                  }>
+                                  <EditIcon className='text-green-400 hover:text-green-500 transition duration-700 ease-in-out' />
+                                </IconButton>
+                                <IconButton  aria-label="delete" onClick={() => {
+                                    onDelete(e.id)
+                                  }
+                                }>
+                                  <DeleteIcon className='text-red-400 hover:text-red-500 transition duration-700 ease-in-out' />
+                                </IconButton>
+                              </span>
+                            </li>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                      {events.length === 0 && (
+                        <li className="p-3 text-sm text-white/60">No events yet.</li>
+                      )}
+                    </ul>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            )}
+          </div>
+        )}
+
+        {/* Update tab controls */}
+        {showUpdateView && (
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Select
@@ -370,6 +487,7 @@ export default function CMSPage() {
                   const id = String(e.target.value);
                   setSelectedUpdateId(id);
                   const ev = events.find(x => x.id === id);
+                  console.log("here ev", ev)
                   if (ev) {
                     setSelectedEvent(ev);
                     setEventId(ev.id);
@@ -379,9 +497,9 @@ export default function CMSPage() {
                     setStartDate(ev.start_date || '');
                     setEndDate(ev.end_date || '');
                     setStartTime(ev.start_time || '');
-                    setCtaLabel(ev.ctaLabel || '');
-                    setCtaHref(ev.ctaHref || '');
-                    setImageUrl(ev.imageDataUrl || null);
+                    setCtaLabel(ev.cta_label || '');
+                    setCtaHref(ev.cta_href || '');
+                    setImageUrl(ev.image_url || null);
                   }
                 }}
                 sx={{
@@ -422,140 +540,10 @@ export default function CMSPage() {
           </div>
         )}
 
-        {tab === 2 && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-white/80">Reorder events (drag rows)</div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={saveOrder}
-                  disabled={!hasOrderChanges}
-                  className="rounded-md bg-blue-500/90 hover:bg-blue-500 px-3 py-1.5 text-sm disabled:opacity-50"
-                >
-                  Save
-                </button>
-                <IconButton size="small" onClick={fetchEvents}>
-                  <RefreshIcon htmlColor="#9ca3af" fontSize="small" />
-                </IconButton>
-              </div>
-            </div>
-
-            {loadingEvents ? (
-              <div className="flex justify-center py-4"><CircularProgress size={20} /></div>
-            ) : (
-              <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="events-order">
-                  {(provided) => (
-                    <ul
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className="divide-y divide-white/10 rounded-lg h-[150px] md:h-[550px] overflow-scroll custom-scrollbar"
-                    >
-                      {events.map((e, index) => (
-                        <Draggable key={e.id} draggableId={e.id} index={index}>
-                          {(prov) => (
-                            <li
-                              ref={prov.innerRef}
-                              {...prov.draggableProps}
-                              className="flex items-center justify-between even:bg-[#151c2f] p-2  hover:bg-white/10"
-                            >
-                              <div className="flex items-center gap-3">
-                                <span
-                                  {...prov.dragHandleProps}
-                                  className="text-white/60 cursor-grab active:cursor-grabbing"
-                                  title="Drag to reorder"
-                                >
-                                  <DragIndicatorIcon fontSize="small" />
-                                </span>
-                                <span className="w-6 text-white/60 text-xs tabular-nums">{index + 1}</span>
-                                <span className="text-white">{e.title || '(untitled)'}</span>
-                              </div>
-                              <span className="text-xs text-white/40">{e.id}</span>
-                            </li>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                      {events.length === 0 && (
-                        <li className="p-3 text-sm text-white/60">No events yet.</li>
-                      )}
-                    </ul>
-                  )}
-                </Droppable>
-              </DragDropContext>
-            )}
-          </div>
-        )}
-
-        {/* Delete tab content */}
-        {tab === 3 && (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-white/80">Delete events</div>
-              <IconButton size="small" onClick={()=>{
-                fetchEvents()
-                resetAll()
-              }}>
-                <RefreshIcon htmlColor="#9ca3af" fontSize="small" />
-              </IconButton>
-            </div>
-            {loadingEvents ? (
-              <div className="flex justify-center py-4"><CircularProgress size={20} /></div>
-            ) : (
-              <List dense 
-                className="h-[150px] md:h-[600px] overflow-scroll custom-scrollbar"
-              >
-                {events.map(e => (
-                  <ListItem
-                    className=''
-                    key={e.id}
-                    secondaryAction={
-                      <IconButton edge="end" aria-label="delete" onClick={() => {
-                        onDelete(e.id)
-                      }
-                      }>
-                        <DeleteIcon htmlColor="#fca5a5" />
-                      </IconButton>
-                    }
-                    onClick={()=>{
-                      const id = e.id
-                      setSelectedUpdateId(id);
-                      const ev = events.find(x => x.id === id);
-                      if (ev) {
-                        setEventId(ev.id);
-                        setTitle(ev.title || '');
-                        setSubheading(ev.subheading || '');
-                        setDescription(ev.description || '');
-                        setStartDate(ev.startDate || '');
-                        setEndDate(ev.endDate || '');
-                        setStartTime(ev.startTime || '');
-                        setCtaLabel(ev.ctaLabel || '');
-                        setCtaHref(ev.ctaHref || '');
-                        setImageUrl(ev.imageDataUrl || null);
-                      }
-                      console.log(e.id)
-                    }}
-                  >
-                    <ListItemText
-                      primary={e.title || '(untitled)'}
-                      secondary={e.id}
-                      primaryTypographyProps={{ color: '#fff' }}
-                      secondaryTypographyProps={{ color: 'rgba(255,255,255,0.5)' }}
-                    />
-                  </ListItem>
-                ))}
-                {events.length === 0 && (
-                  <div className="text-white/60 text-sm px-2 py-4">No events yet.</div>
-                )}
-              </List>
-            )}
-          </div>
-        )}
-
         {canShowForm && (
-          <>
+          <div className='md:h-[90%] overflow-scroll custom-scrollbar'>
             <div
-              className="border border-dashed rounded-xl h-48 flex items-center justify-center relative hover:border-white/60 transition-colors cursor-pointer group"
+              className="border border-dashed rounded-xl h-32 flex items-center justify-center relative hover:border-white/60 transition-colors cursor-pointer group"
               onClick={onPickClick}
               onDrop={onDrop}
               onDragOver={onDragOver}
@@ -600,14 +588,23 @@ export default function CMSPage() {
             <div className="text-xs text-white/60"><div className="mt-1">{description.length} chars</div></div>
 
             <div className="flex gap-2 pt-2">
-              <button onClick={onSave} className="px-3 py-2 rounded-lg bg-emerald-500/90 hover:bg-emerald-500 text-black font-medium">
-                {tab === 0 || !eventId ? 'Create' : 'Update'}
+              <button onClick={onSave} 
+                disabled={buttonLoading}
+                className="px-3 py-2 rounded-lg bg-green-400 hover:bg-green-500 hover:cursor-pointer text-black font-medium disabled:cursor-not-allowed">
+                  {buttonLoading ? (
+                    <span className="inline-flex items-center gap-2">
+                      {tab === 0 || !eventId ? 'Creating…' : 'Updating…'}
+                      <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 004 12z"/></svg>
+                    </span>
+                  ) : (
+                    tab === 0 || !eventId ? 'Create' : 'Update'
+                  )}
               </button>
-              <button onClick={resetAll} className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white">
+              <button onClick={resetAll} className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white hover:cursor-pointer">
                 Clear
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
 
@@ -620,14 +617,8 @@ export default function CMSPage() {
             container="contained"
             open={modalOpen}
             onClose={() => setDismissed(true)}
-            imageUrl={imageUrl || undefined}
-            title={title || ''}
-            subheading={subheading}
-            description={description}
-            dateRange={formatDateRange(startDate, endDate)}
-            timeText={to12h(startTime)}
-            ctaLabel={ctaLabel}
-            ctaHref={ctaHref}
+            events={previewEvents}
+            initialIndex={Math.max(0, previewEvents.findIndex(x => x.title === title))}
           />
         </div>
 
@@ -698,7 +689,8 @@ function formatDateRange(start?: string, end?: string) {
   if (!start && !end) return '';
   if (start && !end) return pretty(start);
   if (!start && end) return pretty(end);
-  const sd = new Date(start!); const ed = new Date(end!);
+  const sd = new Date(start!); 
+  const ed = new Date(end!);
   if (isNaN(sd.getTime()) || isNaN(ed.getTime())) return '';
   const sameMonth = sd.getFullYear() === ed.getFullYear() && sd.getMonth() === ed.getMonth();
   if (sameMonth) {
@@ -707,16 +699,21 @@ function formatDateRange(start?: string, end?: string) {
   }
   return `${pretty(start!)} – ${pretty(end!)}`;
 }
+
 function pretty(s: string) {
-  const d = new Date(s); if (isNaN(d.getTime())) return '';
+  const d = new Date(s); 
+  if (isNaN(d.getTime())) return '';
+
   return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 }
+
 function to12h(t?: string) {
   if (!t) return '';
   const [h, m] = t.split(':').map(Number);
   const d = new Date(); d.setHours(h ?? 0, m ?? 0, 0, 0);
   return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 }
+
 function fileToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

@@ -1,51 +1,68 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
+
+export type EventItem = {
+  imageUrl?: string;
+  title: string;
+  subheading?: string;
+  description?: string;
+  dateRange?: string;
+  timeText?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+};
 
 type Props = {
   open: boolean;
   onClose: () => void;
-
-  imageUrl?: string;
-  title: string;
-  subheading?: string;     
-  description?: string;
-  dateRange?: string;
-  timeText?: string;
-
-  ctaLabel?: string;
-  ctaHref?: string;
-
+  events: EventItem[];
   container?: 'contained' | 'fullscreen';
+  initialIndex?: number;
 };
 
 export default function EventModalOverlay({
   open,
   onClose,
-  imageUrl,
-  title,
-  subheading,         
-  description,
-  dateRange,
-  timeText,
-  ctaLabel,
-  ctaHref,
+  events,
   container = 'contained',
+  initialIndex = 0,
 }: Props) {
-  if (!open) return null;
+  const [index, setIndex] = useState(() =>
+    Math.min(Math.max(initialIndex, 0), Math.max(0, (events?.length ?? 1) - 1))
+  );
 
+  useEffect(() => {
+    setIndex(Math.min(Math.max(initialIndex, 0), Math.max(0, (events?.length ?? 1) - 1)));
+  }, [events, initialIndex, open]);
+
+  useEffect(() => {
+    if (!open || (events?.length ?? 0) < 1) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') setIndex((i) => (i - 1 + events.length) % events.length);
+      if (e.key === 'ArrowRight') setIndex((i) => (i + 1) % events.length);
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, events, onClose]);
+
+  const hasEvents = (events?.length ?? 0) > 0;
+  if (!open || !hasEvents) return null;
+  
   const pos = container === 'contained' ? 'absolute' : 'fixed';
   const z   = container === 'contained' ? 'z-10' : 'z-[9999]';
+  const current = events[index];
+
+  const prev = () => setIndex((i) => (i - 1 + events.length) % events.length);
+  const next = () => setIndex((i) => (i + 1) % events.length);
 
   return (
-    <div className={`${pos} inset-0 ${z} flex items-center justify-center`}>
-      <div className={`${pos} inset-0 bg-black/60 backdrop-blur-[1px]`}
-        onClick={onClose}
-      />  
+    <div className={`${pos} inset-0 ${z} flex items-center justify-center`} role="dialog" aria-modal="true">
+      <div className={`${pos} inset-0 bg-black/60 backdrop-blur-[1px]`} onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-[560px] rounded-2xl bg-white shadow-2xl"
-        onClick={(e)=> e.stopPropagation()}
-      >
+      <div className="relative z-10 w-full max-w-[560px] rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={onClose}
           aria-label="Close"
@@ -54,12 +71,31 @@ export default function EventModalOverlay({
           ×
         </button>
 
+        {events.length > 1 && (
+          <>
+            <button
+              aria-label="Previous"
+              onClick={prev}
+              className="absolute left-2 top-1/2 z-[50] -translate-y-1/2 rounded-full bg-black/30 text-white h-8 w-8 grid place-items-center hover:bg-black/40"
+            >
+              ‹
+            </button>
+            <button
+              aria-label="Next"
+              onClick={next}
+              className="absolute right-2 top-1/2 z-[50] -translate-y-1/2 rounded-full bg-black/30 text-white h-8 w-8 grid place-items-center hover:bg-black/40"
+            >
+              ›
+            </button>
+          </>
+        )}
+
         <div className="px-5 pb-5 pt-6">
-          {imageUrl && (
+          {current.imageUrl && (
             <div className="relative mx-auto mb-4 h-32 w-full overflow-hidden rounded-xl sm:h-36">
               <Image
-                src={imageUrl}
-                alt=""
+                src={current.imageUrl}
+                alt={current.title || ''}
                 fill
                 unoptimized
                 className="object-cover"
@@ -69,56 +105,73 @@ export default function EventModalOverlay({
             </div>
           )}
 
-          {/* Title */}
-          <h2 className="text-center text-neutral-600 text-3xl font-semibold tracking-tight whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">{title}</h2>
+          <h2 className="text-center text-neutral-600 text-3xl font-semibold tracking-tight whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">
+            {current.title}
+          </h2>
 
-          {/* Subheading */}
-          {!!subheading && (
-            <p className="mt-1 text-center text-sm text-neutral-600 whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">{subheading}</p>
+          {!!current.subheading && (
+            <p className="mt-1 text-center text-sm text-neutral-600 whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">
+              {current.subheading}
+            </p>
           )}
 
-          {(dateRange || timeText) && (
+          {(current.dateRange || current.timeText) && (
             <div className="mt-2 flex items-center justify-center gap-5 text-sm text-neutral-700">
-              {dateRange && (
+              {current.dateRange && (
                 <span className="inline-flex items-center gap-1.5">
                   <span className="inline-block h-5 w-5 rounded-[4px] border border-neutral-400" />
-                  {dateRange}
+                  {current.dateRange}
                 </span>
               )}
-              {timeText && (
+              {current.timeText && (
                 <span className="inline-flex items-center gap-1.5">
                   <span className="inline-block h-5 w-5 rounded-full border border-neutral-400" />
-                  {timeText}
+                  {current.timeText}
                 </span>
               )}
             </div>
           )}
 
-          {!!description && (
+          {!!current.description && (
             <div className="mt-4 max-h-56 overflow-y-auto">
-              <p className="text-sm leading-relaxed text-neutral-800
-                          whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">
-                {description}
+              <p className="text-sm leading-relaxed text-neutral-800 whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">
+                {current.description}
               </p>
             </div>
           )}
 
-          {(ctaLabel || ctaHref) && (
+          {(current.ctaLabel || current.ctaHref) && (
             <div className="mt-6 flex justify-center">
-              {ctaHref ? (
+              {current.ctaHref ? (
                 <a
-                  href={ctaHref}
+                  href={current.ctaHref}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center justify-center rounded-full bg-red-600 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow hover:opacity-95"
                 >
-                  {ctaLabel}
+                  {current.ctaLabel ?? 'Learn more'}
                 </a>
               ) : (
                 <button className="inline-flex items-center justify-center rounded-full bg-red-600 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow hover:opacity-95">
-                  {ctaLabel}
+                  {current.ctaLabel ?? 'Learn more'}
                 </button>
               )}
+            </div>
+          )}
+
+          {events.length > 1 && (
+            <div className="mt-4 flex items-center justify-center gap-2">
+              {/* <span className="mr-2 text-xs text-neutral-500 tabular-nums">
+                {index + 1}/{events.length}
+              </span> */}
+              {events.map((_, i) => (
+                <button
+                  key={i}
+                  aria-label={`Go to slide ${i + 1}`}
+                  onClick={() => setIndex(i)}
+                  className={`h-2 w-2 rounded-full ${i === index ? 'bg-neutral-900' : 'bg-neutral-300'}`}
+                />
+              ))}
             </div>
           )}
         </div>

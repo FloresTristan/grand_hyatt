@@ -4,15 +4,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import grandhyattmodel from '../assets/grandhyatt.png';
-import { auth } from '../../../lib/firebase/client';
 import { useRouter, usePathname } from 'next/navigation';
-import { signOut } from 'firebase/auth';
+import { supabase } from '../../../lib/supabase/client';
 
-export default function NavBar() {
+type Role = 'admin' | 'editor';
+
+export default function NavBar({ role = 'editor' }: { role?: Role }) {
   const r = useRouter();
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 0);
@@ -32,11 +34,8 @@ export default function NavBar() {
 
   async function logout() {
     try {
-      await fetch('/api/auth/sessionLogout', { method: 'POST', credentials: 'same-origin' });
-    } catch (e) {
-      console.error('logout cookie clear failed', e);
+      await supabase.auth.signOut(); 
     } finally {
-      await signOut(auth);
       r.replace('/login');
     }
   }
@@ -69,20 +68,39 @@ export default function NavBar() {
               Seasons
             </Link>
           </li>
-          <li>
-            <Link
-              href="/admin/users"
-              className="rounded-md border-2 border-transparent px-3 py-2 hover:border-blue-500 transition"
-            >
-              Users
-            </Link>
-          </li>
+          {role === 'admin' && (
+            <li>
+              <Link 
+                href="/admin/users" 
+                className="rounded-md border-2 border-transparent px-3 py-2 hover:border-blue-500"
+              >
+                Users
+              </Link>
+            </li>
+          )}
           <li>
             <button
-              onClick={logout}
-              className="ml-2 rounded-lg bg-red-600 px-3 py-2 text-sm hover:opacity-95"
+              onClick={async () => {
+                if (loggingOut) return;       
+                setLoggingOut(true);
+                try {
+                  await logout();                 
+                } finally {
+                  setLoggingOut(false);
+                }
+              }}
+              className="ml-2 rounded-lg bg-red-500 px-3 py-2 text-sm hover:opacity-95 hover:cursor-pointer"
             >
-              Logout
+              {loggingOut ? (
+                <span className="inline-flex items-center px-3 gap-2">
+                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 004 12z" />
+                  </svg>
+                </span>
+              ) : (
+                'Logout'
+              )}
             </button>
           </li>
         </ul>

@@ -30,7 +30,8 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 0.5px; /* Adjust width as needed */
+  width: 0.5px; 
+  height: 0.5px;/* Adjust width as needed */
 }
 
 /* Target the scrollbar track (background) */

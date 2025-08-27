@@ -127,9 +127,8 @@ export default function UsersPage() {
   return (
     <div className="min-h-screen bg-[#151c2f] text-white p-6">
       <div className="mx-auto max-w-5xl space-y-4">
-        <header className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Users</h1>
-          <div className="flex items-center gap-2">
+        <header className="md:flex flex-col md:flex-row items-center justify-end">
+          <div className="flex justify-center items-center gap-2">
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
@@ -147,9 +146,9 @@ export default function UsersPage() {
 
         {err && <div className="text-sm text-red-300">{err}</div>}
 
-        <div className="overflow-hidden rounded-xl border border-white/10 bg-[#212e3f]">
+        <div className="h-[60vh] rounded-xl border overflow-scroll custom-scrollbar border-white/10 bg-[#212e3f]">
           <table className="w-full text-sm">
-            <thead className="bg-white/5">
+            <thead className="bg-white/5 ">
               <tr>
                 <Th>Email</Th>
                 <Th>Name</Th>
@@ -165,7 +164,7 @@ export default function UsersPage() {
                 <tr><td colSpan={6} className="p-6 text-center text-white/60">No users found.</td></tr>
               ) : (
                 filtered.map((u) => (
-                  <tr key={u.uid} className="border-t border-white/10">
+                  <tr key={u.uid} className="border-t border-white/10 even:bg-white/5">
                     <Td>{u.email}</Td>
                     <Td>{u.displayName || '—'}</Td>
                     <Td><RoleBadge role={u.role} /></Td>

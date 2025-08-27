@@ -27,8 +27,10 @@ export async function POST(req: Request) {
     start_date: body.startDate || null,
     end_date: body.endDate || null,
     start_time: body.startTime || null,
-    cta_label: body.ctaLabel, cta_href: body.ctaHref,
-    image_url: body.imageUrl || null,
+    cta_label: body.ctaLabel, 
+    cta_href: body.ctaHref,
+    image_url: body.image_url || null,
+    image_path: body.image_path || null,
     status: body.status || 'draft',
     order: body.order ?? 0,
     updated_by: user.id

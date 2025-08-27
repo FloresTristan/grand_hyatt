@@ -13,13 +13,13 @@ export default function Home() {
             container="fullscreen"
             open={true}
             onClose={() => setForceOpen(false)}
-            imageUrl={imageUrl || undefined}
-            title={title || 'Event Title'}
-            description={description}
-            dateRange={formatDateRange(startDate, endDate)}
-            timeText={to12h(startTime)}
-            ctaLabel={ctaLabel}
-            ctaHref={ctaHref}
+            imageUrl={"undefined"}
+            title={ 'Event Title'}
+            description={"dfgdfgdf"}
+            dateRange={"null"}
+            timeText={"null"}
+            ctaLabel={"ctaLabel"}
+            ctaHref={"ctaHref"}
           /> */}
       <Image src={grandhyattmodel} alt="sample" placeholder="blur" quality={100} objectFit="cover" layout="fill" />
     </div>

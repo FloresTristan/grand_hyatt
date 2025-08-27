@@ -29,7 +29,8 @@ export async function PATCH(req: Request, ctx: Ctx) {
     start_time: body.startTime,
     cta_label: body.ctaLabel,
     cta_href: body.ctaHref,
-    image_url: body.imageUrl,
+    image_url: body.image_url,
+    image_path: body.image_path,
     status: body.status,
     order: typeof body.order === 'number' ? body.order : undefined,
     updated_at: new Date().toISOString(),
@@ -43,10 +44,25 @@ export async function PATCH(req: Request, ctx: Ctx) {
   return NextResponse.json({ ok: true, id });
 }
 
-export async function DELETE(_req: Request, ctx: Ctx) {
-  const { id } = await ctx.params;
+export async function DELETE(
+  _req: Request,
+  ctx: { params: Promise<Params> } 
+) {
+  const { id } = await ctx.params; 
   const supabase = await createSupabaseServer();
+
+  const { data: ev } = await supabase
+    .from('events')
+    .select('image_path')
+    .eq('id', id)
+    .single();
+
   const { error } = await supabase.from('events').delete().eq('id', id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  if (ev?.image_path) {
+    await supabase.storage.from('events').remove([ev.image_path]).catch(() => {});
+  }
+
   return NextResponse.json({ ok: true });
 }
