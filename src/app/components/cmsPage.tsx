@@ -8,13 +8,14 @@ import { uploadEventImage } from '../../../lib/images/uploadEventImages.ts'
 // MUI
 import {
   Tabs, Tab, Box, Select, MenuItem,
-  IconButton, CircularProgress,
+  IconButton, CircularProgress, 
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import EditIcon from '@mui/icons-material/EditOutlined';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import SnackbarComponent from './Snackbar';
 
 export default function CMSPage() {
   const [title, setTitle] = useState('');
@@ -44,6 +45,11 @@ export default function CMSPage() {
 
   const [showUpdateView, setShowUpdateView] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [snackbarSettings, setSnackbarSettings] = useState({
+    open: false,
+    message: '',
+    severity: ''
+  })
 
   const DRAFT_KEY = 'cmsDraft_v1';
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -195,7 +201,6 @@ export default function CMSPage() {
     setHasOrderChanges(true);
   }
 
-// Save new order to Firestore
   async function saveOrder() {
     try {
       setButtonLoading(true)
@@ -292,17 +297,19 @@ export default function CMSPage() {
     try {
       const res = await fetch(`/api/events/${id}`, { method: 'DELETE' });
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || 'Delete failed');
+      if (!res.ok){
+        throw new Error(data?.error || 'Delete failed')
+      };
+
       setEvents(prev => prev.filter(e => e.id !== id));
       if (eventId === id) { setEventId(null); }
     } catch (e: unknown) {
-      alert(e.message || 'Delete failed');
+      alert(e.message || 'Delete failed')
     }
   }
   
   console.log('id', eventId)
-
-  const previewEvents = events.map(e => ({
+  const dbEvents = events.map(e => ({
     imageUrl: e.image_url ?? undefined,
     title: e.title ?? '(untitled)',
     subheading: e.subheading ?? '',
@@ -312,6 +319,31 @@ export default function CMSPage() {
     ctaLabel: e.cta_label ?? '',
     ctaHref: e.cta_href ?? '',
   }));
+
+  const formEvent = {
+    imageUrl: imageUrl ?? undefined,
+    title: title?.trim() || '(untitled)',
+    subheading: subheading || '',
+    description: description || '',
+    dateRange: formatDateRange(startDate, endDate),
+    timeText: to12h(startTime),
+    ctaLabel: ctaLabel || '',
+    ctaHref: ctaHref || '',
+  };
+
+  const hasFormContent =
+    (title?.trim()?.length ?? 0) > 0 ||
+    (subheading?.trim()?.length ?? 0) > 0 ||
+    (description?.trim()?.length ?? 0) > 0 ||
+    !!startDate || !!endDate || !!startTime ||
+    (ctaLabel?.trim()?.length ?? 0) > 0 ||
+    (ctaHref?.trim()?.length ?? 0) > 0 ||
+    !!imageUrl;
+
+  const previewEvents =
+    tab === 0
+      ? (hasFormContent ? [formEvent, ...dbEvents] : dbEvents)
+      : (selectedUpdateId ? [formEvent] : dbEvents);
 
   const dateError =
     startDate && endDate && new Date(endDate) < new Date(startDate)
@@ -335,6 +367,7 @@ export default function CMSPage() {
               setTab(v);
               resetAll();
               setSelectedUpdateId('')
+              setEvents([])
               if (v === 0) setEventId(null);
             }}
             variant="fullWidth"
@@ -633,6 +666,7 @@ export default function CMSPage() {
           </label> */}
         </div>
       </div>
+      <SnackbarComponent open={true} message={"hello"} severity={"success"}/>
     </div>
   );
 }
