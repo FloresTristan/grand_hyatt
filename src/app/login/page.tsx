@@ -68,6 +68,7 @@ export default function Login() {
             <input
               name="email"
               id="email"
+              required
               autoComplete="email"
               className="rounded-lg bg-[#151c2f] focus:outline-none border border-[#151c2f] focus:border-blue-500 p-2"
             />
@@ -79,6 +80,7 @@ export default function Login() {
               name="password"
               id="password"
               type="password"
+              required
               autoComplete="current-password"
               className="rounded-lg bg-[#151c2f] focus:outline-none border border-[#151c2f] focus:border-blue-500 p-2"
             />
@@ -88,16 +90,26 @@ export default function Login() {
             <button
               type="button"
               onClick={onForgotPassword}
-              className="text-blue-400 hover:underline disabled:opacity-60"
+              className="text-blue-400  hover:underline disabled:opacity-60"
               disabled={loading}
             >
               Forgot password?
             </button>
             <button
               disabled={loading}
-              className="md:w-[40%] lg:w-[15%] rounded-lg bg-blue-600 p-2 text-sm cursor-pointer disabled:opacity-60"
+              className="w-[35%] md:w-[30%] xl:w-[20%]  rounded-lg bg-blue-600 p-2 text-sm cursor-pointer disabled:opacity-60"
             >
-              {loading ? '...' : 'Log in'}
+              {/* {loading ? '...' : 'Log in'} */}
+              {loading ? (
+                <span className="inline-flex items-center px-3 gap-2">
+                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 004 12z" />
+                  </svg>
+                </span>
+              ) : (
+                'Login'
+              )}
             </button>
           </div>
         </form>

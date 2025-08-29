@@ -322,7 +322,7 @@ function UserFormModal({
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={mode === 'edit'}
                   required
-                  className="w-full rounded-lg border border-neutral-200 px-3 py-2 outline-none focus:border-neutral-400 disabled:bg-neutral-100"
+                  className="w-full rounded-lg border border-neutral-200 px-3 py-2 outline-none focus:border-neutral-400 disabled:bg-neutral-700"
                 />
               </label>
 
@@ -390,7 +390,17 @@ function UserFormModal({
                   disabled={busy}
                   className="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-60"
                 >
-                  {busy ? 'Saving…' : (mode === 'create' ? 'Create' : 'Save')}
+                  {/* {busy ? 'Saving…' : (mode === 'create' ? 'Create' : 'Save')} */}
+                  {busy ? (
+                    <span className="inline-flex items-center px-3 gap-2">
+                      <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 004 12z" />
+                      </svg>
+                    </span>
+                  ) : (
+                    'Save'
+                  )}
                 </button>
               </div>
             </form>

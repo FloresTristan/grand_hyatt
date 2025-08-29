@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabase/client';
 
@@ -11,6 +11,12 @@ export default function FirstUserPage() {
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) r.replace('/admin');
+    });
+  }, [r]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();

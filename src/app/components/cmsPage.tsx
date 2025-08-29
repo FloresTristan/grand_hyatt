@@ -15,7 +15,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import EditIcon from '@mui/icons-material/EditOutlined';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import SnackbarComponent from './Snackbar';
+import SnackbarComponent, {SnackbarSettings} from './Snackbar';
 
 export default function CMSPage() {
   const [title, setTitle] = useState('');
@@ -45,11 +45,12 @@ export default function CMSPage() {
 
   const [showUpdateView, setShowUpdateView] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
-  const [snackbarSettings, setSnackbarSettings] = useState({
+  const [snackbarSettings, setSnackbarSettings] = useState<SnackbarSettings>({
     open: false,
     message: '',
-    severity: ''
-  })
+    severity: '',
+  });
+    const [pendingDeleteId, setPendingDeleteId] = useState(null);
 
   const DRAFT_KEY = 'cmsDraft_v1';
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -211,22 +212,47 @@ export default function CMSPage() {
         body: JSON.stringify({ ids }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || 'Reorder failed');
+      if (!res.ok){
+        setSnackbarSettings((prev) => ({...prev,
+          open: true,
+          message: 'Event Reorder failed',
+          severity: 'error'
+        }))
+        throw new Error(data?.error || 'Reorder failed')
+      } else {
+        setSnackbarSettings((prev) => ({...prev,
+          open: true,
+          message: 'Event Order Saved',
+          severity: 'success'
+        }))
+      }
       setHasOrderChanges(false);
-      alert('Order saved');
     } catch (e: unknown) {
-      alert(e.message || 'Save failed');
+      setSnackbarSettings((prev) => ({...prev,
+        open: true,
+        message: e.message || 'Event Reorder failed',
+        severity: 'error'
+      }))
     }
     setButtonLoading(false)
   }
-  useEffect(() => { if (tab !== 0) fetchEvents(); }, [tab]);
-  // fetchEvents()
+
+  useEffect(() => { 
+      if (tab !== 0){
+        fetchEvents()
+      };
+  }, [tab]);
+
   console.log(events)
 
   async function onSave() {
     try {
       if (title=='' || title == null){
-        alert("Title needed")
+        setSnackbarSettings((prev) => ({...prev,
+          open: true,
+          message: 'Title Needed',
+          severity: 'error'
+        }))
         return
       }
 
@@ -266,12 +292,26 @@ export default function CMSPage() {
           body: JSON.stringify(payload),
         });
         data = await res.json();
-        if (!res.ok) throw new Error(data?.error || 'Create failed');
+        if (!res.ok) {
+          setSnackbarSettings((prev) => ({...prev,
+            open: true,
+            message: 'Event Creation failed',
+            severity: 'error'
+          }))
+          throw new Error(data?.error || 'Create failed')
+        } else {
+          const raw = localStorage.getItem(DRAFT_KEY);
+          const s = raw ? JSON.parse(raw) : {};
+          localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...s, eventId: data.id }));
+          if (tab === 0){
+            setSnackbarSettings((prev) => ({...prev,
+              open: true,
+              message: 'Event Created Successfully',
+              severity: 'success'
+            }))
+          };
+        }
 
-        const raw = localStorage.getItem(DRAFT_KEY);
-        const s = raw ? JSON.parse(raw) : {};
-        localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...s, eventId: data.id }));
-        if (tab === 0) alert('Created!');
       } else {
         res = await fetch(`/api/events/${eventId}`, {
           method: 'PATCH',
@@ -279,13 +319,29 @@ export default function CMSPage() {
           body: JSON.stringify(payload),
         });
         data = await res.json();
-        if (!res.ok) throw new Error(data?.error || 'Update failed');
-        alert('Updated!');
+        if (!res.ok) {
+          setSnackbarSettings((prev) => ({...prev,
+            open: true,
+            message: 'Event Update failed',
+            severity: 'error'
+          }))
+          throw new Error(data?.error || 'Update failed')
+        }else{
+          setSnackbarSettings((prev) => ({...prev,
+            open: true,
+            message: 'Event Updated Successfully',
+            severity: 'success'
+          }))
+        }
       }
       if (tab !== 0) fetchEvents();
       if (image_url) setImageUrl(image_url);
     } catch (e: unknown) {
-      alert(e.message || 'Save failed');
+        setSnackbarSettings((prev) => ({...prev,
+          open: true,
+          message: e.message || 'Save failed',
+          severity: 'error'
+        }))
     }
     setButtonLoading(false)
     resetAll();
@@ -293,19 +349,46 @@ export default function CMSPage() {
   console.log(selectedEvent)
 
   async function onDelete(id: string) {
-    if (!confirm('Delete this event?')) return;
-    try {
-      const res = await fetch(`/api/events/${id}`, { method: 'DELETE' });
-      const data = await res.json();
-      if (!res.ok){
-        throw new Error(data?.error || 'Delete failed')
-      };
-
-      setEvents(prev => prev.filter(e => e.id !== id));
-      if (eventId === id) { setEventId(null); }
-    } catch (e: unknown) {
-      alert(e.message || 'Delete failed')
-    }
+    setPendingDeleteId(id); 
+    setSnackbarSettings({
+      open: true,
+      message: 'Are you sure you want to delete this event?',
+      severity: 'warning',
+      actionLabel: 'Delete',
+      duration: 10000,
+      actionCallback: async () => {
+        try {
+          const res = await fetch(`/api/events/${id}`, { method: 'DELETE' });
+          const data = await res.json();
+          if (!res.ok) {
+            setSnackbarSettings({
+              open: true,
+              message: 'Delete Event failed',
+              severity: 'error',
+            });
+            throw new Error(data?.error || 'Delete failed');
+          } else {
+            setSnackbarSettings({
+              open: true,
+              message: 'Event Deleted Successfully',
+              severity: 'success',
+            });
+            setEvents((prev) => prev.filter((e) => e.id !== id));
+            if (eventId === id) {
+              setEventId(null);
+            }
+          }
+        } catch (e: unknown) {
+          setSnackbarSettings({
+            open: true,
+            message: (e instanceof Error ? e.message : 'Delete failed'),
+            severity: 'error',
+          });
+        } finally {
+          setPendingDeleteId(null); 
+        }
+      },
+    });
   }
   
   console.log('id', eventId)
@@ -605,6 +688,7 @@ export default function CMSPage() {
             <label className="block">
               <div className="text-sm mb-1 text-white/80">Start time</div>
               <input
+                style={{ colorScheme: 'dark' }}
                 type="time"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
@@ -666,7 +750,7 @@ export default function CMSPage() {
           </label> */}
         </div>
       </div>
-      <SnackbarComponent open={true} message={"hello"} severity={"success"}/>
+      <SnackbarComponent snackbarSettings={snackbarSettings} setSnackbarSettings={setSnackbarSettings}/>
     </div>
   );
 }
@@ -693,7 +777,7 @@ function LabeledDate({ label, value, onChange, min, max }: { label: string; valu
   return (
     <label className="block">
       <div className="text-sm mb-1 text-white/80">{label}</div>
-      <input type="date" value={value} min={min} max={max} onChange={(e) => onChange(e.target.value)} className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
+      <input style={{ colorScheme: 'dark' }} type="date" value={value} min={min} max={max} onChange={(e) => onChange(e.target.value)} className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
     </label>
   );
 }
