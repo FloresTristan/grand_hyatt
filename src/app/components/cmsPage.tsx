@@ -50,7 +50,7 @@ export default function CMSPage() {
     message: '',
     severity: '',
   });
-    const [pendingDeleteId, setPendingDeleteId] = useState(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
 
   const DRAFT_KEY = 'cmsDraft_v1';
   const inputRef = useRef<HTMLInputElement | null>(null);
