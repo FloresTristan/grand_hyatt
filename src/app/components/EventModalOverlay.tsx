@@ -91,7 +91,7 @@ export default function EventModalOverlay({
         )}
 
         <div className="px-5 pb-5 pt-6">
-          {current.imageUrl && (
+          {current?.imageUrl && (
             <div className="relative mx-auto mb-4 h-32 w-full overflow-hidden rounded-xl sm:h-36">
               <Image
                 src={current.imageUrl}
@@ -106,54 +106,54 @@ export default function EventModalOverlay({
           )}
 
           <h2 className="text-center text-neutral-600 text-3xl font-semibold tracking-tight whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">
-            {current.title}
+            {current?.title}
           </h2>
 
-          {!!current.subheading && (
+          {!!current?.subheading && (
             <p className="mt-1 text-center text-sm text-neutral-600 whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">
-              {current.subheading}
+              {current?.subheading}
             </p>
           )}
 
-          {(current.dateRange || current.timeText) && (
+          {(current?.dateRange || current?.timeText) && (
             <div className="mt-2 flex items-center justify-center gap-5 text-sm text-neutral-700">
-              {current.dateRange && (
+              {current?.dateRange && (
                 <span className="inline-flex items-center gap-1.5">
                   <span className="inline-block h-5 w-5 rounded-[4px] border border-neutral-400" />
-                  {current.dateRange}
+                  {current?.dateRange}
                 </span>
               )}
-              {current.timeText && (
+              {current?.timeText && (
                 <span className="inline-flex items-center gap-1.5">
                   <span className="inline-block h-5 w-5 rounded-full border border-neutral-400" />
-                  {current.timeText}
+                  {current?.timeText}
                 </span>
               )}
             </div>
           )}
 
-          {!!current.description && (
+          {!!current?.description && (
             <div className="mt-4 max-h-56 overflow-y-auto">
               <p className="text-sm leading-relaxed text-neutral-800 whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">
-                {current.description}
+                {current?.description}
               </p>
             </div>
           )}
 
-          {(current.ctaLabel || current.ctaHref) && (
+          {(current?.ctaLabel || current?.ctaHref) && (
             <div className="mt-6 flex justify-center">
-              {current.ctaHref ? (
+              {current?.ctaHref ? (
                 <a
-                  href={current.ctaHref}
+                  href={current?.ctaHref}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center justify-center rounded-full bg-red-600 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow hover:opacity-95"
                 >
-                  {current.ctaLabel ?? 'Learn more'}
+                  {current?.ctaLabel ?? 'Learn more'}
                 </a>
               ) : (
                 <button className="inline-flex items-center justify-center rounded-full bg-red-600 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow hover:opacity-95">
-                  {current.ctaLabel ?? 'Learn more'}
+                  {current?.ctaLabel ?? 'Learn more'}
                 </button>
               )}
             </div>
