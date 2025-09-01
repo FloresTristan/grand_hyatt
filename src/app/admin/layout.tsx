@@ -2,26 +2,26 @@ import { ReactNode } from 'react';
 import { redirect, notFound } from 'next/navigation';
 import NavBar from '../components/navbar';
 import { createSupabaseAdmin } from '../../../lib/supabase/admin';
-import { createSupabaseServer } from '../../../lib/supabase/server.ts'
+import { createSupabaseServer } from '../../../lib/supabase/server'
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const admin = createSupabaseAdmin();
   const { count: profilesCount, error: profilesErr } = await admin
-    .from('profiles')                      
+    .from('profiles')
     .select('id', { head: true, count: 'exact' });
   if (profilesErr) {
     console.log("error", profilesErr)
   }
   if ((profilesCount ?? 0) === 0) {
     redirect('/signup'); 
-    console.log(count)
+    console.log(profilesCount)
   }
 
   const supabase = await createSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  const role = (user.app_metadata as unknown)?.role ?? 'user';
+  const role = (user.app_metadata as { role?: string })?.role ?? 'user';
   if (role !== 'admin' && role !== 'editor') notFound();
 
   return (
