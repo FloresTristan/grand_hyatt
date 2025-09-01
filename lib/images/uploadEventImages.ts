@@ -1,8 +1,14 @@
 import { supabase } from '../supabase/client';
+import * as nodeCrypto from 'crypto';
 
 export async function uploadEventImage(file: File, opts?: { oldPath?: string }) {
   const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-  const key = `${crypto.randomUUID()}.${ext}`; 
+  const key = `${(
+    typeof window === 'undefined'
+      ? nodeCrypto.randomUUID()
+      : crypto.randomUUID()
+  )}.${ext}`;
+
   const path = `events/${key}`;
 
   const { error: upErr } = await supabase
