@@ -2,11 +2,11 @@
   "version": 1,
   "functions": {
     "/api/admin/users": {},
-    "/api/admin/users/create": {},
-    "/api/admin/users/[uid]": {},
     "/api/bootstrap/create-first-admin": {},
+    "/api/admin/users/[uid]": {},
+    "/api/admin/users/create": {},
+    "/api/events": {},
     "/api/events/reorder": {},
-    "/api/events/[id]": {},
-    "/api/events": {}
+    "/api/events/[id]": {}
   }
 }
