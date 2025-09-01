@@ -1,13 +1,9 @@
 import { supabase } from '../supabase/client';
-import * as nodeCrypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function uploadEventImage(file: File, opts?: { oldPath?: string }) {
   const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-  const key = `${(
-    typeof window === 'undefined'
-      ? nodeCrypto.randomUUID()
-      : crypto.randomUUID()
-  )}.${ext}`;
+  const key = `${uuidv4()}.${ext}`;
 
   const path = `events/${key}`;
 
@@ -15,7 +11,7 @@ export async function uploadEventImage(file: File, opts?: { oldPath?: string }) 
     .storage.from('events')
     .upload(path, file, { contentType: file.type, upsert: false });
   if (upErr) throw upErr;
-
+ 
   const { data: pub } = supabase.storage.from('events').getPublicUrl(path);
 
   if (opts?.oldPath) {
