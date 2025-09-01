@@ -3,10 +3,10 @@
   "functions": {
     "/api/admin/users": {},
     "/api/admin/users/create": {},
-    "/api/bootstrap/create-first-admin": {},
     "/api/admin/users/[uid]": {},
+    "/api/bootstrap/create-first-admin": {},
     "/api/events/reorder": {},
-    "/api/events": {},
-    "/api/events/[id]": {}
+    "/api/events/[id]": {},
+    "/api/events": {}
   }
 }
