@@ -1,14 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
+
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import EventModalOverlay from '@/app/components/EventModalOverlay';
-import { uploadEventImage } from '../../../lib/images/uploadEventImages.ts'
-
-// MUI
+import { uploadEventImage } from '../../../lib/images/uploadEventImages'
 import {
   Tabs, Tab, Box, Select, MenuItem,
-  IconButton, CircularProgress, 
+  IconButton, CircularProgress,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -17,7 +16,8 @@ import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import SnackbarComponent, {SnackbarSettings} from './Snackbar';
 import { LabeledDate, LabeledInput, LabeledTextarea, 
-  shouldShowModal, formatDateRange, to12h, fileToDataUrl} from './helpersAndInputs';
+  shouldShowModal, formatDateRange, to12h, fileToDataUrl, ImageDropzone} from './helpersAndInputs';
+
 
 export default function CMSPage() {
   const [title, setTitle] = useState('');
@@ -39,10 +39,38 @@ export default function CMSPage() {
   
   const [eventId, setEventId] = useState<string | null>(null);
   const [tab, setTab] = useState(0); // 0=create, 1=update, 2=delete
-  const [events, setEvents] = useState([]);
+  type EventType = {
+    id: string;
+    title?: string;
+    subheading?: string;
+    description?: string;
+    start_date?: string;
+    end_date?: string;
+    start_time?: string;
+    cta_label?: string;
+    cta_href?: string;
+    image_url?: string;
+    image_path?: string;
+    order?: number;
+    [key: string]: unknown;
+  };
+  const [events, setEvents] = useState<EventType[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(false);
   const [selectedUpdateId, setSelectedUpdateId] = useState<string>('');
-  const [selectedEvent, setSelectedEvent] = useState({});
+  const [selectedEvent, setSelectedEvent] = useState<EventType>({
+    id: '',
+    title: '',
+    subheading: '',
+    description: '',
+    start_date: '',
+    end_date: '',
+    start_time: '',
+    cta_label: '',
+    cta_href: '',
+    image_url: '',
+    image_path: '',
+    order: 0,
+  });
   const [hasOrderChanges, setHasOrderChanges] = useState(false);
 
   const [showUpdateView, setShowUpdateView] = useState(false);
@@ -52,7 +80,7 @@ export default function CMSPage() {
     message: '',
     severity: '',
   });
-  const [pendingDeleteId, setPendingDeleteId] = useState(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   const DRAFT_KEY = 'cmsDraft_v1';
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -167,7 +195,7 @@ export default function CMSPage() {
     setImageFile(null); setImageUrl(null);
     localStorage.removeItem(DRAFT_KEY);
     setSelectedUpdateId('');
-    setSelectedEvent({});
+    setSelectedEvent({ id: '' });
     setShowUpdateView(false)
   }
   
@@ -178,7 +206,7 @@ export default function CMSPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || 'Failed to load events');
       const items = (data.items || []).sort(
-      (a: unknown, b: unknown) => (a.order ?? 0) - (b.order ?? 0)
+      (a: EventType, b: EventType) => (a.order ?? 0) - (b.order ?? 0)
     );
       setEvents(items);
     } catch (e) {
@@ -231,7 +259,7 @@ export default function CMSPage() {
     } catch (e: unknown) {
       setSnackbarSettings((prev) => ({...prev,
         open: true,
-        message: e.message || 'Event Reorder failed',
+        message: e instanceof Error ? e.message : 'Event Reorder failed',
         severity: 'error'
       }))
     }
@@ -242,6 +270,7 @@ export default function CMSPage() {
       if (tab !== 0){
         fetchEvents()
       };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
 
   console.log(events)
@@ -262,7 +291,7 @@ export default function CMSPage() {
       let image_path: string | null = null;
       let image_url: string | null = null;
 
-      const oldPath = (selectedEvent as unknown)?.image_path as string | undefined;
+      const oldPath = (selectedEvent as EventType)?.image_path as string | undefined;
 
       if (imageFile) {
         const up = await uploadEventImage(imageFile, { oldPath });
@@ -270,8 +299,8 @@ export default function CMSPage() {
         image_url = up.publicUrl; 
       } else {
         if (tab === 1 && eventId) {
-          image_path = (selectedEvent as unknown)?.image_path ?? null;
-          image_url  = (selectedEvent as unknown)?.image_url ?? null;
+          image_path = selectedEvent?.image_path ?? null;
+          image_url  = selectedEvent?.image_url ?? null;
         }
       }
 
@@ -340,7 +369,7 @@ export default function CMSPage() {
     } catch (e: unknown) {
         setSnackbarSettings((prev) => ({...prev,
           open: true,
-          message: e.message || 'Save failed',
+          message: e instanceof Error ? e.message : 'Save failed',
           severity: 'error'
         }))
     }
@@ -442,7 +471,7 @@ export default function CMSPage() {
   return (
     <div className="font-sans flex flex-col gap-4 md:flex-row min-h-screen md:h-screen p-8 md:gap-8 sm:px-20 bg-[#151c2f]">
       {/* editor side ni */}
-      <div className="md:w-[30%] text-white h-[90%] md:overflow-scroll custom-scrollbar md:overflow-auto shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-4">
+      <div className="md:w-[30%] text-white h-[90%] md:overflow-scroll custom-scrollbar shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-4">
         {/* tabs header */}
         <Box sx={{ borderBottom: 1, borderColor: 'rgba(255,255,255,0.1)' }}>
           <Tabs
@@ -659,24 +688,14 @@ export default function CMSPage() {
 
         {canShowForm && (
           <div className='md:h-[90%] overflow-scroll custom-scrollbar'>
-            <div
-              className="border border-dashed rounded-xl h-32 flex items-center justify-center relative hover:border-white/60 transition-colors cursor-pointer group"
-              onClick={onPickClick}
+            <ImageDropzone
+              imageUrl={imageUrl ?? undefined}
+              onPickClick={onPickClick}
+              onFileSelect={onFileSelect}
               onDrop={onDrop}
               onDragOver={onDragOver}
-              title="Click, drag & drop, or paste an image"
-            >
-              {!imageUrl ? (
-                <div className="text-center text-white/70 px-4">
-                  <div className="text-sm">Image Upload</div>
-                  <div className="text-xs mt-1 opacity-80">Click, drag & drop, or paste</div>
-                </div>
-              ) : (
-                <img src={imageUrl} alt="Preview" className="absolute inset-0 w-full h-full object-cover rounded-xl" />
-              )}
-              <div className="absolute inset-0 rounded-xl ring-0 group-hover:ring-2 ring-white/10 pointer-events-none" />
-              <input ref={inputRef} type="file" accept="image/*" onChange={onFileSelect} className="hidden" />
-            </div>
+              inputRef={inputRef}
+            />
 
             <LabeledInput label="Title" value={title} onChange={setTitle} placeholder="Enter title" />
             <LabeledInput label="Subheading" value={subheading} onChange={setSubheading} placeholder="Optional subheading" />
@@ -727,14 +746,14 @@ export default function CMSPage() {
       </div>
 
       {/* RIGHT: live website preview + modal overlay */}
-      <div className="md:w-[70%] h-[90%] md:overflow-scroll custom-scrollbar md:overflow-auto text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
+      <div className="md:w-[70%] h-[90%] md:overflow-scroll custom-scrollbar text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
         <div className="mb-2 text-sm text-white/60">Live preview from website</div>
         <div className="relative w-full h-[720px] md:h-full border border-white/10 bg-white rounded-xl overflow-hidden">
           <iframe ref={previewRef} src="/" title="Website Live Preview" className="absolute inset-0 w-full h-full" />
           <EventModalOverlay
             container="contained"
             open={modalOpen}
-            onClose={() => setDismissed(true)}
+            onClose={() => {}}
             events={previewEvents}
             initialIndex={Math.max(0, previewEvents.findIndex(x => x.title === title))}
           />

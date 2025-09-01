@@ -1,3 +1,57 @@
+
+interface ImageDropzoneProps {
+  imageUrl?: string | null;
+  onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onDrop: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
+  onPickClick: () => void;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
+}
+
+export const ImageDropzone: React.FC<ImageDropzoneProps> = ({
+  imageUrl,
+  onFileSelect,
+  onDrop,
+  onDragOver,
+  onPickClick,
+  inputRef
+}) => {
+  return (
+    <div
+      className="border border-dashed rounded-xl h-32 flex items-center justify-center relative hover:border-white/60 transition-colors cursor-pointer group"
+      onClick={onPickClick}
+      onDrop={onDrop}
+      onDragOver={onDragOver}
+      title="Click, drag & drop, or paste an image"
+    >
+      {!imageUrl ? (
+        <div className="text-center text-white/70 px-4">
+          <div className="text-sm">Image Upload</div>
+          <div className="text-xs mt-1 opacity-80">Click, drag & drop, or paste</div>
+        </div>
+      ) : (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={imageUrl}
+          alt="Preview"
+          className="absolute inset-0 w-full h-full object-cover rounded-xl"
+        />
+      )}
+      <div className="absolute inset-0 rounded-xl ring-0 group-hover:ring-2 ring-white/10 pointer-events-none" />
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        onChange={onFileSelect}
+        className="hidden"
+      />
+    </div>
+  );
+};
+
+export default ImageDropzone;
+
+
 export function LabeledInput({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
   return (
     <label className="block">
