@@ -16,7 +16,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import SnackbarComponent, {SnackbarSettings} from './Snackbar';
 import { LabeledDate, LabeledInput, LabeledTextarea, 
-  shouldShowModal, formatDateRange, to12h, fileToDataUrl, ImageDropzone} from './helpersAndInputs';
+  shouldShowModal, formatDateRange, to12h, fileToDataUrl, ImageDropzone, EventType, fetchEvents} from './helpersAndInputs';
 
 
 export default function CMSPage() {
@@ -29,31 +29,17 @@ export default function CMSPage() {
   // Schedule/time
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [startTime, setStartTime] = useState(''); 
-  
+  const [startTime, setStartTime] = useState('');
+
   // Modal controls (preview/editor only)
   const [publishModal, setPublishModal] = useState(true);
   const [forceOpen, setForceOpen] = useState(true);
   const [ctaLabel, setCtaLabel] = useState('');
   const [ctaHref, setCtaHref] = useState('');
-  
+
   const [eventId, setEventId] = useState<string | null>(null);
-  const [tab, setTab] = useState(0); // 0=create, 1=update, 2=delete
-  type EventType = {
-    id: string;
-    title?: string;
-    subheading?: string;
-    description?: string;
-    start_date?: string;
-    end_date?: string;
-    start_time?: string;
-    cta_label?: string;
-    cta_href?: string;
-    image_url?: string;
-    image_path?: string;
-    order?: number;
-    [key: string]: unknown;
-  };
+  const [tab, setTab] = useState(0);
+
   const [events, setEvents] = useState<EventType[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(false);
   const [selectedUpdateId, setSelectedUpdateId] = useState<string>('');
@@ -199,22 +185,22 @@ export default function CMSPage() {
     setShowUpdateView(false)
   }
   
-  async function fetchEvents() {
-    setLoadingEvents(true);
-    try {
-      const res = await fetch('/api/events', { cache: 'no-store' });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || 'Failed to load events');
-      const items = (data.items || []).sort(
-      (a: EventType, b: EventType) => (a.order ?? 0) - (b.order ?? 0)
-    );
-      setEvents(items);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoadingEvents(false);
-    }
-  }
+  // async function fetchEvents() {
+  //   setLoadingEvents(true);
+  //   try {
+  //     const res = await fetch('/api/events', { cache: 'no-store' });
+  //     const data = await res.json();
+  //     if (!res.ok) throw new Error(data?.error || 'Failed to load events');
+  //     const items = (data.items || []).sort(
+  //     (a: EventType, b: EventType) => (a.order ?? 0) - (b.order ?? 0)
+  //   );
+  //     setEvents(items);
+  //   } catch (e) {
+  //     console.error(e);
+  //   } finally {
+  //     setLoadingEvents(false);
+  //   }
+  // }
 
   function onDragEnd(result: DropResult) {
     if (!result.destination) return;
@@ -268,9 +254,8 @@ export default function CMSPage() {
 
   useEffect(() => { 
       if (tab !== 0){
-        fetchEvents()
+        fetchEvents({ setEvents, setLoadingEvents })
       };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
 
   console.log(events)
@@ -364,7 +349,7 @@ export default function CMSPage() {
           }))
         }
       }
-      if (tab !== 0) fetchEvents();
+      if (tab !== 0) fetchEvents({ setEvents, setLoadingEvents });
       if (image_url) setImageUrl(image_url);
     } catch (e: unknown) {
         setSnackbarSettings((prev) => ({...prev,
@@ -466,7 +451,10 @@ export default function CMSPage() {
   const modalOpen = shouldShowModal({ publishModal, forceOpen, startDate, endDate });
 
   const canShowForm = tab === 0 || (tab === 1 && !!selectedUpdateId);
-    
+
+  useEffect(() => {
+    if (tab === 0) resetAll();
+  }, [tab])
 
   return (
     <div className="font-sans flex flex-col gap-4 md:flex-row min-h-screen md:h-screen p-8 md:gap-8 sm:px-20 bg-[#151c2f]">
@@ -516,9 +504,9 @@ export default function CMSPage() {
                     'Save'
                   )}
                 </button>
-                <IconButton size="small" 
+                <IconButton size="small"
                   onClick={()=>{
-                    fetchEvents()
+                    fetchEvents({ setEvents, setLoadingEvents })
                     resetAll()
                   }}
                 >
@@ -675,7 +663,7 @@ export default function CMSPage() {
                 onClick={()=>{
                   setSelectedUpdateId('')
                   resetAll()
-                  fetchEvents()
+                  fetchEvents({ setEvents, setLoadingEvents })
                   }}>
                 <RefreshIcon htmlColor="#9ca3af" fontSize="small" />
               </IconButton>

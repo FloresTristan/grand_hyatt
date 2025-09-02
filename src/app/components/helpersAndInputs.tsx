@@ -8,6 +8,22 @@ interface ImageDropzoneProps {
   inputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
+export type EventType = {
+  id: string;
+  title?: string;
+  subheading?: string;
+  description?: string;
+  start_date?: string;
+  end_date?: string;
+  start_time?: string;
+  cta_label?: string;
+  cta_href?: string;
+  image_url?: string;
+  image_path?: string;
+  order?: number;
+  [key: string]: unknown;
+};
+
 export const ImageDropzone: React.FC<ImageDropzoneProps> = ({
   imageUrl,
   onFileSelect,
@@ -48,6 +64,23 @@ export const ImageDropzone: React.FC<ImageDropzoneProps> = ({
     </div>
   );
 };
+
+export async function fetchEvents({ setEvents, setLoadingEvents }: { setEvents: (events: EventType[]) => void; setLoadingEvents: (loading: boolean) => void; }) {
+  setLoadingEvents(true);
+  try {
+    const res = await fetch('/api/events', { cache: 'no-store' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || 'Failed to load events');
+    const items = (data.items || []).sort(
+    (a: EventType, b: EventType) => (a.order ?? 0) - (b.order ?? 0)
+  );
+    setEvents(items);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    setLoadingEvents(false);
+  }
+}
 
 
 export function LabeledInput({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
