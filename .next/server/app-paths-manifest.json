@@ -1,10 +1,10 @@
 {
-  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/_not-found/page": "app/_not-found/page.js",
-  "/api/admin/users/create/route": "app/api/admin/users/create/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/api/admin/users/[uid]/route": "app/api/admin/users/[uid]/route.js",
   "/api/admin/users/route": "app/api/admin/users/route.js",
   "/api/bootstrap/create-first-admin/route": "app/api/bootstrap/create-first-admin/route.js",
-  "/api/admin/users/[uid]/route": "app/api/admin/users/[uid]/route.js",
+  "/api/admin/users/create/route": "app/api/admin/users/create/route.js",
   "/api/events/reorder/route": "app/api/events/reorder/route.js",
   "/api/events/route": "app/api/events/route.js",
   "/api/events/[id]/route": "app/api/events/[id]/route.js",

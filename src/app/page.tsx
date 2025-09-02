@@ -5,6 +5,7 @@ import grandhyattmodel from "../app/assets/grandhyatt-resized.png"
 import EventModalOverlay from './components/EventModalOverlay';
 import { fetchEvents, EventType, formatDateRange, to12h } from './components/helpersAndInputs';
 import { useEffect, useState } from 'react';
+import { IoInformationCircleSharp } from "react-icons/io5";
 
 export default function Home() {
   const [events, setEvents] = useState<EventType[]>([]);
@@ -24,7 +25,7 @@ export default function Home() {
 
   console.log(events)
   return (
-    <div className="">
+    <div className="overflow-x-scroll">
       <Image src={grandhyattmodel} alt="sample" placeholder="blur" quality={100} objectFit="cover" layout="fill" />
       {
         showModal && events.length > 0 && (
@@ -47,6 +48,11 @@ export default function Home() {
           />
         )
       }
+       <button
+       onClick={() => setOpen(true)}
+       >
+        <IoInformationCircleSharp className="absolute bottom-4 right-4 h-12 w-12 cursor-pointer hover:text-red-500 duration-300" />
+      </button>
     </div>
   );
 }

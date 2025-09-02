@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
+
+
 export type EventItem = {
   imageUrl?: string;
   title: string;
@@ -63,11 +65,11 @@ export default function EventModalOverlay({
     <div className={`${pos} inset-0 ${z} flex items-center justify-center`} role="dialog" aria-modal="true">
       <div className={`${pos} inset-0 bg-black/60 backdrop-blur-[1px]`} onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-[560px] rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="relative z-10 w-full max-w-[350px] md:max-w-[560px] rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute -right-3 -top-3 flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white shadow-lg ring-4 ring-white"
+          className="absolute -right-3 -top-3 flex h-10 w-10 items-center justify-center rounded-full bg-red-500 hover:bg-red-600 text-white shadow-lg cursor-pointer ring-4 ring-white"
         >
           ×
         </button>
@@ -177,6 +179,7 @@ export default function EventModalOverlay({
           )}
         </div>
       </div>
+     
     </div>
   );
 }
