@@ -122,7 +122,7 @@ export default function EventModalOverlay({
             <div className="mt-2 flex items-center justify-center gap-5 text-sm text-neutral-700">
               {current?.dateRange && (
                 <span className="inline-flex items-center gap-1.5">
-                  <span className="inline-block h-5 w-5 rounded-[4px] border border-neutral-400" />
+                  {/* <span className="inline-block h-5 w-5 rounded-[4px] border border-neutral-400" /> */}
                   {current?.dateRange}
                 </span>
               )}
