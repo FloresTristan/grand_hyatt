@@ -49,8 +49,6 @@ export const ImageDropzone: React.FC<ImageDropzoneProps> = ({
   );
 };
 
-export default ImageDropzone;
-
 
 export function LabeledInput({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
   return (

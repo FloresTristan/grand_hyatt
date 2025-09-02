@@ -30,7 +30,7 @@ export default function Login() {
       if (error) throw error;
       r.replace('/admin');
     } catch (e: unknown) {
-      setErr(e?.message || 'Login failed');
+      setErr(e instanceof Error? e.message: 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -49,7 +49,7 @@ export default function Login() {
       if (error) throw error;
       setErr('Password reset email sent. Check your inbox.');
     } catch (e: unknown) {
-      setErr(e?.message || 'Failed to send reset email');
+      setErr(e instanceof Error? e.message: 'Failed to send reset email');
     } finally {
       setLoading(false);
     }
