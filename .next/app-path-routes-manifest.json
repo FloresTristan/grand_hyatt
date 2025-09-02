@@ -1,0 +1,17 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/favicon.ico/route": "/favicon.ico",
+  "/api/admin/users/[uid]/route": "/api/admin/users/[uid]",
+  "/api/admin/users/route": "/api/admin/users",
+  "/api/events/reorder/route": "/api/events/reorder",
+  "/api/admin/users/create/route": "/api/admin/users/create",
+  "/api/bootstrap/create-first-admin/route": "/api/bootstrap/create-first-admin",
+  "/api/events/[id]/route": "/api/events/[id]",
+  "/api/events/route": "/api/events",
+  "/page": "/",
+  "/login/page": "/login",
+  "/admin/seasons/page": "/admin/seasons",
+  "/admin/page": "/admin",
+  "/signup/page": "/signup",
+  "/admin/users/page": "/admin/users"
+}

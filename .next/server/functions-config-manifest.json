@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "functions": {
+    "/api/admin/users/[uid]": {},
+    "/api/admin/users": {},
+    "/api/bootstrap/create-first-admin": {},
+    "/api/admin/users/create": {},
+    "/api/events/reorder": {},
+    "/api/events/[id]": {},
+    "/api/events": {}
+  }
+}
