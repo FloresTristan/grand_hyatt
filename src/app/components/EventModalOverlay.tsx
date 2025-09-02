@@ -48,6 +48,7 @@ export default function EventModalOverlay({
     return () => window.removeEventListener('keydown', onKey);
   }, [open, events, onClose]);
 
+
   const hasEvents = (events?.length ?? 0) > 0;
   if (!open || !hasEvents) return null;
   

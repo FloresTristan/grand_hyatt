@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import EventModalOverlay from '@/app/components/EventModalOverlay';
 import { uploadEventImage } from '../../../lib/images/uploadEventImages'
 import {
@@ -16,7 +16,8 @@ import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import SnackbarComponent, {SnackbarSettings} from './Snackbar';
 import { LabeledDate, LabeledInput, LabeledTextarea, 
-  shouldShowModal, formatDateRange, to12h, fileToDataUrl, ImageDropzone, EventType, fetchEvents} from './helpersAndInputs';
+  shouldShowModal, formatDateRange, to12h, fileToDataUrl,
+  ImageDropzone, EventType, fetchEvents} from './helpersAndInputs';
 
 
 export default function CMSPage() {
@@ -184,23 +185,6 @@ export default function CMSPage() {
     setSelectedEvent({ id: '' });
     setShowUpdateView(false)
   }
-  
-  // async function fetchEvents() {
-  //   setLoadingEvents(true);
-  //   try {
-  //     const res = await fetch('/api/events', { cache: 'no-store' });
-  //     const data = await res.json();
-  //     if (!res.ok) throw new Error(data?.error || 'Failed to load events');
-  //     const items = (data.items || []).sort(
-  //     (a: EventType, b: EventType) => (a.order ?? 0) - (b.order ?? 0)
-  //   );
-  //     setEvents(items);
-  //   } catch (e) {
-  //     console.error(e);
-  //   } finally {
-  //     setLoadingEvents(false);
-  //   }
-  // }
 
   function onDragEnd(result: DropResult) {
     if (!result.destination) return;
@@ -455,6 +439,7 @@ export default function CMSPage() {
   useEffect(() => {
     if (tab === 0) resetAll();
   }, [tab])
+
 
   return (
     <div className="font-sans flex flex-col gap-4 md:flex-row min-h-screen md:h-screen p-8 md:gap-8 sm:px-20 bg-[#151c2f]">

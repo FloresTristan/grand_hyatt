@@ -1,4 +1,5 @@
-
+'use client';
+import React, { useState } from 'react';
 interface ImageDropzoneProps {
   imageUrl?: string | null;
   onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -74,6 +75,7 @@ export async function fetchEvents({ setEvents, setLoadingEvents }: { setEvents: 
     const items = (data.items || []).sort(
     (a: EventType, b: EventType) => (a.order ?? 0) - (b.order ?? 0)
   );
+    console.log(items, 'fetched items for homepage');
     setEvents(items);
   } catch (e) {
     console.error(e);
@@ -81,7 +83,6 @@ export async function fetchEvents({ setEvents, setLoadingEvents }: { setEvents: 
     setLoadingEvents(false);
   }
 }
-
 
 export function LabeledInput({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
   return (
@@ -91,6 +92,7 @@ export function LabeledInput({ label, value, onChange, placeholder }: { label: s
     </label>
   );
 }
+
 export function LabeledTextarea({ label, value, onChange, placeholder, rows = 5 }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; rows?: number }) {
   return (
     <label className="block">
@@ -99,6 +101,7 @@ export function LabeledTextarea({ label, value, onChange, placeholder, rows = 5 
     </label>
   );
 }
+
 export function LabeledDate({ label, value, onChange, min, max }: { label: string; value: string; onChange: (v: string) => void; min?: string; max?: string }) {
   return (
     <label className="block">
@@ -107,6 +110,7 @@ export function LabeledDate({ label, value, onChange, min, max }: { label: strin
     </label>
   );
 }
+
 export function shouldShowModal({
   publishModal,
   forceOpen,
