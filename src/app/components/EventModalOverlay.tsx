@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import ScheduleIcon from '@mui/icons-material/Schedule';
@@ -40,6 +40,19 @@ export default function EventModalOverlay({
     setIndex(Math.min(Math.max(initialIndex, 0), Math.max(0, (events?.length ?? 1) - 1)));
   }, [events, initialIndex, open]);
 
+  const dotRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  useEffect(() => {
+    const activeDot = dotRefs.current[index];
+    if (activeDot) {
+      activeDot.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
+    }
+  }, [index]);
+
   useEffect(() => {
     if (!open || (events?.length ?? 0) < 1) return;
     function onKey(e: KeyboardEvent) {
@@ -66,7 +79,7 @@ export default function EventModalOverlay({
     <div className={`${pos} inset-0 ${z} flex items-center justify-center`} role="dialog" aria-modal="true">
       <div className={`${pos} inset-0 bg-black/60 backdrop-blur-[1px]`} onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-[350px] md:max-w-[560px] rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="relative z-10 w-full max-w-[290px] md:max-w-[560px] rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={onClose}
           aria-label="Close"
@@ -164,25 +177,34 @@ export default function EventModalOverlay({
               )}
             </div>
           )}
-
+          
           {events.length > 1 && (
-            <div className="mt-4 flex items-center justify-center gap-2">
-              {/* <span className="mr-2 text-xs text-neutral-500 tabular-nums">
-                {index + 1}/{events.length}
-              </span> */}
-              {events.map((_, i) => (
-                <button
-                  key={i}
-                  aria-label={`Go to slide ${i + 1}`}
-                  onClick={() => setIndex(i)}
-                  className={`h-2 w-2 rounded-full ${i === index ? 'bg-neutral-900' : 'bg-neutral-300'}`}
-                />
-              ))}
+            <div className="mt-4 w-full max-w-md mx-auto  overflow-x-scroll custom-scrollbar">
+              <div className="flex items-center gap-3 px-2">
+                {events.map((_, i) => {
+                  const isActive = i === index;
+                  return (
+                    <button
+                      key={i}
+                      ref={(el) => {
+                        dotRefs.current[i] = el;
+                      }}
+                      aria-label={`Go to slide ${i + 1}`}
+                      aria-current={isActive ? 'true' : undefined}
+                      onClick={() => setIndex(i)}
+                      className={`
+                        h-2 md:h-3 w-2 md:w-3 rounded-full transition-all duration-300
+                        flex-shrink-0 focus:outline-none
+                        ${isActive ? 'bg-neutral-900' : 'border-neutral-300 bg-neutral-200 hover:bg-neutral-400'}
+                      `}
+                    />
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
       </div>
-     
     </div>
   );
 }
