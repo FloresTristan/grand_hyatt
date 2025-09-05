@@ -178,31 +178,35 @@ export default function EventModalOverlay({
             </div>
           )}
           
-          {events.length > 1 && (
-            <div className="mt-4 w-full max-w-md mx-auto  overflow-x-scroll custom-scrollbar">
-              <div className="flex items-center gap-3 px-2">
-                {events.map((_, i) => {
-                  const isActive = i === index;
-                  return (
-                    <button
-                      key={i}
-                      ref={(el) => {
-                        dotRefs.current[i] = el;
-                      }}
-                      aria-label={`Go to slide ${i + 1}`}
-                      aria-current={isActive ? 'true' : undefined}
-                      onClick={() => setIndex(i)}
-                      className={`
-                        h-2 md:h-3 w-2 md:w-3 rounded-full transition-all duration-300
-                        flex-shrink-0 focus:outline-none
-                        ${isActive ? 'bg-neutral-900' : 'border-neutral-300 bg-neutral-200 hover:bg-neutral-400'}
-                      `}
-                    />
-                  );
-                })}
-              </div>
+          <div className='flex justify-center'>
+            <div className='items-center w-[25%] md:w-[15%]'>
+              {events.length > 1 && (
+                <div className="mt-4 w-full max-w-md mx-auto  overflow-x-scroll custom-scrollbar">
+                  <div className="flex items-center gap-3 px-2">
+                    {events.map((_, i) => {
+                      const isActive = i === index;
+                      return (
+                        <button
+                          key={i}
+                          ref={(el) => {
+                            dotRefs.current[i] = el;
+                          }}
+                          aria-label={`Go to slide ${i + 1}`}
+                          aria-current={isActive ? 'true' : undefined}
+                          onClick={() => setIndex(i)}
+                          className={`
+                            h-2 md:h-3 w-2 md:w-3 rounded-full transition-all duration-300
+                            flex-shrink-0 focus:outline-none
+                            ${isActive ? 'bg-neutral-900' : 'border-neutral-300 bg-neutral-200 hover:bg-neutral-400'}
+                          `}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
