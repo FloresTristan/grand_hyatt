@@ -27,6 +27,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
     start_date: body.startDate,
     end_date: body.endDate,
     start_time: body.startTime,
+    end_time: body.endTime,
     cta_label: body.ctaLabel,
     cta_href: body.ctaHref,
     image_url: body.image_url,

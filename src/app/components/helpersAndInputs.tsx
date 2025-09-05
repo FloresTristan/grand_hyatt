@@ -17,6 +17,7 @@ export type EventType = {
   start_date?: string;
   end_date?: string;
   start_time?: string;
+  end_time?: string;
   cta_label?: string;
   cta_href?: string;
   image_url?: string;
@@ -75,7 +76,7 @@ export async function fetchEvents({ setEvents, setLoadingEvents }: { setEvents: 
     const items = (data.items || []).sort(
     (a: EventType, b: EventType) => (a.order ?? 0) - (b.order ?? 0)
   );
-    console.log(items, 'fetched items for homepage');
+    // console.log(items, 'fetched items for homepage');
     setEvents(items);
   } catch (e) {
     console.error(e);
@@ -97,7 +98,7 @@ export function LabeledTextarea({ label, value, onChange, placeholder, rows = 5 
   return (
     <label className="block">
       <div className="text-sm mb-1 text-white/80">{label}</div>
-      <textarea value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} rows={rows} className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30 resize-y" />
+      <textarea value={value} maxLength={500} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} rows={rows} className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30 resize-y" />
     </label>
   );
 }
@@ -147,6 +148,65 @@ export function formatDateRange(start?: string, end?: string) {
   return `${pretty(start!)} – ${pretty(end!)}`;
 }
 
+// export function formatTimeRange(start?: string, end?: string) {
+//   if (!start && !end) return '';
+//   if (start && !end) return to12h(start);
+//   if (!start && end) return to12h(end);
+
+//   return `${to12h(start!)} – ${to12h(end!)}`;
+// }
+
+// export function to12h(t?: string) {
+//   if (!t) return '';
+//   const [h, m] = t.split(':').map(Number);
+//   const d = new Date(); d.setHours(h ?? 0, m ?? 0, 0, 0);
+//   return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+// }
+
+export function formatTimeRange(start?: string, end?: string) {
+  const s = to12h(start);
+  const e = to12h(end);
+
+  if (!s && !e) return '';
+  if (s && !e) return s;
+  if (!s && e) return e;
+  return `${s} – ${e}`;
+}
+
+function parseHM(t?: string): { h: number; m: number } | null {
+  if (!t?.trim()) return null;
+
+  const m = /^(\d{1,2})(?::(\d{1,2}))?(?::(\d{1,2})(?:\.\d+)?)?$/.exec(t.trim());
+  if (!m) return null;
+
+  const h = Number(m[1]);
+  const min = Number(m[2] ?? '0');
+
+  const sec = Number(m[3] ?? '0');
+
+  if (
+    Number.isNaN(h) || Number.isNaN(min) || Number.isNaN(sec) ||
+    h < 0 || h > 23 || min < 0 || min > 59 || sec < 0 || sec > 59
+  ) return null;
+
+  return { h, m: min };
+}
+
+function pad2(n: number) {
+  return n < 10 ? `0${n}` : String(n);
+}
+
+export function to12h(t?: string, opts?: { upper?: boolean }) {
+  const hm = parseHM(t);
+  if (!hm) return '';
+  let hour = hm.h % 12;
+  if (hour === 0) hour = 12;
+  const suffix = hm.h < 12 ? 'am' : 'pm';
+  const ampm = opts?.upper ? suffix.toUpperCase() : suffix;
+  return `${hour}:${pad2(hm.m)} ${ampm}`;
+}
+
+
 export function pretty(s: string) {
   const d = new Date(s); 
   if (isNaN(d.getTime())) return '';
@@ -154,12 +214,6 @@ export function pretty(s: string) {
   return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
-export function to12h(t?: string) {
-  if (!t) return '';
-  const [h, m] = t.split(':').map(Number);
-  const d = new Date(); d.setHours(h ?? 0, m ?? 0, 0, 0);
-  return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-}
 
 export function fileToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {

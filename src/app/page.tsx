@@ -23,7 +23,7 @@ export default function Home() {
 
   const onClose = () => setOpen(false);
 
-  console.log(events)
+  // console.log(events)
   return (
     <div className="overflow-x-scroll">
       <Image src={grandhyattmodel} alt="sample" placeholder="blur" quality={100} objectFit="cover" layout="fill" />

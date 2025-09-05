@@ -1,8 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 
 'use client';
 
-import { use, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import EventModalOverlay from '@/app/components/EventModalOverlay';
 import { uploadEventImage } from '../../../lib/images/uploadEventImages'
 import {
@@ -16,8 +15,8 @@ import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import SnackbarComponent, {SnackbarSettings} from './Snackbar';
 import { LabeledDate, LabeledInput, LabeledTextarea, 
-  shouldShowModal, formatDateRange, to12h, fileToDataUrl,
-  ImageDropzone, EventType, fetchEvents} from './helpersAndInputs';
+  shouldShowModal, formatDateRange, fileToDataUrl,
+  ImageDropzone, EventType, fetchEvents, formatTimeRange} from './helpersAndInputs';
 
 
 export default function CMSPage() {
@@ -31,6 +30,7 @@ export default function CMSPage() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
 
   // Modal controls (preview/editor only)
   const [publishModal, setPublishModal] = useState(true);
@@ -52,6 +52,7 @@ export default function CMSPage() {
     start_date: '',
     end_date: '',
     start_time: '',
+    end_time: '',
     cta_label: '',
     cta_href: '',
     image_url: '',
@@ -68,6 +69,9 @@ export default function CMSPage() {
     severity: '',
   });
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [isScheduledPublish, setIsScheduledPublish] = useState(false);
+  const [publishDate, setPublishDate] = useState('');
+  const [unpublishDate, setUnpublishDate] = useState('');
 
   const DRAFT_KEY = 'cmsDraft_v1';
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -85,6 +89,7 @@ export default function CMSPage() {
       setStartDate(s.startDate || '');
       setEndDate(s.endDate || '');
       setStartTime(s.startTime || '');
+      setEndTime(s.endTime || '');
       setPublishModal(s.publishModal ?? true);
       setForceOpen(s.forceOpen ?? true);
       setCtaLabel(s.ctaLabel || '');
@@ -111,6 +116,7 @@ export default function CMSPage() {
             startDate,
             endDate,
             startTime,
+            endTime,
             publishModal,
             forceOpen,
             ctaLabel,
@@ -121,7 +127,7 @@ export default function CMSPage() {
       } catch {}
     }, 300);
     return () => clearTimeout(id);
-  }, [title, subheading, description, startDate, endDate, startTime, publishModal, forceOpen, ctaLabel, ctaHref, imageFile, imageUrl]);
+  }, [title, subheading, description, startDate, endDate, startTime, endTime, publishModal, forceOpen, ctaLabel, ctaHref, imageFile, imageUrl]);
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -134,7 +140,7 @@ export default function CMSPage() {
         } catch {}
       }
       const payload = {
-        title, subheading, description, startDate, endDate, startTime,
+        title, subheading, description, startDate, endDate, startTime, endTime,
         publishModal, forceOpen, ctaLabel, ctaHref, imageDataUrl,
       };
       previewRef.current?.contentWindow?.postMessage(
@@ -143,7 +149,7 @@ export default function CMSPage() {
       );
     }, 120);
     return () => clearTimeout(id);
-  }, [title, subheading, description, startDate, endDate, startTime, publishModal, forceOpen, ctaLabel, ctaHref, imageUrl]);
+  }, [title, subheading, description, startDate, endDate, startTime, endTime, publishModal, forceOpen, ctaLabel, ctaHref, imageUrl]);
 
   function onPickClick() { inputRef.current?.click(); }
 
@@ -183,7 +189,8 @@ export default function CMSPage() {
     localStorage.removeItem(DRAFT_KEY);
     setSelectedUpdateId('');
     setSelectedEvent({ id: '' });
-    setShowUpdateView(false)
+    setShowUpdateView(false);
+    setEndTime('');
   }
 
   function onDragEnd(result: DropResult) {
@@ -275,7 +282,10 @@ export default function CMSPage() {
 
       const payload = {
         title, subheading, description,
-        startDate: startDate || null, endDate: endDate||null, startTime: startTime||null,
+        startDate: startDate || null,
+        endDate: endDate||null,
+        startTime: startTime||null,
+        endTime: endTime||null,
         ctaLabel, ctaHref,
         image_path,      
         image_url, 
@@ -397,7 +407,7 @@ export default function CMSPage() {
     subheading: e.subheading ?? '',
     description: e.description ?? '',
     dateRange: formatDateRange(e.start_date, e.end_date),
-    timeText: to12h(e.start_time),
+    timeText: formatTimeRange(e.start_time, e.end_time),
     ctaLabel: e.cta_label ?? '',
     ctaHref: e.cta_href ?? '',
   }));
@@ -408,7 +418,7 @@ export default function CMSPage() {
     subheading: subheading || '',
     description: description || '',
     dateRange: formatDateRange(startDate, endDate),
-    timeText: to12h(startTime),
+    timeText: formatTimeRange(startTime, endTime),
     ctaLabel: ctaLabel || '',
     ctaHref: ctaHref || '',
   };
@@ -417,7 +427,7 @@ export default function CMSPage() {
     (title?.trim()?.length ?? 0) > 0 ||
     (subheading?.trim()?.length ?? 0) > 0 ||
     (description?.trim()?.length ?? 0) > 0 ||
-    !!startDate || !!endDate || !!startTime ||
+    !!startDate || !!endDate || !!startTime || !!endTime ||
     (ctaLabel?.trim()?.length ?? 0) > 0 ||
     (ctaHref?.trim()?.length ?? 0) > 0 ||
     !!imageUrl;
@@ -540,11 +550,12 @@ export default function CMSPage() {
                                       setStartDate(ev.start_date || '');
                                       setEndDate(ev.end_date || '');
                                       setStartTime(ev.start_time || '');
+                                      setEndTime(ev.end_time || '');
                                       setCtaLabel(ev.cta_label || '');
                                       setCtaHref(ev.cta_href || '');
                                       setImageUrl(ev.image_url || null);
                                     }
-                                    console.log(e.id)
+                                    // console.log(e.id)
                                   }}
                                 >{e.title || '(untitled)'}</span>
                               </div>
@@ -562,6 +573,7 @@ export default function CMSPage() {
                                         setStartDate(ev.start_date || '');
                                         setEndDate(ev.end_date || '');
                                         setStartTime(ev.start_time || '');
+                                        setEndTime(ev.end_time || '');
                                         setCtaLabel(ev.cta_label || '');
                                         setCtaHref(ev.cta_href || '');
                                         setImageUrl(ev.image_url || null);
@@ -606,7 +618,7 @@ export default function CMSPage() {
                   const id = String(e.target.value);
                   setSelectedUpdateId(id);
                   const ev = events.find(x => x.id === id);
-                  console.log("here ev", ev)
+                  // console.log("here ev", ev)
                   if (ev) {
                     setSelectedEvent(ev);
                     setEventId(ev.id);
@@ -616,6 +628,7 @@ export default function CMSPage() {
                     setStartDate(ev.start_date || '');
                     setEndDate(ev.end_date || '');
                     setStartTime(ev.start_time || '');
+                    setEndTime(ev.end_time || '');
                     setCtaLabel(ev.cta_label || '');
                     setCtaHref(ev.cta_href || '');
                     setImageUrl(ev.image_url || null);
@@ -669,35 +682,69 @@ export default function CMSPage() {
               onDragOver={onDragOver}
               inputRef={inputRef}
             />
-
-            <LabeledInput label="Title" value={title} onChange={setTitle} placeholder="Enter title" />
-            <LabeledInput label="Subheading" value={subheading} onChange={setSubheading} placeholder="Optional subheading" />
-            <LabeledTextarea label="Description" value={description} onChange={setDescription} placeholder="Write a short description..." rows={3} />
+            <div className="space-y-1 mt-2">
+              <LabeledInput label="Title" value={title} onChange={setTitle} placeholder="Enter title" />
+              <LabeledInput label="Subheading" value={subheading} onChange={setSubheading} placeholder="Optional subheading" />
+              <LabeledTextarea label="Description" value={description} onChange={setDescription} placeholder="Write a short description..." rows={3} />
+              <div className="text-xs text-white/60"><div className="text-end">{description.length} chars</div></div>
+            </div>
 
             <div className="grid grid-cols-2 gap-2">
               <LabeledDate label="Start date" value={startDate} onChange={setStartDate} />
               <LabeledDate label="End date" value={endDate} onChange={setEndDate} min={startDate || undefined} />
             </div>
-            <label className="block">
-              <div className="text-sm mb-1 text-white/80">Start time</div>
-              <input
-                style={{ colorScheme: 'dark' }}
-                type="time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
-              />
-            </label>
+
+            <div className="grid grid-cols-2 mt-1 gap-2">
+              <label className="block">
+                <div className="text-sm mb-1 text-white/80">
+                  Start time
+                </div>
+                <input
+                  style={{ colorScheme: 'dark' }}
+                  type="time"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                  className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                />
+              </label>
+              <label className="block">
+                <div className="text-sm mb-1 text-white/80">
+                  End time
+                </div>
+                <input
+                  style={{ colorScheme: 'dark' }}
+                  type="time"
+                  value={endTime}
+                  onChange={(e) => setEndTime(e.target.value)}
+                  className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                />
+              </label>
+            </div>
             {dateError && <div className="text-xs text-red-300">{dateError}</div>}
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 mt-1 gap-2">
               <LabeledInput label="CTA label" value={ctaLabel} onChange={setCtaLabel} placeholder="Learn More" />
               <LabeledInput label="CTA link" value={ctaHref} onChange={setCtaHref} placeholder="https://example.com" />
             </div>
 
-            <div className="text-xs text-white/60"><div className="mt-1">{description.length} chars</div></div>
+            <div className="mt-2">
+              <label className='flex items-center gap-2'>
+                <input type="checkbox" onChange={(e)=>{
+                  setIsScheduledPublish(e.target.checked)
+                }} />
+                <div className="text-sm text-white/80">Schedule Publish</div>
+              </label>
+            </div>
+            {
+              isScheduledPublish && (
+                <div className="grid grid-cols-2 mt-1 gap-2">
+                  <LabeledDate label="Publish Date" value={publishDate} onChange={setPublishDate} />
+                  <LabeledDate label="Unpublish Date" value={unpublishDate} onChange={setUnpublishDate} min={publishDate || undefined} />
+                </div>
+              )
+            }
 
-            <div className="flex gap-2 pt-2">
+            <div className="flex gap-2 mt-1 pt-2">
               <button onClick={onSave} 
                 disabled={buttonLoading}
                 className="px-3 py-2 rounded-lg bg-green-400 hover:bg-green-500 hover:cursor-pointer text-black font-medium disabled:cursor-not-allowed">
@@ -707,9 +754,20 @@ export default function CMSPage() {
                       <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 004 12z"/></svg>
                     </span>
                   ) : (
-                    tab === 0 || !eventId ? 'Create' : 'Update'
+                    tab === 0 || !eventId ? 'Publish' : 'Update'
                   )}
               </button>
+              {/* <button className="px-3 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 hover:cursor-pointer text-white font-medium disabled:cursor-not-allowed"
+                onClick={onSave}
+                disabled={buttonLoading}
+              >
+                {buttonLoading ? (
+                    <span className="inline-flex items-center gap-2">
+                      {tab === 0 || !eventId ? 'Creating…' : 'Updating…'}
+                      <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 004 12z"/></svg>
+                    </span>
+                  ) : 'Schedule'}
+              </button> */}
               <button onClick={resetAll} className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white hover:cursor-pointer">
                 Clear
               </button>
