@@ -23,6 +23,10 @@ export type EventType = {
   image_url?: string;
   image_path?: string;
   order?: number;
+  published?: boolean;
+  publish_at?: string | null;
+  unpublish_at?: string | null;
+  computed_status?: 'hidden' | 'scheduled' | 'expired' | 'live';
   [key: string]: unknown;
 };
 
@@ -67,11 +71,18 @@ export const ImageDropzone: React.FC<ImageDropzoneProps> = ({
   );
 };
 
-export async function fetchEvents({ setEvents, setLoadingEvents }: { setEvents: (events: EventType[]) => void; setLoadingEvents: (loading: boolean) => void; }) {
+export async function fetchEventsForClient({ setEvents, setLoadingEvents }: { setEvents: (events: EventType[]) => void; setLoadingEvents: (loading: boolean) => void; }) {
   setLoadingEvents(true);
   try {
     const res = await fetch('/api/events', { cache: 'no-store' });
     const data = await res.json();
+    console.log(data, 'fetched data for homepage');
+    console.log(
+      'ANON key fingerprint:',
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(0, 6),
+      '…',
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(-6)
+    );
     if (!res.ok) throw new Error(data?.error || 'Failed to load events');
     const items = (data.items || []).sort(
     (a: EventType, b: EventType) => (a.order ?? 0) - (b.order ?? 0)
@@ -84,6 +95,25 @@ export async function fetchEvents({ setEvents, setLoadingEvents }: { setEvents: 
     setLoadingEvents(false);
   }
 }
+
+export async function fetchEventsForAdmin({ setEvents, setLoadingEvents }: { setEvents: (events: EventType[]) => void; setLoadingEvents: (loading: boolean) => void; }) {
+  setLoadingEvents(true);
+  try {
+    const res = await fetch('/api/admin/events', { cache: 'no-store' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || 'Failed to load events');
+    const items = (data.items || []).sort(
+    (a: EventType, b: EventType) => (a.order ?? 0) - (b.order ?? 0)
+  );
+
+    setEvents(items);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    setLoadingEvents(false);
+  }
+}
+
 
 export function LabeledInput({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
   return (
@@ -206,6 +236,10 @@ export function to12h(t?: string, opts?: { upper?: boolean }) {
   return `${hour}:${pad2(hm.m)} ${ampm}`;
 }
 
+export function toUtcIso(dtLocal?: string | null) {
+  if (!dtLocal) return null;              // dtLocal like "2025-09-08T17:15"
+  return new Date(dtLocal).toISOString(); // -> "2025-09-08T09:15:00.000Z" in Manila
+}
 
 export function pretty(s: string) {
   const d = new Date(s); 

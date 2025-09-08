@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import EventModalOverlay from '@/app/components/EventModalOverlay';
 import { uploadEventImage } from '../../../lib/images/uploadEventImages'
 import {
@@ -16,8 +16,9 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import SnackbarComponent, {SnackbarSettings} from './Snackbar';
 import { LabeledDate, LabeledInput, LabeledTextarea, 
   shouldShowModal, formatDateRange, fileToDataUrl,
-  ImageDropzone, EventType, fetchEvents, formatTimeRange} from './helpersAndInputs';
-
+  ImageDropzone, EventType, fetchEventsForAdmin, formatTimeRange, toUtcIso} from './helpersAndInputs';
+import { StatusPill } from './statusPill';
+import { ArrowBackOutlined } from '@mui/icons-material';
 
 export default function CMSPage() {
   const [title, setTitle] = useState('');
@@ -31,6 +32,10 @@ export default function CMSPage() {
   const [endDate, setEndDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
+
+  const [published, setPublished] = useState<boolean>(false);
+  const [publishAt, setPublishAt] = useState<string>('');
+  const [unpublishAt, setUnpublishAt] = useState<string>('');
 
   // Modal controls (preview/editor only)
   const [publishModal, setPublishModal] = useState(true);
@@ -69,9 +74,8 @@ export default function CMSPage() {
     severity: '',
   });
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
-  const [isScheduledPublish, setIsScheduledPublish] = useState(false);
-  const [publishDate, setPublishDate] = useState('');
-  const [unpublishDate, setUnpublishDate] = useState('');
+  const [filterTab, setFilterTab] = useState(0);
+  const [disableDrag, setDisableDrag] = useState(false);
 
   const DRAFT_KEY = 'cmsDraft_v1';
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -94,6 +98,9 @@ export default function CMSPage() {
       setForceOpen(s.forceOpen ?? true);
       setCtaLabel(s.ctaLabel || '');
       setCtaHref(s.ctaHref || '');
+      setPublished(s.published ?? true);
+      setPublishAt(s.publishAt ?? '');
+      setUnpublishAt(s.unpublishAt ?? '');
       if (s.imageDataUrl) setImageUrl(s.imageDataUrl);
     } catch {}
   }, []);
@@ -122,12 +129,15 @@ export default function CMSPage() {
             ctaLabel,
             ctaHref,
             imageDataUrl,
+            published,
+            publishAt,
+            unpublishAt
           }),
         );
       } catch {}
     }, 300);
     return () => clearTimeout(id);
-  }, [title, subheading, description, startDate, endDate, startTime, endTime, publishModal, forceOpen, ctaLabel, ctaHref, imageFile, imageUrl]);
+  }, [title, subheading, description, startDate, endDate, startTime, endTime, publishModal, forceOpen, ctaLabel, ctaHref, imageFile, imageUrl, published, publishAt, unpublishAt]);
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -191,6 +201,20 @@ export default function CMSPage() {
     setSelectedEvent({ id: '' });
     setShowUpdateView(false);
     setEndTime('');
+    setPublished(false);
+    setPublishAt('');
+    setUnpublishAt('');
+  }
+
+  function clearForm() {
+    setTitle(''); setSubheading(''); setDescription('');
+    setStartDate(''); setEndDate(''); setStartTime('');
+    setCtaLabel(''); setCtaHref('');
+    setImageFile(null); setImageUrl(null);
+    localStorage.removeItem(DRAFT_KEY);
+    setPublished(false);
+    setPublishAt('');
+    setUnpublishAt('');
   }
 
   function onDragEnd(result: DropResult) {
@@ -212,7 +236,7 @@ export default function CMSPage() {
     try {
       setButtonLoading(true)
       const ids = events.map(e => e.id);
-      const res = await fetch('/api/events/reorder', {
+      const res = await fetch('/api/admin/events/reorder', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids }),
@@ -245,7 +269,7 @@ export default function CMSPage() {
 
   useEffect(() => { 
       if (tab !== 0){
-        fetchEvents({ setEvents, setLoadingEvents })
+        fetchEventsForAdmin({ setEvents, setLoadingEvents })
       };
   }, [tab]);
 
@@ -287,15 +311,17 @@ export default function CMSPage() {
         startTime: startTime||null,
         endTime: endTime||null,
         ctaLabel, ctaHref,
-        image_path,      
-        image_url, 
-        status: 'draft',
+        image_path,
+        image_url,
+        published,
+        publishAt: toUtcIso(publishAt) || null,
+        unpublishAt: toUtcIso(unpublishAt) || null,
       };
 
       let res, data;
       if (!eventId || tab === 0) {
         // CREATE
-        res = await fetch('/api/events', {
+        res = await fetch('/api/admin/events', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -322,7 +348,7 @@ export default function CMSPage() {
         }
 
       } else {
-        res = await fetch(`/api/events/${eventId}`, {
+        res = await fetch(`/api/admin/events/${eventId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -343,7 +369,7 @@ export default function CMSPage() {
           }))
         }
       }
-      if (tab !== 0) fetchEvents({ setEvents, setLoadingEvents });
+      if (tab !== 0) fetchEventsForAdmin({ setEvents, setLoadingEvents });
       if (image_url) setImageUrl(image_url);
     } catch (e: unknown) {
         setSnackbarSettings((prev) => ({...prev,
@@ -355,6 +381,7 @@ export default function CMSPage() {
     setButtonLoading(false)
     resetAll();
   }
+
   console.log(selectedEvent)
 
   async function onDelete(id: string) {
@@ -367,7 +394,7 @@ export default function CMSPage() {
       duration: 10000,
       actionCallback: async () => {
         try {
-          const res = await fetch(`/api/events/${id}`, { method: 'DELETE' });
+          const res = await fetch(`/api/admin/events/${id}`, { method: 'DELETE' });
           const data = await res.json();
           if (!res.ok) {
             setSnackbarSettings({
@@ -450,6 +477,39 @@ export default function CMSPage() {
     if (tab === 0) resetAll();
   }, [tab])
 
+  type Status = 'all'|'live' | 'scheduled' | 'expired' | 'hidden';
+  const computeStatus = (e: any): Status => {
+    if (e?.computed_status) return e.computed_status as Status;
+    if (!e?.published) return 'hidden';
+    const now = Date.now();
+    const pub  = e?.publish_at   ? new Date(e.publish_at).getTime()   : null;
+    const unpub= e?.unpublish_at ? new Date(e.unpublish_at).getTime() : null;
+    if (pub && pub > now) return 'scheduled';
+    if (unpub && unpub <= now) return 'expired';
+    return 'live';
+  };
+
+  const TAB_TO_STATUS: Status[] = ['all','live', 'scheduled', 'expired', 'hidden'];
+  const applyFilter = (items: any[], tabIdx: number) => {
+    if (tabIdx === 0){
+      setDisableDrag(false)
+      return items ?? []
+    }else{
+      console.log({ tabIdx })
+      setDisableDrag(true)
+      const wanted = TAB_TO_STATUS[tabIdx] ?? 'live';
+      console.log({ wanted })
+      return (items ?? []).filter(e => computeStatus(e) === wanted);
+    }
+  };
+
+  const filteredEvents = useMemo(() => applyFilter(events, filterTab), [events, filterTab]);
+
+  const counts = useMemo(() => {
+    const c = { live:0, scheduled:0, expired:0, hidden:0 };
+    for (const e of events) c[computeStatus(e)]++;
+    return c;
+  }, [events]);
 
   return (
     <div className="font-sans flex flex-col gap-4 md:flex-row min-h-screen md:h-screen p-8 md:gap-8 sm:px-20 bg-[#151c2f]">
@@ -481,7 +541,7 @@ export default function CMSPage() {
         {tab === 1 && (
           <div className={`space-y-3 ${showUpdateView? 'hidden': ''}`}>
             <div className="flex items-center justify-between">
-              <div className="text-sm text-white/80">Reorder events (drag rows)</div>
+              <div className="px-2 text-sm text-white/80">Reorder events (drag rows)</div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={saveOrder}
@@ -501,7 +561,7 @@ export default function CMSPage() {
                 </button>
                 <IconButton size="small"
                   onClick={()=>{
-                    fetchEvents({ setEvents, setLoadingEvents })
+                    fetchEventsForAdmin({ setEvents, setLoadingEvents })
                     resetAll()
                   }}
                 >
@@ -509,20 +569,45 @@ export default function CMSPage() {
                 </IconButton>
               </div>
             </div>
+            <div >
+              <Box sx={{ borderBottom: 1, borderColor: 'rgba(255,255,255,0.1)' }}>
+                <Tabs
+                  value={filterTab}
+                  onChange={(_, v) => {
+                    setFilterTab(v);
+                    console.log(v)
+                  }}
+                  variant="fullWidth"
+                  sx={{
+                    '& .MuiTab-root': { color: 'rgba(255,255,255,0.7)',
+                      fontSize: '12px',
+                     },
+                    '& .Mui-selected': { color: '#67ff56' },
+                    '& .MuiTabs-indicator': { backgroundColor: '#60fa68' },
+                  }}
+                > 
+                  <Tab label={`All`} />
+                  <Tab label={`Live`} />
+                  <Tab label={`Scheduled`} />
+                  <Tab label={`Expired`}  />
+                  <Tab label={`Hidden`} />
+                </Tabs>
+              </Box>
+            </div>
 
             {loadingEvents ? (
               <div className="flex justify-center py-4"><CircularProgress size={20} /></div>
             ) : (
               <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="events-order">
+                <Droppable droppableId="events-order" isDropDisabled={disableDrag}>
                   {(provided) => (
                     <ul
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      className="divide-y divide-white/10 rounded-lg h-[150px] md:h-[550px] overflow-scroll custom-scrollbar"
+                      className="divide-y divide-white/10 rounded-lg h-[150px] md:h-[500px] overflow-scroll custom-scrollbar"
                     >
-                      {events.map((e, index) => (
-                        <Draggable key={e.id} draggableId={e.id} index={index}>
+                      {filteredEvents.map((e, index) => (
+                        <Draggable key={e.id} draggableId={e.id} index={index} isDragDisabled={disableDrag} >
                           {(prov) => (
                             <li
                               ref={prov.innerRef}
@@ -537,11 +622,12 @@ export default function CMSPage() {
                                 >
                                   <DragIndicatorIcon fontSize="small" />
                                 </span>
-                                <span className="w-6 text-white/60 text-xs tabular-nums">{index + 1}</span>
-                                <span className="text-white hover:cursor-pointer"
+                                {/* <span className="w-6 text-white/60 text-xs tabular-nums">{index + 1}</span> */}
+                                <span className="text-white hover:cursor-pointer truncate max-w-[100px] md:max-w-[150px]"
                                   onClick={()=>{
                                     const id = e.id
                                     const ev = events.find(x => x.id === id);
+                                    console.log("here ev", ev)
                                     if (ev) {
                                       setEventId(ev.id);
                                       setTitle(ev.title || '');
@@ -554,12 +640,16 @@ export default function CMSPage() {
                                       setCtaLabel(ev.cta_label || '');
                                       setCtaHref(ev.cta_href || '');
                                       setImageUrl(ev.image_url || null);
+                                      setPublished(!!ev.published);
+                                      setPublishAt(ev.publish_at ? new Date(ev.publish_at).toISOString().slice(0,16) : '');
+                                      setUnpublishAt(ev.unpublish_at ? new Date(ev.unpublish_at).toISOString().slice(0,16) : '');
                                     }
-                                    // console.log(e.id)
+                                    // console.log(e)
                                   }}
                                 >{e.title || '(untitled)'}</span>
                               </div>
                               <span className="text-xs text-white/40">
+                                <StatusPill status={e.computed_status ?? "hidden"}/>
                                 <IconButton  aria-label="delete" onClick={() => {
                                       setShowUpdateView(true)
                                       setSelectedUpdateId(e.id)
@@ -577,6 +667,9 @@ export default function CMSPage() {
                                         setCtaLabel(ev.cta_label || '');
                                         setCtaHref(ev.cta_href || '');
                                         setImageUrl(ev.image_url || null);
+                                        setPublished(ev.published ?? false);
+                                        setPublishAt(ev.publish_at ? new Date(ev.publish_at).toISOString().slice(0,16) : '');
+                                        setUnpublishAt(ev.unpublish_at ? new Date(ev.unpublish_at).toISOString().slice(0,16) : '');
                                       }
                                     }
                                   }>
@@ -609,6 +702,21 @@ export default function CMSPage() {
         {showUpdateView && (
           <div className="space-y-2">
             <div className="flex items-center gap-2">
+              <IconButton size="small" 
+                onClick={()=>{
+                  setSelectedUpdateId('')
+                  resetAll()
+                  fetchEventsForAdmin({ setEvents, setLoadingEvents })
+                  }}
+                  >
+                  <div
+                    className='border border-[rgba(255,255,255,0.1)] flex justify-center items-center p-2 rounded hover:bg-white/10 transition duration-300 ease-in-out'>
+                    <ArrowBackOutlined htmlColor="#9ca3af" fontSize="small" 
+                      // className='border  p-4 rounded '
+                      // sx={{ border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '18px' }}
+                    />
+                  </div>
+              </IconButton>
               <Select
                 fullWidth
                 displayEmpty
@@ -632,6 +740,9 @@ export default function CMSPage() {
                     setCtaLabel(ev.cta_label || '');
                     setCtaHref(ev.cta_href || '');
                     setImageUrl(ev.image_url || null);
+                    setPublished(!!ev.published);
+                    setPublishAt(ev.publish_at ? new Date(ev.publish_at).toISOString().slice(0,16) : '');
+                    setUnpublishAt(ev.unpublish_at ? new Date(ev.unpublish_at).toISOString().slice(0,16) : '');
                   }
                 }}
                 sx={{
@@ -640,7 +751,7 @@ export default function CMSPage() {
                   '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.3)' },
                 }}
                 renderValue={(val) =>
-                  val ? (events.find(e => e.id === val)?.title + ' hi' || '---') : 'Select event…'
+                  val ? (events.find(e => e.id === val)?.title || '---') : 'Select event…'
                 }
               >
                 {loadingEvents && (
@@ -657,14 +768,6 @@ export default function CMSPage() {
                   </MenuItem>
                 ))}
               </Select>
-              <IconButton size="small" 
-                onClick={()=>{
-                  setSelectedUpdateId('')
-                  resetAll()
-                  fetchEvents({ setEvents, setLoadingEvents })
-                  }}>
-                <RefreshIcon htmlColor="#9ca3af" fontSize="small" />
-              </IconButton>
             </div>
             <div className="text-xs text-white/60">
               {selectedUpdateId ? `Editing: ${selectedUpdateId}` : 'Pick an event to edit'}
@@ -727,22 +830,39 @@ export default function CMSPage() {
               <LabeledInput label="CTA link" value={ctaHref} onChange={setCtaHref} placeholder="https://example.com" />
             </div>
 
-            <div className="mt-2">
-              <label className='flex items-center gap-2'>
-                <input type="checkbox" onChange={(e)=>{
-                  setIsScheduledPublish(e.target.checked)
-                }} />
-                <div className="text-sm text-white/80">Schedule Publish</div>
+            <div className="mt-2 grid grid-cols-2 gap-3">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={published}
+                  onChange={(e) => setPublished(e.target.checked)}
+                />
+                <div className="text-sm text-white/80">Published</div>
+              </label>
+
+              <div />
+              <label className="block">
+                <div className="text-sm mb-1 text-white/80">Publish at</div>
+                <input
+                  style={{ colorScheme: 'dark' }}
+                  type="datetime-local"
+                  value={publishAt}
+                  onChange={(e) => setPublishAt(e.target.value)}
+                  className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                />
+              </label>
+              <label className="block">
+                <div className="text-sm mb-1 text-white/80">Unpublish at</div>
+                <input
+                  style={{ colorScheme: 'dark' }}
+                  type="datetime-local"
+                  value={unpublishAt}
+                  min={publishAt || undefined}
+                  onChange={(e) => setUnpublishAt(e.target.value)}
+                  className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                />
               </label>
             </div>
-            {
-              isScheduledPublish && (
-                <div className="grid grid-cols-2 mt-1 gap-2">
-                  <LabeledDate label="Publish Date" value={publishDate} onChange={setPublishDate} />
-                  <LabeledDate label="Unpublish Date" value={unpublishDate} onChange={setUnpublishDate} min={publishDate || undefined} />
-                </div>
-              )
-            }
 
             <div className="flex gap-2 mt-1 pt-2">
               <button onClick={onSave} 
@@ -768,7 +888,7 @@ export default function CMSPage() {
                     </span>
                   ) : 'Schedule'}
               </button> */}
-              <button onClick={resetAll} className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white hover:cursor-pointer">
+              <button onClick={clearForm} className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white hover:cursor-pointer">
                 Clear
               </button>
             </div>

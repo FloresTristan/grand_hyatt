@@ -370,15 +370,18 @@ __turbopack_context__.s({
     "LabeledInput": ()=>LabeledInput,
     "LabeledTextarea": ()=>LabeledTextarea,
     "endOfDay": ()=>endOfDay,
-    "fetchEvents": ()=>fetchEvents,
+    "fetchEventsForAdmin": ()=>fetchEventsForAdmin,
+    "fetchEventsForClient": ()=>fetchEventsForClient,
     "fileToDataUrl": ()=>fileToDataUrl,
     "formatDateRange": ()=>formatDateRange,
     "formatTimeRange": ()=>formatTimeRange,
     "pretty": ()=>pretty,
     "shouldShowModal": ()=>shouldShowModal,
     "startOfDay": ()=>startOfDay,
-    "to12h": ()=>to12h
+    "to12h": ()=>to12h,
+    "toUtcIso": ()=>toUtcIso
 });
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 'use client';
 ;
@@ -399,7 +402,7 @@ const ImageDropzone = (param)=>{
                         children: "Image Upload"
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                        lineNumber: 47,
+                        lineNumber: 51,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -407,13 +410,13 @@ const ImageDropzone = (param)=>{
                         children: "Click, drag & drop, or paste"
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                        lineNumber: 48,
+                        lineNumber: 52,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 46,
+                lineNumber: 50,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)) : // eslint-disable-next-line @next/next/no-img-element
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
@@ -422,14 +425,14 @@ const ImageDropzone = (param)=>{
                 className: "absolute inset-0 w-full h-full object-cover rounded-xl"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 52,
+                lineNumber: 56,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "absolute inset-0 rounded-xl ring-0 group-hover:ring-2 ring-white/10 pointer-events-none"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 58,
+                lineNumber: 62,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -440,22 +443,46 @@ const ImageDropzone = (param)=>{
                 className: "hidden"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 59,
+                lineNumber: 63,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-        lineNumber: 38,
+        lineNumber: 42,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
 _c = ImageDropzone;
-async function fetchEvents(param) {
+async function fetchEventsForClient(param) {
     let { setEvents, setLoadingEvents } = param;
     setLoadingEvents(true);
     try {
+        var _process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY, _process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY1;
         const res = await fetch('/api/events', {
+            cache: 'no-store'
+        });
+        const data = await res.json();
+        console.log(data, 'fetched data for homepage');
+        console.log('ANON key fingerprint:', (_process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY = ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVuYWRxenpmeXl3c2JpY3Rmd3ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxODQ1OTIsImV4cCI6MjA3MTc2MDU5Mn0.VPk2P-BIeJs01QDgUwYtn-K66onMC70WpZeYdHZbEXs")) === null || _process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY === void 0 ? void 0 : _process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY.slice(0, 6), '…', (_process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY1 = ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVuYWRxenpmeXl3c2JpY3Rmd3ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxODQ1OTIsImV4cCI6MjA3MTc2MDU5Mn0.VPk2P-BIeJs01QDgUwYtn-K66onMC70WpZeYdHZbEXs")) === null || _process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY1 === void 0 ? void 0 : _process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY1.slice(-6));
+        if (!res.ok) throw new Error((data === null || data === void 0 ? void 0 : data.error) || 'Failed to load events');
+        const items = (data.items || []).sort((a, b)=>{
+            var _a_order, _b_order;
+            return ((_a_order = a.order) !== null && _a_order !== void 0 ? _a_order : 0) - ((_b_order = b.order) !== null && _b_order !== void 0 ? _b_order : 0);
+        });
+        // console.log(items, 'fetched items for homepage');
+        setEvents(items);
+    } catch (e) {
+        console.error(e);
+    } finally{
+        setLoadingEvents(false);
+    }
+}
+async function fetchEventsForAdmin(param) {
+    let { setEvents, setLoadingEvents } = param;
+    setLoadingEvents(true);
+    try {
+        const res = await fetch('/api/admin/events', {
             cache: 'no-store'
         });
         const data = await res.json();
@@ -464,7 +491,6 @@ async function fetchEvents(param) {
             var _a_order, _b_order;
             return ((_a_order = a.order) !== null && _a_order !== void 0 ? _a_order : 0) - ((_b_order = b.order) !== null && _b_order !== void 0 ? _b_order : 0);
         });
-        // console.log(items, 'fetched items for homepage');
         setEvents(items);
     } catch (e) {
         console.error(e);
@@ -482,7 +508,7 @@ function LabeledInput(param) {
                 children: label
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 91,
+                lineNumber: 121,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -492,13 +518,13 @@ function LabeledInput(param) {
                 className: "w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 92,
+                lineNumber: 122,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-        lineNumber: 90,
+        lineNumber: 120,
         columnNumber: 5
     }, this);
 }
@@ -513,7 +539,7 @@ function LabeledTextarea(param) {
                 children: label
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 100,
+                lineNumber: 130,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -525,13 +551,13 @@ function LabeledTextarea(param) {
                 className: "w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30 resize-y"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 101,
+                lineNumber: 131,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-        lineNumber: 99,
+        lineNumber: 129,
         columnNumber: 5
     }, this);
 }
@@ -546,7 +572,7 @@ function LabeledDate(param) {
                 children: label
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 109,
+                lineNumber: 139,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -561,13 +587,13 @@ function LabeledDate(param) {
                 className: "w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 110,
+                lineNumber: 140,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-        lineNumber: 108,
+        lineNumber: 138,
         columnNumber: 5
     }, this);
 }
@@ -642,6 +668,10 @@ function to12h(t, opts) {
     const ampm = (opts === null || opts === void 0 ? void 0 : opts.upper) ? suffix.toUpperCase() : suffix;
     return "".concat(hour, ":").concat(pad2(hm.m), " ").concat(ampm);
 }
+function toUtcIso(dtLocal) {
+    if (!dtLocal) return null; // dtLocal like "2025-09-08T17:15"
+    return new Date(dtLocal).toISOString(); // -> "2025-09-08T09:15:00.000Z" in Manila
+}
 function pretty(s) {
     const d = new Date(s);
     if (isNaN(d.getTime())) return '';
@@ -700,7 +730,7 @@ function Home() {
     const [open, setOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "Home.useEffect": ()=>{
-            (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchEvents"])({
+            (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchEventsForClient"])({
                 setEvents,
                 setLoadingEvents
             });

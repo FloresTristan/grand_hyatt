@@ -462,7 +462,8 @@ __turbopack_context__.s({
     "LabeledInput": ()=>LabeledInput,
     "LabeledTextarea": ()=>LabeledTextarea,
     "endOfDay": ()=>endOfDay,
-    "fetchEvents": ()=>fetchEvents,
+    "fetchEventsForAdmin": ()=>fetchEventsForAdmin,
+    "fetchEventsForClient": ()=>fetchEventsForClient,
     "fileToDataUrl": ()=>fileToDataUrl,
     "formatDateRange": ()=>formatDateRange,
     "formatTimeRange": ()=>formatTimeRange,
@@ -471,6 +472,7 @@ __turbopack_context__.s({
     "startOfDay": ()=>startOfDay,
     "to12h": ()=>to12h
 });
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 'use client';
 ;
@@ -491,7 +493,7 @@ const ImageDropzone = (param)=>{
                         children: "Image Upload"
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                        lineNumber: 47,
+                        lineNumber: 51,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -499,13 +501,13 @@ const ImageDropzone = (param)=>{
                         children: "Click, drag & drop, or paste"
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                        lineNumber: 48,
+                        lineNumber: 52,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 46,
+                lineNumber: 50,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)) : // eslint-disable-next-line @next/next/no-img-element
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
@@ -514,14 +516,14 @@ const ImageDropzone = (param)=>{
                 className: "absolute inset-0 w-full h-full object-cover rounded-xl"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 52,
+                lineNumber: 56,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "absolute inset-0 rounded-xl ring-0 group-hover:ring-2 ring-white/10 pointer-events-none"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 58,
+                lineNumber: 62,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -532,22 +534,46 @@ const ImageDropzone = (param)=>{
                 className: "hidden"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 59,
+                lineNumber: 63,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-        lineNumber: 38,
+        lineNumber: 42,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
 _c = ImageDropzone;
-async function fetchEvents(param) {
+async function fetchEventsForClient(param) {
     let { setEvents, setLoadingEvents } = param;
     setLoadingEvents(true);
     try {
+        var _process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY, _process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY1;
         const res = await fetch('/api/events', {
+            cache: 'no-store'
+        });
+        const data = await res.json();
+        console.log(data, 'fetched data for homepage');
+        console.log('ANON key fingerprint:', (_process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY = ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVuYWRxenpmeXl3c2JpY3Rmd3ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxODQ1OTIsImV4cCI6MjA3MTc2MDU5Mn0.VPk2P-BIeJs01QDgUwYtn-K66onMC70WpZeYdHZbEXs")) === null || _process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY === void 0 ? void 0 : _process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY.slice(0, 6), '…', (_process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY1 = ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVuYWRxenpmeXl3c2JpY3Rmd3ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxODQ1OTIsImV4cCI6MjA3MTc2MDU5Mn0.VPk2P-BIeJs01QDgUwYtn-K66onMC70WpZeYdHZbEXs")) === null || _process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY1 === void 0 ? void 0 : _process_env_NEXT_PUBLIC_SUPABASE_ANON_KEY1.slice(-6));
+        if (!res.ok) throw new Error((data === null || data === void 0 ? void 0 : data.error) || 'Failed to load events');
+        const items = (data.items || []).sort((a, b)=>{
+            var _a_order, _b_order;
+            return ((_a_order = a.order) !== null && _a_order !== void 0 ? _a_order : 0) - ((_b_order = b.order) !== null && _b_order !== void 0 ? _b_order : 0);
+        });
+        // console.log(items, 'fetched items for homepage');
+        setEvents(items);
+    } catch (e) {
+        console.error(e);
+    } finally{
+        setLoadingEvents(false);
+    }
+}
+async function fetchEventsForAdmin(param) {
+    let { setEvents, setLoadingEvents } = param;
+    setLoadingEvents(true);
+    try {
+        const res = await fetch('/api/admin/events', {
             cache: 'no-store'
         });
         const data = await res.json();
@@ -556,7 +582,6 @@ async function fetchEvents(param) {
             var _a_order, _b_order;
             return ((_a_order = a.order) !== null && _a_order !== void 0 ? _a_order : 0) - ((_b_order = b.order) !== null && _b_order !== void 0 ? _b_order : 0);
         });
-        // console.log(items, 'fetched items for homepage');
         setEvents(items);
     } catch (e) {
         console.error(e);
@@ -574,7 +599,7 @@ function LabeledInput(param) {
                 children: label
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 91,
+                lineNumber: 121,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -584,13 +609,13 @@ function LabeledInput(param) {
                 className: "w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 92,
+                lineNumber: 122,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-        lineNumber: 90,
+        lineNumber: 120,
         columnNumber: 5
     }, this);
 }
@@ -605,7 +630,7 @@ function LabeledTextarea(param) {
                 children: label
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 100,
+                lineNumber: 130,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -617,13 +642,13 @@ function LabeledTextarea(param) {
                 className: "w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30 resize-y"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 101,
+                lineNumber: 131,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-        lineNumber: 99,
+        lineNumber: 129,
         columnNumber: 5
     }, this);
 }
@@ -638,7 +663,7 @@ function LabeledDate(param) {
                 children: label
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 109,
+                lineNumber: 139,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -653,13 +678,13 @@ function LabeledDate(param) {
                 className: "w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-                lineNumber: 110,
+                lineNumber: 140,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/helpersAndInputs.tsx",
-        lineNumber: 108,
+        lineNumber: 138,
         columnNumber: 5
     }, this);
 }
@@ -813,6 +838,9 @@ function CMSPage() {
     const [endDate, setEndDate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     const [startTime, setStartTime] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     const [endTime, setEndTime] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    const [published, setPublished] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [publishAt, setPublishAt] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    const [unpublishAt, setUnpublishAt] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     // Modal controls (preview/editor only)
     const [publishModal, setPublishModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
     const [forceOpen, setForceOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
@@ -847,9 +875,9 @@ function CMSPage() {
         severity: ''
     });
     const [pendingDeleteId, setPendingDeleteId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
-    const [isScheduledPublish, setIsScheduledPublish] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [publishDate, setPublishDate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
-    const [unpublishDate, setUnpublishDate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    // const [isScheduledPublish, setIsScheduledPublish] = useState(false);
+    // const [publishDate, setPublishDate] = useState('');
+    // const [unpublishDate, setUnpublishDate] = useState('');
     const DRAFT_KEY = 'cmsDraft_v1';
     const inputRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
     const previewRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
@@ -872,6 +900,12 @@ function CMSPage() {
                 setForceOpen((_s_forceOpen = s.forceOpen) !== null && _s_forceOpen !== void 0 ? _s_forceOpen : true);
                 setCtaLabel(s.ctaLabel || '');
                 setCtaHref(s.ctaHref || '');
+                var _s_published;
+                setPublished((_s_published = s.published) !== null && _s_published !== void 0 ? _s_published : true);
+                var _s_publishAt;
+                setPublishAt((_s_publishAt = s.publishAt) !== null && _s_publishAt !== void 0 ? _s_publishAt : '');
+                var _s_unpublishAt;
+                setUnpublishAt((_s_unpublishAt = s.unpublishAt) !== null && _s_unpublishAt !== void 0 ? _s_unpublishAt : '');
                 if (s.imageDataUrl) setImageUrl(s.imageDataUrl);
             } catch (e) {}
         }
@@ -898,7 +932,10 @@ function CMSPage() {
                             forceOpen,
                             ctaLabel,
                             ctaHref,
-                            imageDataUrl
+                            imageDataUrl,
+                            published,
+                            publishAt,
+                            unpublishAt
                         }));
                     } catch (e) {}
                 }
@@ -920,7 +957,10 @@ function CMSPage() {
         ctaLabel,
         ctaHref,
         imageFile,
-        imageUrl
+        imageUrl,
+        published,
+        publishAt,
+        unpublishAt
     ]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "CMSPage.useEffect": ()=>{
@@ -1033,6 +1073,9 @@ function CMSPage() {
         });
         setShowUpdateView(false);
         setEndTime('');
+        setPublished(false);
+        setPublishAt('');
+        setUnpublishAt('');
     }
     function onDragEnd(result) {
         if (!result.destination) return;
@@ -1053,7 +1096,7 @@ function CMSPage() {
         try {
             setButtonLoading(true);
             const ids = events.map((e)=>e.id);
-            const res = await fetch('/api/events/reorder', {
+            const res = await fetch('/api/admin/events/reorder', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -1093,7 +1136,7 @@ function CMSPage() {
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "CMSPage.useEffect": ()=>{
             if (tab !== 0) {
-                (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchEvents"])({
+                (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchEventsForAdmin"])({
                     setEvents,
                     setLoadingEvents
                 });
@@ -1146,12 +1189,14 @@ function CMSPage() {
                 ctaHref,
                 image_path,
                 image_url,
-                status: 'draft'
+                published,
+                publishAt: publishAt || null,
+                unpublishAt: unpublishAt || null
             };
             let res, data;
             if (!eventId || tab === 0) {
                 // CREATE
-                res = await fetch('/api/events', {
+                res = await fetch('/api/admin/events', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1185,7 +1230,7 @@ function CMSPage() {
                     ;
                 }
             } else {
-                res = await fetch("/api/events/".concat(eventId), {
+                res = await fetch("/api/admin/events/".concat(eventId), {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1210,7 +1255,7 @@ function CMSPage() {
                         }));
                 }
             }
-            if (tab !== 0) (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchEvents"])({
+            if (tab !== 0) (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchEventsForAdmin"])({
                 setEvents,
                 setLoadingEvents
             });
@@ -1237,7 +1282,7 @@ function CMSPage() {
             duration: 10000,
             actionCallback: async ()=>{
                 try {
-                    const res = await fetch("/api/events/".concat(id), {
+                    const res = await fetch("/api/admin/events/".concat(id), {
                         method: 'DELETE'
                     });
                     const data = await res.json();
@@ -1355,25 +1400,25 @@ function CMSPage() {
                                     label: "Create"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                    lineNumber: 476,
+                                    lineNumber: 492,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Tab$2f$Tab$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Tab$3e$__["Tab"], {
                                     label: "Update"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                    lineNumber: 477,
+                                    lineNumber: 493,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/cmsPage.tsx",
-                            lineNumber: 460,
+                            lineNumber: 476,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                        lineNumber: 459,
+                        lineNumber: 475,
                         columnNumber: 9
                     }, this),
                     tab === 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1387,7 +1432,7 @@ function CMSPage() {
                                         children: "Reorder events (drag rows)"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 484,
+                                        lineNumber: 500,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1414,7 +1459,7 @@ function CMSPage() {
                                                                 strokeWidth: "4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                                lineNumber: 494,
+                                                                lineNumber: 510,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -1423,29 +1468,29 @@ function CMSPage() {
                                                                 d: "M4 12a8 8 0 018-8v4A4 4 0 004 12z"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                                lineNumber: 495,
+                                                                lineNumber: 511,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                        lineNumber: 493,
+                                                        lineNumber: 509,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                    lineNumber: 492,
+                                                    lineNumber: 508,
                                                     columnNumber: 21
                                                 }, this) : 'Save'
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                lineNumber: 486,
+                                                lineNumber: 502,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$IconButton$2f$IconButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__IconButton$3e$__["IconButton"], {
                                                 size: "small",
                                                 onClick: ()=>{
-                                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchEvents"])({
+                                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchEventsForAdmin"])({
                                                         setEvents,
                                                         setLoadingEvents
                                                     });
@@ -1456,24 +1501,24 @@ function CMSPage() {
                                                     fontSize: "small"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                    lineNumber: 508,
+                                                    lineNumber: 524,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                lineNumber: 502,
+                                                lineNumber: 518,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 485,
+                                        lineNumber: 501,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 483,
+                                lineNumber: 499,
                                 columnNumber: 13
                             }, this),
                             loadingEvents ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1482,12 +1527,12 @@ function CMSPage() {
                                     size: 20
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                    lineNumber: 514,
+                                    lineNumber: 530,
                                     columnNumber: 57
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 514,
+                                lineNumber: 530,
                                 columnNumber: 15
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$hello$2d$pangea$2f$dnd$2f$dist$2f$dnd$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DragDropContext"], {
                                 onDragEnd: onDragEnd,
@@ -1501,7 +1546,9 @@ function CMSPage() {
                                                 events.map((e, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$hello$2d$pangea$2f$dnd$2f$dist$2f$dnd$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Draggable"], {
                                                         draggableId: e.id,
                                                         index: index,
-                                                        children: (prov)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                        children: (prov)=>{
+                                                            var _e_computed_status;
+                                                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
                                                                 ref: prov.innerRef,
                                                                 ...prov.draggableProps,
                                                                 className: "flex items-center justify-between even:bg-[#151c2f] p-2  hover:bg-white/10",
@@ -1517,24 +1564,16 @@ function CMSPage() {
                                                                                     fontSize: "small"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                                                    lineNumber: 538,
+                                                                                    lineNumber: 554,
                                                                                     columnNumber: 35
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                                                lineNumber: 533,
+                                                                                lineNumber: 549,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                                className: "w-6 text-white/60 text-xs tabular-nums",
-                                                                                children: index + 1
-                                                                            }, void 0, false, {
-                                                                                fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                                                lineNumber: 540,
-                                                                                columnNumber: 33
-                                                                            }, this),
-                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                                className: "text-white hover:cursor-pointer",
+                                                                                className: "text-white hover:cursor-pointer truncate max-w-[100px] md:max-w-[150px]",
                                                                                 onClick: ()=>{
                                                                                     const id = e.id;
                                                                                     const ev = events.find((x)=>x.id === id);
@@ -1550,19 +1589,30 @@ function CMSPage() {
                                                                                         setCtaLabel(ev.cta_label || '');
                                                                                         setCtaHref(ev.cta_href || '');
                                                                                         setImageUrl(ev.image_url || null);
+                                                                                        setPublished(!!ev.published);
+                                                                                        setPublishAt(ev.publish_at ? new Date(ev.publish_at).toISOString().slice(0, 16) : '');
+                                                                                        setUnpublishAt(ev.unpublish_at ? new Date(ev.unpublish_at).toISOString().slice(0, 16) : '');
                                                                                     }
                                                                                 // console.log(e.id)
                                                                                 },
                                                                                 children: e.title || '(untitled)'
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                                                lineNumber: 541,
+                                                                                lineNumber: 557,
+                                                                                columnNumber: 33
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                className: "text-xs text-white/60",
+                                                                                children: (_e_computed_status = e.computed_status) !== null && _e_computed_status !== void 0 ? _e_computed_status : e.published ? 'live' : 'hidden'
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/app/components/cmsPage.tsx",
+                                                                                lineNumber: 580,
                                                                                 columnNumber: 33
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                                        lineNumber: 532,
+                                                                        lineNumber: 548,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1587,18 +1637,21 @@ function CMSPage() {
                                                                                         setCtaLabel(ev.cta_label || '');
                                                                                         setCtaHref(ev.cta_href || '');
                                                                                         setImageUrl(ev.image_url || null);
+                                                                                        setPublished(!!ev.published);
+                                                                                        setPublishAt(ev.publish_at ? new Date(ev.publish_at).toISOString().slice(0, 16) : '');
+                                                                                        setUnpublishAt(ev.unpublish_at ? new Date(ev.unpublish_at).toISOString().slice(0, 16) : '');
                                                                                     }
                                                                                 },
                                                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$EditOutlined$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                                                     className: "text-green-400 hover:text-green-500 transition duration-700 ease-in-out"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                                                    lineNumber: 583,
+                                                                                    lineNumber: 608,
                                                                                     columnNumber: 35
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                                                lineNumber: 563,
+                                                                                lineNumber: 585,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$IconButton$2f$IconButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__IconButton$3e$__["IconButton"], {
@@ -1610,29 +1663,30 @@ function CMSPage() {
                                                                                     className: "text-red-400 hover:text-red-500 transition duration-700 ease-in-out"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                                                    lineNumber: 589,
+                                                                                    lineNumber: 614,
                                                                                     columnNumber: 35
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                                                lineNumber: 585,
+                                                                                lineNumber: 610,
                                                                                 columnNumber: 33
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                                        lineNumber: 562,
+                                                                        lineNumber: 584,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                                lineNumber: 527,
+                                                                lineNumber: 543,
                                                                 columnNumber: 29
-                                                            }, this)
+                                                            }, this);
+                                                        }
                                                     }, e.id, false, {
                                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                        lineNumber: 525,
+                                                        lineNumber: 541,
                                                         columnNumber: 25
                                                     }, this)),
                                                 provided.placeholder,
@@ -1641,29 +1695,29 @@ function CMSPage() {
                                                     children: "No events yet."
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                    lineNumber: 598,
+                                                    lineNumber: 623,
                                                     columnNumber: 25
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/cmsPage.tsx",
-                                            lineNumber: 519,
+                                            lineNumber: 535,
                                             columnNumber: 21
                                         }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                    lineNumber: 517,
+                                    lineNumber: 533,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 516,
+                                lineNumber: 532,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                        lineNumber: 482,
+                        lineNumber: 498,
                         columnNumber: 11
                     }, this),
                     showUpdateView && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1695,6 +1749,10 @@ function CMSPage() {
                                                 setCtaLabel(ev.cta_label || '');
                                                 setCtaHref(ev.cta_href || '');
                                                 setImageUrl(ev.image_url || null);
+                                                var _ev_published;
+                                                setPublished((_ev_published = ev.published) !== null && _ev_published !== void 0 ? _ev_published : false);
+                                                setPublishAt(ev.publish_at ? new Date(ev.publish_at).toISOString().slice(0, 16) : '');
+                                                setUnpublishAt(ev.unpublish_at ? new Date(ev.unpublish_at).toISOString().slice(0, 16) : '');
                                             }
                                         },
                                         sx: {
@@ -1708,7 +1766,7 @@ function CMSPage() {
                                         },
                                         renderValue: (val)=>{
                                             var _events_find;
-                                            return val ? ((_events_find = events.find((e)=>e.id === val)) === null || _events_find === void 0 ? void 0 : _events_find.title) + ' hi' || '---' : 'Select event…';
+                                            return val ? ((_events_find = events.find((e)=>e.id === val)) === null || _events_find === void 0 ? void 0 : _events_find.title) || '---' : 'Select event…';
                                         },
                                         children: [
                                             loadingEvents && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$MenuItem$2f$MenuItem$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MenuItem$3e$__["MenuItem"], {
@@ -1721,14 +1779,14 @@ function CMSPage() {
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                        lineNumber: 648,
+                                                        lineNumber: 676,
                                                         columnNumber: 21
                                                     }, this),
                                                     " Loading…"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                lineNumber: 647,
+                                                lineNumber: 675,
                                                 columnNumber: 19
                                             }, this),
                                             !loadingEvents && events.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$MenuItem$2f$MenuItem$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MenuItem$3e$__["MenuItem"], {
@@ -1736,7 +1794,7 @@ function CMSPage() {
                                                 children: "No events yet"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                lineNumber: 652,
+                                                lineNumber: 680,
                                                 columnNumber: 19
                                             }, this),
                                             events.map((e)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$MenuItem$2f$MenuItem$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MenuItem$3e$__["MenuItem"], {
@@ -1744,13 +1802,13 @@ function CMSPage() {
                                                     children: e.title || '(untitled)'
                                                 }, e.id, false, {
                                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                    lineNumber: 655,
+                                                    lineNumber: 683,
                                                     columnNumber: 19
                                                 }, this))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 612,
+                                        lineNumber: 637,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$IconButton$2f$IconButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__IconButton$3e$__["IconButton"], {
@@ -1758,7 +1816,7 @@ function CMSPage() {
                                         onClick: ()=>{
                                             setSelectedUpdateId('');
                                             resetAll();
-                                            (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchEvents"])({
+                                            (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchEventsForAdmin"])({
                                                 setEvents,
                                                 setLoadingEvents
                                             });
@@ -1768,18 +1826,18 @@ function CMSPage() {
                                             fontSize: "small"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/cmsPage.tsx",
-                                            lineNumber: 666,
+                                            lineNumber: 694,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 660,
+                                        lineNumber: 688,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 611,
+                                lineNumber: 636,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1787,13 +1845,13 @@ function CMSPage() {
                                 children: selectedUpdateId ? "Editing: ".concat(selectedUpdateId) : 'Pick an event to edit'
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 669,
+                                lineNumber: 697,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                        lineNumber: 610,
+                        lineNumber: 635,
                         columnNumber: 11
                     }, this),
                     canShowForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1808,7 +1866,7 @@ function CMSPage() {
                                 inputRef: inputRef
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 677,
+                                lineNumber: 705,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1821,7 +1879,7 @@ function CMSPage() {
                                         placeholder: "Enter title"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 686,
+                                        lineNumber: 714,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LabeledInput"], {
@@ -1831,7 +1889,7 @@ function CMSPage() {
                                         placeholder: "Optional subheading"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 687,
+                                        lineNumber: 715,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LabeledTextarea"], {
@@ -1842,7 +1900,7 @@ function CMSPage() {
                                         rows: 3
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 688,
+                                        lineNumber: 716,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1855,18 +1913,18 @@ function CMSPage() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/cmsPage.tsx",
-                                            lineNumber: 689,
+                                            lineNumber: 717,
                                             columnNumber: 54
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 689,
+                                        lineNumber: 717,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 685,
+                                lineNumber: 713,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1878,7 +1936,7 @@ function CMSPage() {
                                         onChange: setStartDate
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 693,
+                                        lineNumber: 721,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LabeledDate"], {
@@ -1888,13 +1946,13 @@ function CMSPage() {
                                         min: startDate || undefined
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 694,
+                                        lineNumber: 722,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 692,
+                                lineNumber: 720,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1908,7 +1966,7 @@ function CMSPage() {
                                                 children: "Start time"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                lineNumber: 699,
+                                                lineNumber: 727,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1921,13 +1979,13 @@ function CMSPage() {
                                                 className: "w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                lineNumber: 702,
+                                                lineNumber: 730,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 698,
+                                        lineNumber: 726,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -1938,7 +1996,7 @@ function CMSPage() {
                                                 children: "End time"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                lineNumber: 711,
+                                                lineNumber: 739,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1951,19 +2009,19 @@ function CMSPage() {
                                                 className: "w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                lineNumber: 714,
+                                                lineNumber: 742,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 710,
+                                        lineNumber: 738,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 697,
+                                lineNumber: 725,
                                 columnNumber: 13
                             }, this),
                             dateError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1971,7 +2029,7 @@ function CMSPage() {
                                 children: dateError
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 723,
+                                lineNumber: 751,
                                 columnNumber: 27
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1984,7 +2042,7 @@ function CMSPage() {
                                         placeholder: "Learn More"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 726,
+                                        lineNumber: 754,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LabeledInput"], {
@@ -1994,76 +2052,115 @@ function CMSPage() {
                                         placeholder: "https://example.com"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 727,
+                                        lineNumber: 755,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 725,
+                                lineNumber: 753,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "mt-2",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                    className: "flex items-center gap-2",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                            type: "checkbox",
-                                            onChange: (e)=>{
-                                                setIsScheduledPublish(e.target.checked);
-                                            }
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/components/cmsPage.tsx",
-                                            lineNumber: 732,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "text-sm text-white/80",
-                                            children: "Schedule Publish"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/components/cmsPage.tsx",
-                                            lineNumber: 735,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/app/components/cmsPage.tsx",
-                                    lineNumber: 731,
-                                    columnNumber: 15
-                                }, this)
-                            }, void 0, false, {
-                                fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 730,
-                                columnNumber: 13
-                            }, this),
-                            isScheduledPublish && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "grid grid-cols-2 mt-1 gap-2",
+                                className: "mt-2 grid grid-cols-2 gap-3",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LabeledDate"], {
-                                        label: "Publish Date",
-                                        value: publishDate,
-                                        onChange: setPublishDate
-                                    }, void 0, false, {
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        className: "flex items-center gap-2",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "checkbox",
+                                                checked: published,
+                                                onChange: (e)=>setPublished(e.target.checked)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/components/cmsPage.tsx",
+                                                lineNumber: 760,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-sm text-white/80",
+                                                children: "Published"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/components/cmsPage.tsx",
+                                                lineNumber: 765,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 741,
-                                        columnNumber: 19
+                                        lineNumber: 759,
+                                        columnNumber: 15
                                     }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$helpersAndInputs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LabeledDate"], {
-                                        label: "Unpublish Date",
-                                        value: unpublishDate,
-                                        onChange: setUnpublishDate,
-                                        min: publishDate || undefined
-                                    }, void 0, false, {
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {}, void 0, false, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 742,
-                                        columnNumber: 19
+                                        lineNumber: 768,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        className: "block",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-sm mb-1 text-white/80",
+                                                children: "Publish at"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/components/cmsPage.tsx",
+                                                lineNumber: 770,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                style: {
+                                                    colorScheme: 'dark'
+                                                },
+                                                type: "datetime-local",
+                                                value: publishAt,
+                                                onChange: (e)=>setPublishAt(e.target.value),
+                                                className: "w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/components/cmsPage.tsx",
+                                                lineNumber: 771,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/components/cmsPage.tsx",
+                                        lineNumber: 769,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        className: "block",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-sm mb-1 text-white/80",
+                                                children: "Unpublish at"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/components/cmsPage.tsx",
+                                                lineNumber: 780,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                style: {
+                                                    colorScheme: 'dark'
+                                                },
+                                                type: "datetime-local",
+                                                value: unpublishAt,
+                                                min: publishAt || undefined,
+                                                onChange: (e)=>setUnpublishAt(e.target.value),
+                                                className: "w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/components/cmsPage.tsx",
+                                                lineNumber: 781,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/components/cmsPage.tsx",
+                                        lineNumber: 779,
+                                        columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 740,
-                                columnNumber: 17
+                                lineNumber: 758,
+                                columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex gap-2 mt-1 pt-2",
@@ -2090,7 +2187,7 @@ function CMSPage() {
                                                             strokeWidth: "4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                            lineNumber: 754,
+                                                            lineNumber: 799,
                                                             columnNumber: 93
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -2099,24 +2196,24 @@ function CMSPage() {
                                                             d: "M4 12a8 8 0 018-8v4A4 4 0 004 12z"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                            lineNumber: 754,
+                                                            lineNumber: 799,
                                                             columnNumber: 186
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                                    lineNumber: 754,
+                                                    lineNumber: 799,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/cmsPage.tsx",
-                                            lineNumber: 752,
+                                            lineNumber: 797,
                                             columnNumber: 21
                                         }, this) : tab === 0 || !eventId ? 'Publish' : 'Update'
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 748,
+                                        lineNumber: 793,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2125,25 +2222,25 @@ function CMSPage() {
                                         children: "Clear"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                                        lineNumber: 771,
+                                        lineNumber: 816,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 747,
+                                lineNumber: 792,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                        lineNumber: 676,
+                        lineNumber: 704,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                lineNumber: 457,
+                lineNumber: 473,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2154,7 +2251,7 @@ function CMSPage() {
                         children: "Live preview from website"
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                        lineNumber: 781,
+                        lineNumber: 826,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2167,7 +2264,7 @@ function CMSPage() {
                                 className: "absolute inset-0 w-full h-full"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 783,
+                                lineNumber: 828,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$EventModalOverlay$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2178,13 +2275,13 @@ function CMSPage() {
                                 initialIndex: Math.max(0, previewEvents.findIndex((x)=>x.title === title))
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                                lineNumber: 784,
+                                lineNumber: 829,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                        lineNumber: 782,
+                        lineNumber: 827,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2198,31 +2295,31 @@ function CMSPage() {
                                     onChange: (e)=>setPublishModal(e.target.checked)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                    lineNumber: 795,
+                                    lineNumber: 840,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                     children: "Publish event popup (preview)"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/cmsPage.tsx",
-                                    lineNumber: 796,
+                                    lineNumber: 841,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/cmsPage.tsx",
-                            lineNumber: 794,
+                            lineNumber: 839,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/cmsPage.tsx",
-                        lineNumber: 793,
+                        lineNumber: 838,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                lineNumber: 780,
+                lineNumber: 825,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$Snackbar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2230,17 +2327,17 @@ function CMSPage() {
                 setSnackbarSettings: setSnackbarSettings
             }, void 0, false, {
                 fileName: "[project]/src/app/components/cmsPage.tsx",
-                lineNumber: 804,
+                lineNumber: 849,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/cmsPage.tsx",
-        lineNumber: 455,
+        lineNumber: 471,
         columnNumber: 5
     }, this);
 }
-_s(CMSPage, "gaHdp/1FAHarUXYDQ1JXsmdM/zI=");
+_s(CMSPage, "UGxeoSpD9wOWxLR780+5b7eOlHk=");
 _c = CMSPage;
 var _c;
 __turbopack_context__.k.register(_c, "CMSPage");

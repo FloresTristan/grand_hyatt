@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import grandhyattmodel from "../app/assets/grandhyatt-resized.png"
 import EventModalOverlay from './components/EventModalOverlay';
-import { fetchEvents, EventType, formatDateRange, to12h } from './components/helpersAndInputs';
+import { fetchEventsForClient, EventType, formatDateRange, to12h } from './components/helpersAndInputs';
 import { useEffect, useState } from 'react';
 import { IoInformationCircleSharp } from "react-icons/io5";
 
@@ -14,7 +14,7 @@ export default function Home() {
   const [open, setOpen] = useState(true);
 
   useEffect(() => {
-    fetchEvents({ setEvents, setLoadingEvents});
+    fetchEventsForClient({ setEvents, setLoadingEvents});
     const isInIframe = window.self !== window.top;
     if (!isInIframe) {
       setShowModal(true);

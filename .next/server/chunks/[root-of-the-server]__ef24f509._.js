@@ -151,6 +151,7 @@ async function createSupabaseServer() {
 __turbopack_context__.s({
     "GET": ()=>GET,
     "POST": ()=>POST,
+    "dynamic": ()=>dynamic,
     "runtime": ()=>runtime
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/server.js [app-route] (ecmascript)");
@@ -158,12 +159,14 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2f$server$2e
 ;
 ;
 const runtime = 'nodejs';
+const dynamic = 'force-dynamic';
 async function GET() {
     const supabase = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2f$server$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createSupabaseServer"])();
-    const { data, error } = await supabase.from('events').select('*').order('order', {
+    const { data, error } = await supabase.from('events_with_status').select('id,title,subheading,description,image_url,publish_at,unpublish_at,computed_status,"order",updated_at,starts_at,ends_at').order('order', {
         ascending: true
-    }).order('updated_at', {
-        ascending: true
+    }).order('publish_at', {
+        ascending: false,
+        nullsFirst: true
     });
     if (error) return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
         error: error.message
@@ -184,18 +187,19 @@ async function POST(req) {
         status: 401
     });
     const payload = {
-        title: body.title,
-        subheading: body.subheading,
-        description: body.description,
-        start_date: body.startDate || null,
-        end_date: body.endDate || null,
-        start_time: body.startTime || null,
-        end_time: body.endTime || null,
-        cta_label: body.ctaLabel,
-        cta_href: body.ctaHref,
-        image_url: body.image_url || null,
-        image_path: body.image_path || null,
-        status: body.status || 'draft',
+        title: body.title ?? null,
+        subheading: body.subheading ?? null,
+        description: body.description ?? null,
+        start_date: body.startDate ?? null,
+        end_date: body.endDate ?? null,
+        start_time: body.startTime ?? null,
+        end_time: body.endTime ?? null,
+        cta_label: body.ctaLabel ?? null,
+        cta_href: body.ctaHref ?? null,
+        image_url: body.image_url ?? null,
+        published: Boolean(body.published ?? false),
+        publish_at: body.publishAt ?? null,
+        unpublish_at: body.unpublishAt ?? null,
         order: body.order ?? 0,
         updated_by: user.id
     };
