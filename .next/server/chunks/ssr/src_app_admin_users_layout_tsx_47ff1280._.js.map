@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 5, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Mata/Documents/GitHub/grand_hyatt/src/app/admin/users/layout.tsx"],"sourcesContent":["import { ReactNode } from 'react';\r\nimport { notFound, redirect } from 'next/navigation';\r\nimport { createSupabaseServer } from '../../../../lib/supabase/server.ts';\r\n\r\nexport default async function UsersLayout({ children }: { children: ReactNode }) {\r\n  const supabase = await createSupabaseServer();\r\n  const { data: { user } } = await supabase.auth.getUser();\r\n  if (!user) redirect('/login');\r\n\r\n  const role = (user.app_metadata as unknown)?.role ?? 'editor';\r\n  if (role !== 'admin') notFound(); \r\n  return <>{children}</>;\r\n}\r\n"],"names":[],"mappings":";;;;AACA;AAAA;AACA;;;;AAEe,eAAe,YAAY,EAAE,QAAQ,EAA2B;IAC7E,MAAM,WAAW,MAAM,CAAA,GAAA,yHAAA,CAAA,uBAAoB,AAAD;IAC1C,MAAM,EAAE,MAAM,EAAE,IAAI,EAAE,EAAE,GAAG,MAAM,SAAS,IAAI,CAAC,OAAO;IACtD,IAAI,CAAC,MAAM,CAAA,GAAA,qLAAA,CAAA,WAAQ,AAAD,EAAE;IAEpB,MAAM,OAAO,AAAC,KAAK,YAAY,EAAc,QAAQ;IACrD,IAAI,SAAS,SAAS,CAAA,GAAA,qLAAA,CAAA,WAAQ,AAAD;IAC7B,qBAAO;kBAAG;;AACZ","debugId":null}}]
-}

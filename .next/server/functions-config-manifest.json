@@ -1,12 +1,13 @@
 {
   "version": 1,
   "functions": {
+    "/api/admin/events/reorder": {},
+    "/api/admin/events": {},
     "/api/admin/users": {},
-    "/api/bootstrap/create-first-admin": {},
     "/api/admin/users/create": {},
     "/api/admin/users/[uid]": {},
-    "/api/events/reorder": {},
+    "/api/admin/events/[id]": {},
     "/api/events": {},
-    "/api/events/[id]": {}
+    "/api/bootstrap/create-first-admin": {}
   }
 }
