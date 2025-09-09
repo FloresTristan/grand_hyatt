@@ -35,26 +35,6 @@ export default function Login() {
       setLoading(false);
     }
   }
-
-  async function onForgotPassword() {
-    const email = (document.querySelector('input[name="email"]') as HTMLInputElement)?.value?.trim();
-    if (!email) return setErr('Enter your email first to receive a reset link.');
-    setErr(null);
-    setLoading(true);
-    try {
-      // Adjust redirectTo to your real password reset page/route
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset`,
-      });
-      if (error) throw error;
-      setErr('Password reset email sent. Check your inbox.');
-    } catch (e: unknown) {
-      setErr(e instanceof Error? e.message: 'Failed to send reset email');
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return (
     <main className="p-6 bg-[#151c2f] min-h-screen w-full flex flex-col items-center justify-center">
       <div>
@@ -88,16 +68,8 @@ export default function Login() {
 
           <div className="w-full flex justify-end items-center gap-x-2">
             <button
-              type="button"
-              onClick={onForgotPassword}
-              className="text-blue-400  hover:underline disabled:opacity-60"
               disabled={loading}
-            >
-              Forgot password?
-            </button>
-            <button
-              disabled={loading}
-              className="w-[35%] md:w-[30%] xl:w-[20%]  rounded-lg bg-blue-600 p-2 text-sm cursor-pointer disabled:opacity-60"
+              className="w-full rounded-lg bg-blue-600 p-2 text-sm cursor-pointer disabled:opacity-60"
             >
               {/* {loading ? '...' : 'Log in'} */}
               {loading ? (

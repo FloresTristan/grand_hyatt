@@ -1,5 +1,6 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import { useEffect, useState } from 'react';
+import { Role, UserRow } from './createUserForm';
 
 type CreateOrUpdatePayload = {
   email: string;
@@ -30,6 +31,7 @@ export default function UserFormModal({
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
+  console.log({ initial });
   useEffect(() => {
     if (open) {
       setErr(null);

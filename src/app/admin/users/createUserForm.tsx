@@ -6,8 +6,8 @@ import SnackbarComponent, {SnackbarSettings} from '../../components/Snackbar';
 import UserFormModal from './userFormModal';
 
 
-type Role = 'admin' | 'editor' ;
-type UserRow = {
+export type Role = 'admin' | 'editor' | 'super-admin';
+export type UserRow = {
   uid: string;
   email: string;
   displayName?: string;
@@ -81,6 +81,7 @@ export default function UsersPage() {
     setInitial(user);
     setOpen(true);
   }
+
   async function onDelete(user: UserRow) {
     if (!confirm(`Delete user ${user.email}?`)) return;
     try {
@@ -139,6 +140,7 @@ export default function UsersPage() {
           body: JSON.stringify(body),
         });
         const data = await res.json();
+        console.log({data})
         if (!res.ok){
           setSnackbarSettings((prev) => ({...prev,
             open: true,
@@ -176,12 +178,12 @@ export default function UsersPage() {
               placeholder="Search users…"
               className="rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30 text-sm"
             />
-            <button
-              onClick={onAdd}
-              className="rounded-lg bg-emerald-500/90 hover:bg-emerald-500 text-black font-medium px-3 py-2 text-sm"
-            >
-              + Add user
-            </button>
+              <button
+                onClick={onAdd}
+                className="rounded-lg bg-emerald-500/90 hover:bg-emerald-500 text-black font-medium px-3 py-2 text-sm"
+              >
+                + Add user
+              </button>
           </div>
         </header>
 
@@ -267,9 +269,9 @@ function Td({ children, align = 'left' }: { children: React.ReactNode; align?: '
 function RoleBadge({ role }: { role?: Role }) {
   const r = (role || 'user') as Role;
   const styles: Record<Role, string> = {
-    admin: 'bg-red-500/20 text-red-300',
-    editor: 'bg-blue-500/20 text-blue-300',
-    user: 'bg-white/10 text-white/70',
+    "super-admin": 'bg-red-500/20 text-red-300',
+    admin: 'bg-blue-500/20 text-blue-300',
+    editor: 'bg-white/10 text-white/70',
   };
   return <span className={`rounded-full px-2 py-0.5 text-xs ${styles[r]}`}>{r}</span>;
 }

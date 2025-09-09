@@ -75,7 +75,7 @@ export async function POST(req: Request) {
     .insert(payload)
     .select()
     .single();
-
+  console.log({ payload, data, error });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ item: data });
 }

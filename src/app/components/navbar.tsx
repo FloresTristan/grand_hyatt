@@ -40,6 +40,8 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
     }
   }
 
+  const isNotEditor = role !== 'editor';
+
   return (
     <nav
       className={`sticky top-0 z-50 bg-[#212e3f] text-white transition-colors
@@ -68,7 +70,7 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
               Seasons
             </Link>
           </li>
-          {role === 'admin' && (
+          {isNotEditor && (
             <li>
               <Link 
                 href="/admin/users" 

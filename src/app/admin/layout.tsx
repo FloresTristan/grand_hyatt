@@ -4,6 +4,10 @@ import NavBar from '../components/navbar';
 import { createSupabaseAdmin } from '../../../lib/supabase/admin';
 import { createSupabaseServer } from '../../../lib/supabase/server'
 
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const admin = createSupabaseAdmin();
   const { count: profilesCount, error: profilesErr } = await admin
@@ -13,8 +17,8 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     console.log("error", profilesErr)
   }
   if ((profilesCount ?? 0) === 0) {
-    redirect('/signup'); 
     console.log(profilesCount)
+    redirect('/signup'); 
   }
 
   const supabase = await createSupabaseServer();
@@ -22,7 +26,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   if (!user) redirect('/login');
 
   const role = (user.app_metadata as { role?: string })?.role ?? 'user';
-  if (role !== 'admin' && role !== 'editor') notFound();
+  if (role !== 'super-admin' && role !== 'admin' && role !== 'editor') notFound();
 
   return (
     <>
