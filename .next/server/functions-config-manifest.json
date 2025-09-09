@@ -4,10 +4,10 @@
     "/api/admin/events/reorder": {},
     "/api/admin/events": {},
     "/api/admin/users/create": {},
+    "/api/admin/users": {},
     "/api/admin/events/[id]": {},
     "/api/admin/users/[uid]": {},
-    "/api/bootstrap/create-first-admin": {},
     "/api/events": {},
-    "/api/admin/users": {}
+    "/api/bootstrap/create-first-admin": {}
   }
 }

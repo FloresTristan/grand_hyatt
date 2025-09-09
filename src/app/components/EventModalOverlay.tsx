@@ -4,6 +4,8 @@ import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import ScheduleIcon from '@mui/icons-material/Schedule';
+import {ImageLightbox} from './Lightbox';
+import { on } from 'events';
 
 
 export type EventItem = {
@@ -35,6 +37,7 @@ export default function EventModalOverlay({
   const [index, setIndex] = useState(() =>
     Math.min(Math.max(initialIndex, 0), Math.max(0, (events?.length ?? 1) - 1))
   );
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   useEffect(() => {
     setIndex(Math.min(Math.max(initialIndex, 0), Math.max(0, (events?.length ?? 1) - 1)));
@@ -42,6 +45,8 @@ export default function EventModalOverlay({
 
   console.log({ index });
   const dotRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const imageRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     const activeDot = dotRefs.current[index];
@@ -53,6 +58,19 @@ export default function EventModalOverlay({
       });
     }
   }, [index]);
+
+  
+
+  useEffect(() => {
+    function onClickOutsideImage(e: MouseEvent) {
+      if (e.target === imageRef.current) {
+        setLightboxOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', onClickOutsideImage );
+    return () => document.removeEventListener('mousedown', onClickOutsideImage );
+  }, []);
 
   useEffect(() => {
     if (!open || (events?.length ?? 0) < 1) return;
@@ -70,7 +88,7 @@ export default function EventModalOverlay({
   if (!open || !hasEvents) return null;
   
   const pos = container === 'contained' ? 'absolute' : 'fixed';
-  const z   = container === 'contained' ? 'z-10' : 'z-[9999]';
+  const z   = container === 'contained' ? 'z-10' : 'z-[50]';
   const current = events[index];
   console.log({ current });
 
@@ -111,15 +129,24 @@ export default function EventModalOverlay({
 
         <div className="px-5 pb-5 pt-6">
           {current?.imageUrl && (
-            <div className="relative mx-auto mb-4 h-32 w-full overflow-hidden rounded-xl sm:h-36">
+            <div className="relative mx-auto mb-4 h-32 w-full overflow-hidden rounded-xl sm:h-60">
               <Image
                 src={current.imageUrl}
                 alt={current.title || ''}
                 fill
                 unoptimized
-                className="object-cover"
+                className="object-contain object-center bg-black/50 cursor-zoom-in
+                  hover:scale-[1.02] transition-transform duration-300 hover:opacity-70 hover:duration-500"
                 sizes="(max-width: 640px) 100vw, 560px"
                 priority
+                onClick={() => setLightboxOpen(true)}
+              />
+              <ImageLightbox
+                open={lightboxOpen}
+                src={current.imageUrl || ''}
+                alt={current.title || ''}
+                imageRef={imageRef}
+                onClose={() => setLightboxOpen(false)}
               />
             </div>
           )}

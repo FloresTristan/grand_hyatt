@@ -7,7 +7,7 @@ import grandhyattmodel from '../assets/grandhyatt.png';
 import { useRouter, usePathname } from 'next/navigation';
 import { supabase } from '../../../lib/supabase/client';
 
-type Role = 'admin' | 'editor';
+type Role = 'admin' | 'editor' | 'super-admin';
 
 export default function NavBar({ role = 'editor' }: { role?: Role }) {
   const r = useRouter();
