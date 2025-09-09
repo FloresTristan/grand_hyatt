@@ -36,8 +36,8 @@ export async function PATCH(req: Request, {params}: Ctx) {
     cta_href: body.ctaHref ?? undefined,
     image_url: body.image_url ?? undefined,
     published: typeof body.published === 'boolean' ? body.published : undefined,
-    publish_at: ensureUtcIso(body.publishAt) === undefined ? undefined : ensureUtcIso(body.publishAt),
-    unpublish_at: ensureUtcIso(body.unpublishAt) === undefined ? undefined : ensureUtcIso(body.unpublishAt),
+    publish_at: body.publishAt === undefined ? undefined : body.publishAt,
+    unpublish_at: body.unpublishAt === undefined ? undefined : body.unpublishAt,
     order: typeof body.order === 'number' ? body.order : undefined,
   } as const;
 
@@ -111,7 +111,6 @@ export function toStoragePath(
 
 export function ensureUtcIso(v?: string | null) {
   if (!v) return null;
-  // If it already has Z or an offset, trust it; else treat as local
   if (/[zZ]$/.test(v) || /[+\-]\d\d:\d\d$/.test(v)) return v;
   return new Date(v).toISOString();
 }

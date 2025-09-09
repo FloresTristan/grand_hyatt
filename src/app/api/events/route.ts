@@ -16,7 +16,7 @@ export async function GET() {
   console.log('GET /api/events as anon, user?', userCheck?.user);
   const { data, error } = await supabase
     .from('events_with_status')
-    .select('id,title,subheading,description,image_url,publish_at,unpublish_at,computed_status,"order",updated_at,starts_at,ends_at,published')
+    .select('*')
     .eq('computed_status', 'live')
     .order('order', { ascending: true })
     .order('publish_at', { ascending: false, nullsFirst: true });

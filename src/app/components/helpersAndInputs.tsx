@@ -142,6 +142,33 @@ export function LabeledDate({ label, value, onChange, min, max }: { label: strin
   );
 }
 
+export type Status = 'all'|'live' | 'scheduled' | 'expired' | 'hidden';
+export const computeStatus = (e: EventType): Status => {
+  if (e?.computed_status) return e.computed_status as Status;
+  if (!e?.published) return 'hidden';
+  const now = Date.now();
+  const pub  = e?.publish_at   ? new Date(e.publish_at).getTime()   : null;
+  const unpub= e?.unpublish_at ? new Date(e.unpublish_at).getTime() : null;
+  if (pub && pub > now) return 'scheduled';
+  if (unpub && unpub <= now) return 'expired';
+  return 'live';
+};
+
+export const TAB_TO_STATUS: Status[] = ['all','live', 'scheduled', 'expired', 'hidden'];
+export const applyFilter = (items: EventType[], tabIdx: number, setDisableDrag: (value:boolean)=>void ) => {
+  if (tabIdx === 0){
+    setDisableDrag(false)
+    return items ?? []
+  }else{
+    console.log({ tabIdx })
+    setDisableDrag(true)
+    const wanted = TAB_TO_STATUS[tabIdx] ?? 'live';
+    console.log({ wanted })
+    return (items ?? []).filter(e => computeStatus(e) === wanted);
+  }
+};
+
+
 export function shouldShowModal({
   publishModal,
   forceOpen,
@@ -177,21 +204,6 @@ export function formatDateRange(start?: string, end?: string) {
   }
   return `${pretty(start!)} – ${pretty(end!)}`;
 }
-
-// export function formatTimeRange(start?: string, end?: string) {
-//   if (!start && !end) return '';
-//   if (start && !end) return to12h(start);
-//   if (!start && end) return to12h(end);
-
-//   return `${to12h(start!)} – ${to12h(end!)}`;
-// }
-
-// export function to12h(t?: string) {
-//   if (!t) return '';
-//   const [h, m] = t.split(':').map(Number);
-//   const d = new Date(); d.setHours(h ?? 0, m ?? 0, 0, 0);
-//   return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-// }
 
 export function formatTimeRange(start?: string, end?: string) {
   const s = to12h(start);
@@ -237,9 +249,16 @@ export function to12h(t?: string, opts?: { upper?: boolean }) {
 }
 
 export function toUtcIso(dtLocal?: string | null) {
-  if (!dtLocal) return null;              // dtLocal like "2025-09-08T17:15"
-  return new Date(dtLocal).toISOString(); // -> "2025-09-08T09:15:00.000Z" in Manila
+  if (!dtLocal) return null;
+  return new Date(dtLocal).toISOString();
 }
+
+export const toLocalInputValue = (iso?: string | null) => {
+  if (!iso) return '';
+  const d = new Date(iso);           // parses as UTC; getters return local
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
 
 export function pretty(s: string) {
   const d = new Date(s); 

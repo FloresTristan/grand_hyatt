@@ -16,9 +16,11 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import SnackbarComponent, {SnackbarSettings} from './Snackbar';
 import { LabeledDate, LabeledInput, LabeledTextarea, 
   shouldShowModal, formatDateRange, fileToDataUrl,
-  ImageDropzone, EventType, fetchEventsForAdmin, formatTimeRange, toUtcIso} from './helpersAndInputs';
+  ImageDropzone, EventType, fetchEventsForAdmin, formatTimeRange, 
+  toUtcIso, applyFilter, toLocalInputValue} from './helpersAndInputs';
 import { StatusPill } from './statusPill';
 import { ArrowBackOutlined } from '@mui/icons-material';
+import { idID } from '@mui/material/locale';
 
 export default function CMSPage() {
   const [title, setTitle] = useState('');
@@ -273,7 +275,11 @@ export default function CMSPage() {
       };
   }, [tab]);
 
-  console.log(events)
+  // console.log(events)
+
+
+  console.log('time', toUtcIso(publishAt), publishAt+':00.000Z')
+  console.log('utctest', toLocalInputValue(toUtcIso(publishAt)))
 
   async function onSave() {
     try {
@@ -314,7 +320,7 @@ export default function CMSPage() {
         image_path,
         image_url,
         published,
-        publishAt: toUtcIso(publishAt) || null,
+        publishAt:toUtcIso(publishAt) || null,
         unpublishAt: toUtcIso(unpublishAt) || null,
       };
 
@@ -429,6 +435,7 @@ export default function CMSPage() {
   
   console.log('id', eventId)
   const dbEvents = events.map(e => ({
+    id: e.id,
     imageUrl: e.image_url ?? undefined,
     title: e.title ?? '(untitled)',
     subheading: e.subheading ?? '',
@@ -440,6 +447,7 @@ export default function CMSPage() {
   }));
 
   const formEvent = {
+    id: eventId || 'new',
     imageUrl: imageUrl ?? undefined,
     title: title?.trim() || '(untitled)',
     subheading: subheading || '',
@@ -477,39 +485,7 @@ export default function CMSPage() {
     if (tab === 0) resetAll();
   }, [tab])
 
-  type Status = 'all'|'live' | 'scheduled' | 'expired' | 'hidden';
-  const computeStatus = (e: any): Status => {
-    if (e?.computed_status) return e.computed_status as Status;
-    if (!e?.published) return 'hidden';
-    const now = Date.now();
-    const pub  = e?.publish_at   ? new Date(e.publish_at).getTime()   : null;
-    const unpub= e?.unpublish_at ? new Date(e.unpublish_at).getTime() : null;
-    if (pub && pub > now) return 'scheduled';
-    if (unpub && unpub <= now) return 'expired';
-    return 'live';
-  };
-
-  const TAB_TO_STATUS: Status[] = ['all','live', 'scheduled', 'expired', 'hidden'];
-  const applyFilter = (items: any[], tabIdx: number) => {
-    if (tabIdx === 0){
-      setDisableDrag(false)
-      return items ?? []
-    }else{
-      console.log({ tabIdx })
-      setDisableDrag(true)
-      const wanted = TAB_TO_STATUS[tabIdx] ?? 'live';
-      console.log({ wanted })
-      return (items ?? []).filter(e => computeStatus(e) === wanted);
-    }
-  };
-
-  const filteredEvents = useMemo(() => applyFilter(events, filterTab), [events, filterTab]);
-
-  const counts = useMemo(() => {
-    const c = { live:0, scheduled:0, expired:0, hidden:0 };
-    for (const e of events) c[computeStatus(e)]++;
-    return c;
-  }, [events]);
+  const filteredEvents = useMemo(() => applyFilter(events, filterTab, setDisableDrag), [ events, filterTab]);
 
   return (
     <div className="font-sans flex flex-col gap-4 md:flex-row min-h-screen md:h-screen p-8 md:gap-8 sm:px-20 bg-[#151c2f]">
@@ -569,7 +545,7 @@ export default function CMSPage() {
                 </IconButton>
               </div>
             </div>
-            <div >
+            <div>
               <Box sx={{ borderBottom: 1, borderColor: 'rgba(255,255,255,0.1)' }}>
                 <Tabs
                   value={filterTab}
@@ -577,13 +553,20 @@ export default function CMSPage() {
                     setFilterTab(v);
                     console.log(v)
                   }}
-                  variant="fullWidth"
+                  variant="scrollable"
+                  scrollButtons="auto"
+                  allowScrollButtonsMobile
                   sx={{
                     '& .MuiTab-root': { color: 'rgba(255,255,255,0.7)',
                       fontSize: '12px',
+                      // minWidth: 'auto',
+                      px: 1.5,
+                      textTransform: 'none',
+                      whiteSpace: 'nowrap',
                      },
                     '& .Mui-selected': { color: '#67ff56' },
                     '& .MuiTabs-indicator': { backgroundColor: '#60fa68' },
+                    '& .MuiTabs-scrollButtons.Mui-disabled': { opacity: 0.3 },
                   }}
                 > 
                   <Tab label={`All`} />
@@ -604,7 +587,7 @@ export default function CMSPage() {
                     <ul
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      className="divide-y divide-white/10 rounded-lg h-[150px] md:h-[500px] overflow-scroll custom-scrollbar"
+                      className="divide-y divide-white/10 rounded-lg h-[150px] md:h-[420px]  overflow-scroll custom-scrollbar"
                     >
                       {filteredEvents.map((e, index) => (
                         <Draggable key={e.id} draggableId={e.id} index={index} isDragDisabled={disableDrag} >
@@ -623,7 +606,7 @@ export default function CMSPage() {
                                   <DragIndicatorIcon fontSize="small" />
                                 </span>
                                 {/* <span className="w-6 text-white/60 text-xs tabular-nums">{index + 1}</span> */}
-                                <span className="text-white hover:cursor-pointer truncate max-w-[100px] md:max-w-[150px]"
+                                <span className="text-white hover:cursor-pointer truncate max-w-[70px] md:max-w-[150px]"
                                   onClick={()=>{
                                     const id = e.id
                                     const ev = events.find(x => x.id === id);
@@ -641,8 +624,8 @@ export default function CMSPage() {
                                       setCtaHref(ev.cta_href || '');
                                       setImageUrl(ev.image_url || null);
                                       setPublished(!!ev.published);
-                                      setPublishAt(ev.publish_at ? new Date(ev.publish_at).toISOString().slice(0,16) : '');
-                                      setUnpublishAt(ev.unpublish_at ? new Date(ev.unpublish_at).toISOString().slice(0,16) : '');
+                                      setPublishAt(toLocalInputValue(ev.publish_at) || '');
+                                      setUnpublishAt(toLocalInputValue(ev.unpublish_at) || '');
                                     }
                                     // console.log(e)
                                   }}
@@ -668,8 +651,8 @@ export default function CMSPage() {
                                         setCtaHref(ev.cta_href || '');
                                         setImageUrl(ev.image_url || null);
                                         setPublished(ev.published ?? false);
-                                        setPublishAt(ev.publish_at ? new Date(ev.publish_at).toISOString().slice(0,16) : '');
-                                        setUnpublishAt(ev.unpublish_at ? new Date(ev.unpublish_at).toISOString().slice(0,16) : '');
+                                        setPublishAt(toLocalInputValue(ev.publish_at) || '');
+                                        setUnpublishAt(toLocalInputValue(ev.unpublish_at) || '');
                                       }
                                     }
                                   }>
@@ -741,8 +724,8 @@ export default function CMSPage() {
                     setCtaHref(ev.cta_href || '');
                     setImageUrl(ev.image_url || null);
                     setPublished(!!ev.published);
-                    setPublishAt(ev.publish_at ? new Date(ev.publish_at).toISOString().slice(0,16) : '');
-                    setUnpublishAt(ev.unpublish_at ? new Date(ev.unpublish_at).toISOString().slice(0,16) : '');
+                    setPublishAt(toLocalInputValue(ev.publish_at) || '');
+                    setUnpublishAt(toLocalInputValue(ev.unpublish_at) || '');
                   }
                 }}
                 sx={{
@@ -906,7 +889,7 @@ export default function CMSPage() {
             open={modalOpen}
             onClose={() => {}}
             events={previewEvents}
-            initialIndex={Math.max(0, previewEvents.findIndex(x => x.title === title))}
+            initialIndex={Math.max(0, previewEvents.findIndex(x => x.id === eventId))}
           />
         </div>
 

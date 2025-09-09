@@ -40,6 +40,7 @@ export default function EventModalOverlay({
     setIndex(Math.min(Math.max(initialIndex, 0), Math.max(0, (events?.length ?? 1) - 1)));
   }, [events, initialIndex, open]);
 
+  console.log({ index });
   const dotRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
@@ -71,6 +72,7 @@ export default function EventModalOverlay({
   const pos = container === 'contained' ? 'absolute' : 'fixed';
   const z   = container === 'contained' ? 'z-10' : 'z-[9999]';
   const current = events[index];
+  console.log({ current });
 
   const prev = () => setIndex((i) => (i - 1 + events.length) % events.length);
   const next = () => setIndex((i) => (i + 1) % events.length);
