@@ -40,7 +40,7 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
     }
   }
 
-  const isNotEditor = role !== 'editor';
+  const isRoleSuperAdminOrAdmin = role === 'super-admin' || role === 'admin';
 
   return (
     <nav
@@ -70,7 +70,7 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
               Seasons
             </Link>
           </li>
-          {isNotEditor && (
+          {isRoleSuperAdminOrAdmin && (
             <li>
               <Link 
                 href="/admin/users" 
@@ -161,15 +161,17 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
               Seasons
             </Link>
           </li>
-          <li>
-            <Link
-              href="/admin/users"
-              onClick={() => setOpen(false)}
-              className="block rounded-md px-3 py-2 hover:bg白/10 hover:bg-white/10"
-            >
-              Users
-            </Link>
-          </li>
+          {isRoleSuperAdminOrAdmin && (
+            <li>
+              <Link
+                href="/admin/users"
+                onClick={() => setOpen(false)}
+                className="block rounded-md px-3 py-2 hover:bg白/10 hover:bg-white/10"
+              >
+                Users
+              </Link>
+            </li>
+          )}
           <li className="mt-1 border-t border-white/10 pt-2">
             <button
               onClick={logout}
