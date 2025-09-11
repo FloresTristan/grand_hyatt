@@ -20,7 +20,6 @@ import { LabeledDate, LabeledInput, LabeledTextarea,
   toUtcIso, applyFilter, toLocalInputValue} from './helpersAndInputs';
 import { StatusPill } from './statusPill';
 import { ArrowBackOutlined } from '@mui/icons-material';
-import { idID } from '@mui/material/locale';
 
 export default function CMSPage() {
   const [title, setTitle] = useState('');
@@ -860,17 +859,6 @@ export default function CMSPage() {
                     tab === 0 || !eventId ? 'Publish' : 'Update'
                   )}
               </button>
-              {/* <button className="px-3 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 hover:cursor-pointer text-white font-medium disabled:cursor-not-allowed"
-                onClick={onSave}
-                disabled={buttonLoading}
-              >
-                {buttonLoading ? (
-                    <span className="inline-flex items-center gap-2">
-                      {tab === 0 || !eventId ? 'Creating…' : 'Updating…'}
-                      <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 004 12z"/></svg>
-                    </span>
-                  ) : 'Schedule'}
-              </button> */}
               <button onClick={clearForm} className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white hover:cursor-pointer">
                 Clear
               </button>
@@ -883,7 +871,7 @@ export default function CMSPage() {
       <div className="md:w-[70%] h-[90%] md:overflow-scroll custom-scrollbar text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
         <div className="mb-2 text-sm text-white/60">Live preview from website</div>
         <div className="relative w-full h-[720px] md:h-full border border-white/10 bg-white rounded-xl overflow-hidden">
-          <iframe ref={previewRef} src="/" title="Website Live Preview" className="absolute inset-0 w-full h-full" />
+          <iframe ref={previewRef} src="/" title="Website Live Preview" className="absolute inset-0 object-contain h-full w-full" />
           <EventModalOverlay
             container="contained"
             open={modalOpen}

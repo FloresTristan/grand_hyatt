@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation';
 import NavBar from '../components/navbar';
 import { createSupabaseAdmin } from '../../../lib/supabase/admin';
 import { createSupabaseServer } from '../../../lib/supabase/server'
+import { UserProvider } from '../providers/UserProviders';
 
 
 export const dynamic = 'force-dynamic';
@@ -31,7 +32,9 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   return (
     <>
       <NavBar role={role} />
+      <UserProvider initialUser={user}>
       {children}
+      </UserProvider>
     </>
   );
 }

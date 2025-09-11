@@ -114,6 +114,32 @@ export async function fetchEventsForAdmin({ setEvents, setLoadingEvents }: { set
   }
 }
 
+export type Season = {
+  id: string;
+  name: string;
+  image_url: string | null;
+  is_active?: boolean;
+  sort_order?: number | null;
+  created_at?: string;
+};
+
+export async function fetchSeasons({setSeasons,setLoading,}: {setSeasons: (items: Season[]) => void; setLoading?: (loading: boolean) => void;}) {
+  try {
+    setLoading?.(true);
+    const res = await fetch('/api/seasons', { cache: 'no-store' });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json?.error || 'Failed to load seasons');
+    const items: Season[] = Array.isArray(json?.items) ? json.items : [];
+    setSeasons(items);
+    return items;
+  } catch (err) {
+    console.error(err);
+    setSeasons([]);
+    return [];
+  } finally {
+    setLoading?.(false);
+  }
+}
 
 export function LabeledInput({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
   return (

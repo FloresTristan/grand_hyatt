@@ -66,7 +66,7 @@ export default function UserFormModal({
         ...(mode === 'edit' ? { newPassword } : {}),
       });
     } catch (e: unknown) {
-      setErr(e?.message || 'Save failed');
+      setErr(e instanceof Error? e?.message : 'Save failed');
       setBusy(false);
       return;
     }
