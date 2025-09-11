@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "functions": {
+    "/api/admin/events/reorder": {},
+    "/api/admin/events": {},
+    "/api/admin/seasons": {},
+    "/api/admin/events/[id]": {},
+    "/api/admin/seasons/create": {},
+    "/api/admin/users/create": {},
+    "/api/admin/seasons/set_season/[id]": {},
+    "/api/admin/users/[uid]": {},
+    "/api/bootstrap/create-first-admin": {},
+    "/api/seasons": {},
+    "/api/events": {},
+    "/api/admin/users": {}
+  }
+}
