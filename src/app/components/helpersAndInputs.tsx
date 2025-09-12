@@ -118,8 +118,8 @@ export type Season = {
   id: string;
   name: string;
   image_url: string | null;
+  gif_url: string | null;
   is_active?: boolean;
-  sort_order?: number | null;
   created_at?: string;
 };
 

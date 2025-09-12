@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { IoInformationCircleSharp } from "react-icons/io5";
 import SeasonOverlay from './components/SeasonOverlay';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import Map from './Map';
 
 export default function Home() {
   const [events, setEvents] = useState<EventType[]>([]);
@@ -19,6 +20,9 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [selectedSeason, setSelectedSeason] = useState<Season>();
 
+
+  const IMG_W = grandhyattmodel.width;
+  const IMG_H = grandhyattmodel.height;
 
   useEffect(() => {
     fetchEventsForClient({ setEvents, setLoadingEvents});
@@ -43,7 +47,7 @@ export default function Home() {
   console.log({selectedSeason})
   // console.log(events)
 
-  const frameSrc = selectedSeason?.image_url ?? null;
+  const frameSrc = selectedSeason?.gif_url ?? null;
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
@@ -56,7 +60,7 @@ export default function Home() {
       )}
 
       {/* PAN & ZOOM AREA */}
-      <div className="relative z-10 w-full h-full bg-black/5 overflow-hidden">
+      <div className="relative z-10 w-full h-full  bg-black/5 overflow-hidden">
         <TransformWrapper
           minScale={1}
           maxScale={4}
@@ -70,7 +74,6 @@ export default function Home() {
         >
           {({ zoomIn, zoomOut, resetTransform }) => (
             <>
-              {/* Optional controls */}
               <div className="absolute right-3 top-3 z-30 flex gap-2">
                 <button
                   onClick={() => zoomOut()}
@@ -96,25 +99,28 @@ export default function Home() {
                 wrapperClass="w-full h-full"
                 contentClass="relative"
               >
-                <Image
-                  src={grandhyattmodel}
-                  alt="Grand Hyatt Map"
-                  priority
-                  draggable={false}
-                  className="select-none pointer-events-none block max-w-none"
-                />
-                <button
-                  className="absolute right-[600px] top-[220px] -translate-x-1/2 -translate-y-1/2
-                             rounded-full border-2 hover:scale-125 border-blue-600 hover:bg-blue-600 duration-500 text-white text-xs px-2 py-1"
-                  onClick={(e) => { e.stopPropagation(); alert("Grand Hyatt Manila"); }}
-                >
-                  Grand Hyatt Manila
-                </button>
+                <div style={{ position: 'relative', width: IMG_W, height: IMG_H }}>
+                  <Image
+                    src={grandhyattmodel}
+                    alt="Grand Hyatt Map"
+                    priority
+                    draggable={false}
+                    className="select-none pointer-events-none block max-w-none "
+                  />
+                  <button
+                    className="absolute right-[470px] top-[220px] -translate-x-1/2 -translate-y-1/2
+                              rounded-full border-2 hover:scale-125 border-blue-600 hover:bg-blue-600 duration-500 text-white text-xs px-2 py-1"
+                    onClick={(e) => { e.stopPropagation(); alert("Grand Hyatt Manila"); }}
+                  >
+                    Grand Hyatt Manila
+                  </button>
+                </div>
               </TransformComponent>
             </>
           )}
         </TransformWrapper>
       </div>
+      {/* <Map/> */}
 
       {/* Events modal */}
       {showModal && events.length > 0 && (

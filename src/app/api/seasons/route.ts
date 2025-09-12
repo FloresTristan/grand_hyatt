@@ -11,7 +11,7 @@ export async function GET() {
 
     const { data, error } = await supabase
       .from('seasons_with_active')
-      .select('id,name,image_url,created_at,is_active')
+      .select('id,name,image_url,gif_url,created_at,is_active')
       .order('created_at', { ascending: true })
       .order('is_active', { ascending: true });
 

@@ -8,6 +8,10 @@ import SnackbarComponent, {SnackbarSettings} from '@/app/components/Snackbar';
 import SeasonOverlay from '@/app/components/SeasonOverlay';
 import { IconButton } from '@mui/material';
 import { Refresh } from '@mui/icons-material';
+// import christmas from './assets/ChristmasThemePNG.png';
+// import halloween from './assets/HalloweenThemePNGFinal.png';
+// import rainy from './assets/RainyPNG.png';
+// import summer from './assets/SummerThemePNGFinal.png';
 
 export default function SeasonsPage(){
     const previewRef = useRef<HTMLIFrameElement | null>(null);
@@ -24,10 +28,18 @@ export default function SeasonsPage(){
         severity: '',
       });
 
-    async function createSeason({ name, file }: { name: string; file: File | null }) {
+    // const listOfSeasons =[
+    //     {name: 'Christmas', image: christmas},
+    //     {name: 'Halloween', image: halloween},
+    //     {name: 'Rainy', image: rainy},
+    //     {name: 'Summer', image: summer}
+    // ]
+
+    async function createSeason({ name, imageFile, gifFile }: { name: string; imageFile: File | null; gifFile: File | null }) {
         const body = new FormData();
         body.append('name', name);
-        if (file) body.append('file', file);
+        if (imageFile) body.append('image', imageFile);
+        if (gifFile) body.append('gif', gifFile);
         const res = await fetch('/api/admin/seasons/create', { method: 'POST', body });
         if (!res.ok) {
             setSnackbarSettings((prev) => ({...prev,
@@ -44,6 +56,7 @@ export default function SeasonsPage(){
             }))
         }
     }
+
 
     async function setActiveSeason(seasonId: string): Promise<Season> {
         setButtonLoading(true)

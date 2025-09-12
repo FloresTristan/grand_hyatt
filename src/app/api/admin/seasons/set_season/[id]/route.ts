@@ -7,16 +7,17 @@ export const revalidate = 0;
 
 type Ctx = { params: { id: string } };
 
-export async function PATCH(_req: Request, { params }: Ctx) {
+export async function PATCH(_req: Request, ctx: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await ctx.params;
     const supabase = await createSupabaseServer();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const idParam = (params.id || '').trim().toLowerCase();
+    const idParam = (id || '').trim().toLowerCase();
 
     // If id is "none" (or "null"), clear the active season
-    const newValue = (idParam === 'none' || idParam === 'null') ? null : params.id;
+    const newValue = (idParam === 'none' || idParam === 'null') ? null : id;
 
     const { error: upErr } = await supabase
       .from('season_state')
@@ -42,13 +43,14 @@ export async function PATCH(_req: Request, { params }: Ctx) {
   }
 }
 
-export async function DELETE(_req: Request, { params }: Ctx) {
+export async function DELETE(_req: Request, ctx: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await ctx.params;
     const supabase = await createSupabaseServer();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const id = params.id?.trim();
+    // const id = params.id?.trim();
     if (!id) return NextResponse.json({ error: 'Missing season id' }, { status: 400 });
 
     // Get row first to find the image URL (best-effort cleanup)

@@ -12,15 +12,8 @@
       "static/chunks/4bd1b696-cf72ae8a39fa05aa.js",
       "static/chunks/964-238f4b7b1124dd2d.js",
       "static/chunks/main-app-b003b6aaf3ee6a1a.js",
-      "static/css/2192b5806ed75c18.css",
+      "static/css/de82be67d6868a31.css",
       "static/chunks/app/layout-bc07e56aa4d6c76d.js"
-    ],
-    "/api/admin/events/reorder/route": [
-      "static/chunks/webpack-19b906b9d37195cc.js",
-      "static/chunks/4bd1b696-cf72ae8a39fa05aa.js",
-      "static/chunks/964-238f4b7b1124dd2d.js",
-      "static/chunks/main-app-b003b6aaf3ee6a1a.js",
-      "static/chunks/app/api/admin/events/reorder/route-4880a1b27fb5da3d.js"
     ],
     "/api/admin/seasons/route": [
       "static/chunks/webpack-19b906b9d37195cc.js",
@@ -29,12 +22,12 @@
       "static/chunks/main-app-b003b6aaf3ee6a1a.js",
       "static/chunks/app/api/admin/seasons/route-4880a1b27fb5da3d.js"
     ],
-    "/api/admin/events/[id]/route": [
+    "/api/admin/events/reorder/route": [
       "static/chunks/webpack-19b906b9d37195cc.js",
       "static/chunks/4bd1b696-cf72ae8a39fa05aa.js",
       "static/chunks/964-238f4b7b1124dd2d.js",
       "static/chunks/main-app-b003b6aaf3ee6a1a.js",
-      "static/chunks/app/api/admin/events/[id]/route-4880a1b27fb5da3d.js"
+      "static/chunks/app/api/admin/events/reorder/route-4880a1b27fb5da3d.js"
     ],
     "/api/admin/events/route": [
       "static/chunks/webpack-19b906b9d37195cc.js",
@@ -43,12 +36,12 @@
       "static/chunks/main-app-b003b6aaf3ee6a1a.js",
       "static/chunks/app/api/admin/events/route-4880a1b27fb5da3d.js"
     ],
-    "/api/admin/seasons/create/route": [
+    "/api/admin/events/[id]/route": [
       "static/chunks/webpack-19b906b9d37195cc.js",
       "static/chunks/4bd1b696-cf72ae8a39fa05aa.js",
       "static/chunks/964-238f4b7b1124dd2d.js",
       "static/chunks/main-app-b003b6aaf3ee6a1a.js",
-      "static/chunks/app/api/admin/seasons/create/route-4880a1b27fb5da3d.js"
+      "static/chunks/app/api/admin/events/[id]/route-4880a1b27fb5da3d.js"
     ],
     "/api/admin/users/create/route": [
       "static/chunks/webpack-19b906b9d37195cc.js",
@@ -78,13 +71,6 @@
       "static/chunks/main-app-b003b6aaf3ee6a1a.js",
       "static/chunks/app/api/admin/users/route-4880a1b27fb5da3d.js"
     ],
-    "/api/events/route": [
-      "static/chunks/webpack-19b906b9d37195cc.js",
-      "static/chunks/4bd1b696-cf72ae8a39fa05aa.js",
-      "static/chunks/964-238f4b7b1124dd2d.js",
-      "static/chunks/main-app-b003b6aaf3ee6a1a.js",
-      "static/chunks/app/api/events/route-4880a1b27fb5da3d.js"
-    ],
     "/api/bootstrap/create-first-admin/route": [
       "static/chunks/webpack-19b906b9d37195cc.js",
       "static/chunks/4bd1b696-cf72ae8a39fa05aa.js",
@@ -98,6 +84,28 @@
       "static/chunks/964-238f4b7b1124dd2d.js",
       "static/chunks/main-app-b003b6aaf3ee6a1a.js",
       "static/chunks/app/api/seasons/route-4880a1b27fb5da3d.js"
+    ],
+    "/api/events/route": [
+      "static/chunks/webpack-19b906b9d37195cc.js",
+      "static/chunks/4bd1b696-cf72ae8a39fa05aa.js",
+      "static/chunks/964-238f4b7b1124dd2d.js",
+      "static/chunks/main-app-b003b6aaf3ee6a1a.js",
+      "static/chunks/app/api/events/route-4880a1b27fb5da3d.js"
+    ],
+    "/api/admin/seasons/create/route": [
+      "static/chunks/webpack-19b906b9d37195cc.js",
+      "static/chunks/4bd1b696-cf72ae8a39fa05aa.js",
+      "static/chunks/964-238f4b7b1124dd2d.js",
+      "static/chunks/main-app-b003b6aaf3ee6a1a.js",
+      "static/chunks/app/api/admin/seasons/create/route-4880a1b27fb5da3d.js"
+    ],
+    "/signup/page": [
+      "static/chunks/webpack-19b906b9d37195cc.js",
+      "static/chunks/4bd1b696-cf72ae8a39fa05aa.js",
+      "static/chunks/964-238f4b7b1124dd2d.js",
+      "static/chunks/main-app-b003b6aaf3ee6a1a.js",
+      "static/chunks/254-100857624b17f9aa.js",
+      "static/chunks/app/signup/page-8842b086fc3d5733.js"
     ],
     "/login/page": [
       "static/chunks/webpack-19b906b9d37195cc.js",
@@ -119,15 +127,7 @@
       "static/chunks/33-fea9bf8f4023131f.js",
       "static/chunks/889-f01084a166c1bdb3.js",
       "static/chunks/624-354992b6fc8ea8c8.js",
-      "static/chunks/app/page-380e4931fed6b5f1.js"
-    ],
-    "/signup/page": [
-      "static/chunks/webpack-19b906b9d37195cc.js",
-      "static/chunks/4bd1b696-cf72ae8a39fa05aa.js",
-      "static/chunks/964-238f4b7b1124dd2d.js",
-      "static/chunks/main-app-b003b6aaf3ee6a1a.js",
-      "static/chunks/254-100857624b17f9aa.js",
-      "static/chunks/app/signup/page-8842b086fc3d5733.js"
+      "static/chunks/app/page-dfbabe9d50db0866.js"
     ],
     "/admin/layout": [
       "static/chunks/webpack-19b906b9d37195cc.js",
@@ -137,18 +137,6 @@
       "static/chunks/254-100857624b17f9aa.js",
       "static/chunks/766-33ae37ef734bf918.js",
       "static/chunks/app/admin/layout-9e12101d6c3c95b6.js"
-    ],
-    "/admin/seasons/page": [
-      "static/chunks/webpack-19b906b9d37195cc.js",
-      "static/chunks/4bd1b696-cf72ae8a39fa05aa.js",
-      "static/chunks/964-238f4b7b1124dd2d.js",
-      "static/chunks/main-app-b003b6aaf3ee6a1a.js",
-      "static/chunks/254-100857624b17f9aa.js",
-      "static/chunks/766-33ae37ef734bf918.js",
-      "static/chunks/19-2754808c119e683d.js",
-      "static/chunks/834-eb6ae5fcb2d62143.js",
-      "static/chunks/313-78cfb6b95e962563.js",
-      "static/chunks/app/admin/seasons/page-816126396bd0f6cc.js"
     ],
     "/admin/page": [
       "static/chunks/webpack-19b906b9d37195cc.js",
@@ -164,6 +152,18 @@
       "static/chunks/509-cd80c55fa9f79c52.js",
       "static/chunks/624-354992b6fc8ea8c8.js",
       "static/chunks/app/admin/page-be5c02a211735619.js"
+    ],
+    "/admin/seasons/page": [
+      "static/chunks/webpack-19b906b9d37195cc.js",
+      "static/chunks/4bd1b696-cf72ae8a39fa05aa.js",
+      "static/chunks/964-238f4b7b1124dd2d.js",
+      "static/chunks/main-app-b003b6aaf3ee6a1a.js",
+      "static/chunks/254-100857624b17f9aa.js",
+      "static/chunks/766-33ae37ef734bf918.js",
+      "static/chunks/19-2754808c119e683d.js",
+      "static/chunks/834-eb6ae5fcb2d62143.js",
+      "static/chunks/313-78cfb6b95e962563.js",
+      "static/chunks/app/admin/seasons/page-73f3d0f4d01622ac.js"
     ],
     "/admin/users/layout": [
       "static/chunks/webpack-19b906b9d37195cc.js",
