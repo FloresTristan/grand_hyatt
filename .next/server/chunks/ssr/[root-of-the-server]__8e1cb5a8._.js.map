@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 6, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
+    {"offset": {"line": 22, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Mata/Documents/GitHub/grand_hyatt/src/app/admin/grandhyatt/grandHyattContentPage.tsx"],"sourcesContent":["export default function GrandHyattContentPage(){\r\n    return(\r\n        <div className=\"font-sans flex flex-col gap-4 md:flex-row min-h-screen md:h-screen p-8 md:gap-8 sm:px-20 bg-[#151c2f]\">\r\n            Hello\r\n        </div>\r\n    )\r\n}"],"names":[],"mappings":";;;;;AAAe,SAAS;IACpB,qBACI,8OAAC;QAAI,WAAU;kBAAwG;;;;;;AAI/H","debugId":null}},
+    {"offset": {"line": 41, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Mata/Documents/GitHub/grand_hyatt/src/app/admin/grandhyatt/page.tsx"],"sourcesContent":["import GrandHyattContentPage from \"./grandHyattContentPage\";\r\n\r\nexport default function GrandHyatt(){\r\n    return(\r\n        <>\r\n            <GrandHyattContentPage />\r\n        </>\r\n    )\r\n}"],"names":[],"mappings":";;;;AAAA;;;AAEe,SAAS;IACpB,qBACI;kBACI,cAAA,8OAAC,2JAAA,CAAA,UAAqB;;;;;;AAGlC","debugId":null}}]
+}

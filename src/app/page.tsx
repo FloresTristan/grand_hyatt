@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { IoInformationCircleSharp } from "react-icons/io5";
 import SeasonOverlay from './components/SeasonOverlay';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import Map from './Map';
+import KrpanoViewer from './components/KrpanoViewer';
 
 export default function Home() {
   const [events, setEvents] = useState<EventType[]>([]);
@@ -50,7 +50,7 @@ export default function Home() {
   const frameSrc = selectedSeason?.gif_url ?? null;
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-screen h-screen overflow-hidden">
 
       {/* Optional seasonal frame overlay (doesn't pan/zoom) */}
       {showModal && frameSrc && (
@@ -60,12 +60,13 @@ export default function Home() {
       )}
 
       {/* PAN & ZOOM AREA */}
-      <div className="relative z-10 w-full h-full  bg-black/5 overflow-hidden">
+      {/* <div className="relative z-10 bg-black/5">
         <TransformWrapper
           minScale={1}
           maxScale={4}
           initialScale={1}
           centerOnInit
+          disablePadding
           wheel={{ step: 0.2 }}
           doubleClick={{ disabled: false, mode: "zoomIn" }}
           pinch={{ step: 5 }}
@@ -96,8 +97,8 @@ export default function Home() {
               </div>
 
               <TransformComponent
-                wrapperClass="w-full h-full"
-                contentClass="relative"
+                // wrapperClass="w-full h-full"
+                // contentClass="relative"
               >
                 <div style={{ position: 'relative', width: IMG_W, height: IMG_H }}>
                   <Image
@@ -105,7 +106,7 @@ export default function Home() {
                     alt="Grand Hyatt Map"
                     priority
                     draggable={false}
-                    className="select-none pointer-events-none block max-w-none "
+                    className="select-none pointer-events-none block "
                   />
                   <button
                     className="absolute right-[470px] top-[220px] -translate-x-1/2 -translate-y-1/2
@@ -119,7 +120,10 @@ export default function Home() {
             </>
           )}
         </TransformWrapper>
-      </div>
+      </div> */}
+      <KrpanoViewer
+        xml="/vtour/tour.xml"
+      />
       {/* <Map/> */}
 
       {/* Events modal */}

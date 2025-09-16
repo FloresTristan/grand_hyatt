@@ -1,0 +1,3 @@
+{
+  "/api/admin/seasons/set_season/[id]/route": "app/api/admin/seasons/set_season/[id]/route.js"
+}

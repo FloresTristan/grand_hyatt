@@ -59,7 +59,15 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
               href="/admin"
               className="rounded-md border-2 border-transparent px-3 py-2 hover:border-blue-500 transition"
             >
-              Content
+              Pop-up Content
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin/grandhyatt"
+              className="rounded-md border-2 border-transparent px-3 py-2 hover:border-blue-500 transition"
+            >
+              Grand Hyatt Content
             </Link>
           </li>
           <li>
@@ -149,7 +157,16 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
               onClick={() => setOpen(false)}
               className="block rounded-md px-3 py-2 hover:bg-white/10"
             >
-              Content
+              Pop-up Content
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin/grandhyatt"
+              onClick={() => setOpen(false)}
+              className="block rounded-md px-3 py-2 hover:bg-white/10"
+            >
+              Grand Hyatt
             </Link>
           </li>
           <li>
