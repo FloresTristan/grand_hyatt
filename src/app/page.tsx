@@ -1,14 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import Image from 'next/image';
-import grandhyattmodel from "../app/assets/grandhyatt-resized.png"
+// import Image from 'next/image';
+// import grandhyattmodel from "../app/assets/grandhyatt-resized.png"
 import EventModalOverlay from './components/EventModalOverlay';
 import { fetchEventsForClient, EventType, formatDateRange, to12h, fetchSeasons, Season } from './components/helpersAndInputs';
 import { useEffect, useState } from 'react';
 import { IoInformationCircleSharp } from "react-icons/io5";
 import SeasonOverlay from './components/SeasonOverlay';
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import KrpanoViewer from './components/KrpanoViewer';
 
 export default function Home() {
@@ -19,10 +18,6 @@ export default function Home() {
   const [seasons, setSeasons] = useState<Season[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedSeason, setSelectedSeason] = useState<Season>();
-
-
-  const IMG_W = grandhyattmodel.width;
-  const IMG_H = grandhyattmodel.height;
 
   useEffect(() => {
     fetchEventsForClient({ setEvents, setLoadingEvents});
@@ -35,7 +30,6 @@ export default function Home() {
 
   useEffect(() => {
     if(!seasons) return;
-    
     const activeSeason = seasons.find((season)=> season.is_active === true)
     console.log({activeSeason})
     setSelectedSeason(activeSeason)
@@ -49,6 +43,7 @@ export default function Home() {
 
   const frameSrc = selectedSeason?.gif_url ?? null;
 
+
   return (
     <div className="relative w-screen h-screen overflow-hidden">
 
@@ -59,72 +54,9 @@ export default function Home() {
         </div>
       )}
 
-      {/* PAN & ZOOM AREA */}
-      {/* <div className="relative z-10 bg-black/5">
-        <TransformWrapper
-          minScale={1}
-          maxScale={4}
-          initialScale={1}
-          centerOnInit
-          disablePadding
-          wheel={{ step: 0.2 }}
-          doubleClick={{ disabled: false, mode: "zoomIn" }}
-          pinch={{ step: 5 }}
-          limitToBounds={true}
-          alignmentAnimation={{ sizeX: 200, sizeY: 200, animationType: "easeOut" }}
-        >
-          {({ zoomIn, zoomOut, resetTransform }) => (
-            <>
-              <div className="absolute right-3 top-3 z-30 flex gap-2">
-                <button
-                  onClick={() => zoomOut()}
-                  className="rounded bg-white/80 px-2 py-1 text-sm hover:bg-white"
-                >
-                  −
-                </button>
-                <button
-                  onClick={() => zoomIn()}
-                  className="rounded bg-white/80 px-2 py-1 text-sm hover:bg-white"
-                >
-                  +
-                </button>
-                <button
-                  onClick={() => resetTransform()}
-                  className="rounded bg-white/80 px-2 py-1 text-sm hover:bg-white"
-                >
-                  Reset
-                </button>
-              </div>
-
-              <TransformComponent
-                // wrapperClass="w-full h-full"
-                // contentClass="relative"
-              >
-                <div style={{ position: 'relative', width: IMG_W, height: IMG_H }}>
-                  <Image
-                    src={grandhyattmodel}
-                    alt="Grand Hyatt Map"
-                    priority
-                    draggable={false}
-                    className="select-none pointer-events-none block "
-                  />
-                  <button
-                    className="absolute right-[470px] top-[220px] -translate-x-1/2 -translate-y-1/2
-                              rounded-full border-2 hover:scale-125 border-blue-600 hover:bg-blue-600 duration-500 text-white text-xs px-2 py-1"
-                    onClick={(e) => { e.stopPropagation(); alert("Grand Hyatt Manila"); }}
-                  >
-                    Grand Hyatt Manila
-                  </button>
-                </div>
-              </TransformComponent>
-            </>
-          )}
-        </TransformWrapper>
-      </div> */}
       <KrpanoViewer
         xml="/vtour/tour.xml"
       />
-      {/* <Map/> */}
 
       {/* Events modal */}
       {showModal && events.length > 0 && (

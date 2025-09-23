@@ -693,9 +693,7 @@ export default function CMSPage() {
                   >
                   <div
                     className='border border-[rgba(255,255,255,0.1)] flex justify-center items-center p-2 rounded hover:bg-white/10 transition duration-300 ease-in-out'>
-                    <ArrowBackOutlined htmlColor="#9ca3af" fontSize="small" 
-                      // className='border  p-4 rounded '
-                      // sx={{ border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '18px' }}
+                    <ArrowBackOutlined htmlColor="#9ca3af" fontSize="small"
                     />
                   </div>
               </IconButton>
@@ -884,7 +882,7 @@ export default function CMSPage() {
         <div className="mt-3 flex justify-between items-center border-t border-white/10 pt-3">
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={publishModal} onChange={(e) => setPublishModal(e.target.checked)} />
-            <span>Publish event popup (preview)</span>
+            <span>Event popup modal (preview)</span>
           </label>
           {/* <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={forceOpen} onChange={(e) => setForceOpen(e.target.checked)} />

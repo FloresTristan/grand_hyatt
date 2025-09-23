@@ -1,4 +1,4 @@
-// File: C:\Users\Mata\Documents\GitHub\grand_hyatt\src\app\api\admin\users\[uid]\route.ts
+// File: C:\Users\Michael\Documents\grand_hyatt\src\app\api\admin\users\[uid]\route.ts
 import * as entry from '../../../../../../../src/app/api/admin/users/[uid]/route.js'
 import type { NextRequest } from 'next/server.js'
 

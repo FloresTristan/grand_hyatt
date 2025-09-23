@@ -1,17 +1,21 @@
 {
   "version": 1,
   "functions": {
-    "/api/admin/events/reorder": {},
+    "/api/admin/events": {},
     "/api/admin/seasons": {},
     "/api/admin/events/[id]": {},
-    "/api/admin/events": {},
-    "/api/admin/users/create": {},
-    "/api/admin/users/[uid]": {},
-    "/api/admin/seasons/set_season/[id]": {},
+    "/api/admin/events/reorder": {},
     "/api/admin/seasons/create": {},
+    "/api/admin/seasons/set_season/[id]": {},
+    "/api/admin/users": {},
+    "/api/admin/hotspots/[id]": {},
     "/api/events": {},
-    "/api/bootstrap/create-first-admin": {},
+    "/api/admin/hotspots": {},
+    "/api/admin/users/create": {},
+    "/api/admin/hotspots/create": {},
+    "/api/admin/users/[uid]": {},
     "/api/seasons": {},
-    "/api/admin/users": {}
+    "/api/hotspots": {},
+    "/api/bootstrap/create-first-admin": {}
   }
 }

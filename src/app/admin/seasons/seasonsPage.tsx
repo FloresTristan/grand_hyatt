@@ -12,7 +12,7 @@ import { Refresh } from '@mui/icons-material';
 export default function SeasonsPage(){
     const previewRef = useRef<HTMLIFrameElement | null>(null);
     const [selectedSeason, setSelectedSeason] = useState<string | StaticImageData>('');
-    const { user, profile } = useUser();
+    const { profile } = useUser();
     const [open, setOpen] = useState(false);
     const [selectedSeasonId, setSelectedSeasonId] = useState('')
     const [loading, setLoading] = useState(false);
@@ -140,7 +140,7 @@ export default function SeasonsPage(){
 
     console.log({seasons})
 
-    console.log("user", user)
+    // console.log("user", user)
     console.log("profile", profile)
 
     console.log("role", profile?.role)
@@ -183,13 +183,9 @@ export default function SeasonsPage(){
                             setSelectedSeasonId(season.id)
                         }}
                         key={season.id}
-                        className={`flex-col border relative border-white/10 rounded-lg overflow-hidden  hover:scale-[1.05] transition-transform duration-300 cursor-pointer ${season.id === selectedSeasonId? ' shadow-2xl scale-[1.05]': ''}`}
+                        className={`flex-col border relative  rounded-lg overflow-hidden  hover:scale-[1.05] transition-transform duration-300 cursor-pointer ${season.id === selectedSeasonId? ' shadow-2xl scale-[1.05]  border-blue-300': 'border-white/10'}`}
                     >
-                        {/* <div className="relative w-full p-2 h-[80%] bg-white/10">
-                            <Image unoptimized src={season.image_url || ''} alt={season.name} fill className=" object-cover object-center" />
-                        </div> */}
                         <div className=" relative aspect-video w-full overflow-hidden rounded-lg">
-                            {/* preview keeps aspect without stretch */}
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                             src={season.image_url || ""}

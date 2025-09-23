@@ -14,7 +14,7 @@
     hotspot[get(hs_circle)].loadstyle(hs_circle_img);
     copy(hotspot[get(hs_circle)].ath,hotspot[get(h)].ath);
     copy(hotspot[get(hs_circle)].atv,hotspot[get(h)].atv);
-    txtadd(hotspot[get(hs_circle)].url, '%HTMLPATH%/plugins/circular_thumbs/',get(hotspot[get(h)].name),'.png');
+    <!-- txtadd(hotspot[get(hs_circle)].url, '%HTMLPATH%/plugins/circular_thumbs/',get(hotspot[get(h)].name),'.png'); -->
     set(hotspot[get(hs_circle)].scale,0.3);
 
     txtadd(hs_tag,get(hotspot[get(h)].name),'_tag');

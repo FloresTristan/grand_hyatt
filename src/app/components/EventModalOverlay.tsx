@@ -5,7 +5,6 @@ import Image from 'next/image';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import {ImageLightbox} from './Lightbox';
-import { on } from 'events';
 
 
 export type EventItem = {

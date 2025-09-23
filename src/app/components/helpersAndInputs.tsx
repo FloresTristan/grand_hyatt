@@ -140,6 +140,43 @@ export async function fetchSeasons({setSeasons,setLoading,}: {setSeasons: (items
     setLoading?.(false);
   }
 }
+export type Hotspots = {
+  id: string;
+  name: string;
+  description?: string | null;
+  scene?: string | null;
+  ath?: number | null;
+  atv?: number | null;
+  image_url?: string | null;
+}
+
+export type UpdateDraft = {
+  name: string;
+  description: string | null;
+  scene: string;
+  ath: number | null;
+  atv: number | null;
+  image_url: string | null;
+  id: string;
+}
+
+export async function fetchHotspots({setHotspots, setLoading}:{setHotspots: (items: Hotspots[])=>void; setLoading?: (loading:boolean)=>void;}){
+  try {
+    setLoading?.(true);
+    const res = await fetch('/api/hotspots', { cache: 'no-store' });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json?.error || 'Failed to load seasons');
+    const items: Hotspots[] = Array.isArray(json?.items) ? json.items : [];
+    setHotspots(items);
+    return items;
+  } catch (err) {
+    console.error(err);
+    setHotspots([]);
+    return [];
+  } finally {
+    setLoading?.(false);
+  }
+}
 
 export function LabeledInput({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
   return (

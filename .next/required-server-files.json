@@ -103,7 +103,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "C:\\Users\\Mata\\Documents\\GitHub\\grand_hyatt",
+    "outputFileTracingRoot": "C:\\Users\\Michael\\Documents\\grand_hyatt",
     "experimental": {
       "useSkewCookie": false,
       "nodeMiddleware": false,
@@ -294,10 +294,10 @@
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.ts",
     "turbopack": {
-      "root": "C:\\Users\\Mata\\Documents\\GitHub\\grand_hyatt"
+      "root": "C:\\Users\\Michael\\Documents\\grand_hyatt"
     }
   },
-  "appDir": "C:\\Users\\Mata\\Documents\\GitHub\\grand_hyatt",
+  "appDir": "C:\\Users\\Michael\\Documents\\grand_hyatt",
   "relativeAppDir": "",
   "files": [
     ".next\\routes-manifest.json",

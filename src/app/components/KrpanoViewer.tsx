@@ -1,32 +1,133 @@
-/* app/components/KrpanoViewer.tsx */
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Script from "next/script";
+import { fetchHotspots, Hotspots } from "./helpersAndInputs";
+import HotspotModalOverlay from "../admin/grandhyatt/HotspotModal";
 
-type KrpanoViewerProps = {
-  xml: string;                   // e.g. "/vtour/tour.xml"
-  viewerId?: string;             // id for the krpano instance
-  targetId?: string;             // id of the container DIV
-  style?: React.CSSProperties;   // size of the container
+/** Minimal krpano API we use */
+interface Krpano {
+  call(cmd: string): void;
+  set(path: string, value: string | number | boolean): void;
+  get(path: string): unknown;
+}
+interface EmbedPanoOptions {
+  id: string;
+  target: string;
+  xml: string;
+  html5?: "only" | "auto";
+  consolelog?: boolean;
+  debugmode?: boolean;
+  passQueryParameters?: boolean;
+  onready?: (k: Krpano) => void;
+  [key: string]: unknown;
+}
+
+declare global {
+  interface Window {
+    embedpano?: (opts: EmbedPanoOptions) => void;
+    removepano?: (id: string) => void;
+    getkrpano?: (idOrDiv: string) => Krpano | undefined;
+    __readdHotspots?: () => void;
+  }
+}
+
+type Props = {
+  xml: string;
+  viewerId?: string;   // krpano instance id (stable!)
+  targetId?: string;   // div id to mount (stable!)
+  style?: React.CSSProperties;
+  options?: Record<string, unknown>; // pass a memoized object if you use this
 };
+
+function safeId(s: string) {
+  return s.replace(/[^a-zA-Z0-9_]/g, "_");
+}
 
 export default function KrpanoViewer({
   xml,
   viewerId = "krpano1",
   targetId = "pano1",
   style,
-}: KrpanoViewerProps) {
-  const scriptSrc = "/vtour/tour.js"; // you DO have this
+  options, // do NOT put this in effect deps unless memoized
+}: Props) {
+  const [scriptReady, setScriptReady] = useState(false);
+  const [hotspots, setHotspots] = useState<Hotspots[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedHotspot, setSelectedHotspot] = useState<Hotspots|null>(null)
+  const [modalOpen, setModalOpen] = useState(false);
+  const embeddedRef = useRef(false);     // prevent re-embeds
+  const krpanoRef = useRef<Krpano | null>(null);
 
-  const onScriptReady = () => {
-    if (!window.embedpano) {
-      console.error("krpano embedpano() not found at", scriptSrc);
+  useEffect(() => {
+    (window as unknown as Record<string, unknown>).openHotspotById = (id: string) => {
+      const found = hotspots.find(h => h.id === id);
+      if (found) {
+        setSelectedHotspot(found);
+        setModalOpen(true);
+      }
+    };
+  }, [hotspots]);
+
+  useEffect(() => {
+    fetchHotspots({ setHotspots, setLoading });
+  }, []);
+
+  const addHotspots = useCallback((k: Krpano) => {
+    // remove previously-added db hotspots
+    k.call(`
+      for(set(i,0), i LT hotspot.count, inc(i),
+        set(hn, get(hotspot[get(i)].name));
+        if(startswith(hn, 'dbhs_'), removehotspot(get(hn)); dec(i););
+      );
+    `);
+
+    hotspots.forEach((h, idx) => {
+      const hsId = `dbhs_${h.id ? safeId(h.id) : idx}`;
+
+      k.call(`addhotspot(${hsId})`);
+      k.set(`hotspot[${hsId}].id`, h.id ?? "");
+      k.set(`hotspot[${hsId}].ath`, (h.ath ?? 0) as number);
+      k.set(`hotspot[${hsId}].atv`, (h.atv ?? 0) as number);
+
+      // your style from XML (e.g., <style name="circular_hotspot" .../>)
+      k.call(`hotspot[${hsId}].loadstyle(hs_circle)`);
+      k.set(`hotspot[${hsId}].keep`, true);
+      k.set(`hotspot[${hsId}].visible`, true);
+      k.set(`hotspot[${hsId}].handcursor`, true);
+
+      const title = h.name ?? "";
+      const desc  = h.description ?? "";
+      k.set(`hotspot[${hsId}].tag`, title);
+      k.set(`hotspot[${hsId}].data_title`, title);   // used by many circle/skin snippets
+      k.set(`hotspot[${hsId}].data_desc`,  desc);
+
+      // also set common alternatives so any skin variant works
+      k.set(`hotspot[${hsId}].title`,  title);
+      k.set(`hotspot[${hsId}].text`,   title);
+      k.set(`hotspot[${hsId}].tooltip`, title);
+      k.set(`hotspot[${hsId}].id`, h.id ?? "");
+
+      // optional custom icon
+      // if (h.image_url) k.set(`hotspot[${hsId}].url`, h.image_url);
+
+      const msg = (h.description || h.name || "hotspot").replace(/'/g, "\\'");
+      k.set(`hotspot[${hsId}].onclick`, `trace('clicked ${msg}')`)
+      k.set(`hotspot[${hsId}].onclick`, `jscall('openHotspotById("${h.id}")')`);
+
+
+    });
+  }, [hotspots]);
+
+  // Embed ONCE when script is ready; don't tear down on random renders
+  useEffect(() => {
+    if (!scriptReady || loading) return;
+    if (!window.embedpano) return;
+    if (embeddedRef.current) {
+      // already embedded; just ensure we capture the instance
+      krpanoRef.current = window.getkrpano?.(viewerId) ?? null;
       return;
     }
-
-    // clean previous instance with same id
-    try { window.removepano?.(viewerId); } catch {}
 
     window.embedpano({
       id: viewerId,
@@ -34,71 +135,67 @@ export default function KrpanoViewer({
       xml,
       html5: "only",
       consolelog: true,
-      debugmode: true,
+      debugmode: false,
       passQueryParameters: true,
-      onready: (k: any) => {
-        // --- visible HTML hotspot (always shows) ---
-        const addHotspots = () => {
-          // label
-          if (k.get("hotspot[label_center]")) k.call("removehotspot(label_center)");
-          k.call("addhotspot(label_center)");
-          k.set("hotspot[label_center].ath", 0);
-          k.set("hotspot[label_center].atv", 0);
-          k.set("hotspot[label_center].html", "Click me");
-          k.set(
-            "hotspot[label_center].css",
-            "padding:8px 12px;background:rgba(0,0,0,.7);color:#fff;border-radius:8px;font:14px system-ui;white-space:nowrap;"
-          );
-          k.set("hotspot[label_center].zorder", 20);
-          k.set("hotspot[label_center].handcursor", true);
-          k.set("hotspot[label_center].onclick", "trace('label clicked')");
+      onready: (k: Krpano) => {
+        krpanoRef.current = k;
 
-          // image hotspot (use a sure path)
-          if (k.get("hotspot[hs1]")) k.call("removehotspot(hs1)");
-          k.call("addhotspot(hs1)");
-          k.set("hotspot[hs1].ath", 0);
-          k.set("hotspot[hs1].atv", 0);
-          k.set("hotspot[hs1].scale", 0.8);
-          k.set("hotspot[hs1].edge", "center");
-          k.set("hotspot[hs1].handcursor", true);
-          // either absolute path under /public…
-        //   k.set("hotspot[hs1].url", "/vtour/skin/vtourskin_hotspot.png");
-          k.set("hotspot[hs1].url", "/vtour/plugins/hs_circle.png");
-          // …or relative to the xml (both work):
-          // k.set("hotspot[hs1].url", "%CURRENTXML%/skin/vtourskin_hotspot.png");
-          k.set("hotspot[hs1].onclick", "trace('image hotspot clicked')");
+        // initial hotspots
+        addHotspots(k);
+
+        // after each scene load, re-add hotspots
+        window.__readdHotspots = () => {
+          const inst = window.getkrpano?.(viewerId);
+          if (inst) addHotspots(inst);
         };
-
-        // add immediately
-        addHotspots();
-
-        // re-add after each scene load (some xml clear hotspots)
-        (window as unknown as { __readdHotspots?: () => void }).__readdHotspots = addHotspots;
-        k.call("set(events.onloadcomplete, js(window.__readdHotspots()))");
-
-        k.call("trace('krpano ready; scene=', xml.scene)");
+        k.call("set(events.onloadcomplete, js(window.__readdHotspots && window.__readdHotspots()))");
       },
+      // spread options if you *must* (but memoize them in parent)
+      ...(options || {}),
     });
-  };
 
+    embeddedRef.current = true;
+  }, [scriptReady, loading, xml, viewerId, targetId, addHotspots]); // <-- no `options` here
+
+  // If hotspots change later, update without re-embedding
+  useEffect(() => {
+    if (!scriptReady || loading) return;
+    const k = krpanoRef.current ?? window.getkrpano?.(viewerId) ?? null;
+    if (k) addHotspots(k);
+  }, [hotspots, scriptReady, loading, viewerId, addHotspots]);
+
+  // Clean up ONLY on unmount
   useEffect(() => {
     return () => {
-      try { window.removepano?.(viewerId); } catch {}
+      try {
+        window.removepano?.(viewerId);
+      } catch {}
+      embeddedRef.current = false;
+      krpanoRef.current = null;
     };
   }, [viewerId]);
 
+  console.log({selectedHotspot})
+
   return (
     <>
-      <Script src={scriptSrc} strategy="afterInteractive" onReady={onScriptReady} />
+      <Script
+        src="/vtour/tour.js"
+        strategy="afterInteractive"
+        onReady={() => setScriptReady(true)}
+      />
       <div
         id={targetId}
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "relative",
-          ...style,
-        }}
+        style={{ width: "100%", height: "100%", position: "relative", ...style }}
       />
+      {selectedHotspot && (
+        <HotspotModalOverlay
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          hotspot={selectedHotspot}
+          container="fullscreen"
+        />
+      )}
     </>
   );
 }

@@ -4,7 +4,7 @@
 
 	<include url="plugins/circle_hotspots.xml"/>
 
-	<include url="rzry.xml" />
+	<!-- <include url="rzry.xml" /> -->
 	<!-- customize skin settings: maps, gyro, webvr, thumbnails, tooltips, layout, design, ... -->
 	<skin_settings maps="false"
 	               maps_type="openstreetmaps"
@@ -71,11 +71,14 @@
 	<!-- <include url="skin/vtourskin_design_117.xml"         /> -->
 	<!-- <include url="skin/vtourskin_design_117round.xml"    /> -->
 	<!-- <include url="skin/vtourskin_design_black.xml"       /> -->
-	
 
-	
+	<!-- <layer name="try" type="container" width="20%" height="20%" keep="true" visible="false" bgcolor="0x000000" bgalpha="1"  align="center"/> -->
+	<style name="circular_hotspot"
+			url="%SWFPATH%/plugins/hs_circle.png"
+			scale="1.0" edge="center" handcursor="true" zorder="10" />
+
 	<scene name="scene_grandhyatt_resized" title="grandhyatt-resized" onstart="" thumburl="panos/grandhyatt_resized.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
-		
+
 		<control bouncinglimits="calc:image.cube ? true : false" />
 
 		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
@@ -85,6 +88,8 @@
 		<image hfov="1.00" vfov="0.562500" voffset="0.00">
 			<flat url="panos/grandhyatt_resized.tiles/l%l/%v/l%l_%v_%h.jpg" multires="512,1024x576,2048x1152" />
 		</image>
+
+		<!-- <hotspot name="test" style="hs_circle"/> -->
 
 	</scene>
 
