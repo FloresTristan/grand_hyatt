@@ -34,9 +34,10 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
 
   async function logout() {
     try {
-      await supabase.auth.signOut(); 
+      await supabase.auth.signOut();
     } finally {
-      r.replace('/login');
+      window.location.href = '/login';
+      // r.replace('/login');
     }
   }
 

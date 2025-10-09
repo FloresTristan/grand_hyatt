@@ -344,7 +344,7 @@ export default function GrandHyattContentPage(){
             </div>
             <div className="md:w-[70%] h-[90%] md:overflow-scroll custom-scrollbar text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
                 <div className="mb-2 text-sm text-white/60 w-full flex gap-x-2">
-                    <Refresh fontSize="small" className="text-white/60 hover:cursor-pointer  hover:text-white/80"/>
+                    {/* <Refresh fontSize="small" className="text-white/60 hover:cursor-pointer  hover:text-white/80"/> */}
                     <span>
                         Live preview from website
                     </span>
