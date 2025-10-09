@@ -6,9 +6,11 @@ import SnackbarComponent, {SnackbarSettings} from "@/app/components/Snackbar";
 import { useUser } from "@/app/providers/UserProviders";
 import HotspotModal from "./HotspotModal";
 import { IconButton } from "@mui/material";
-import { Refresh, EditOutlined, ArrowBackOutlined } from "@mui/icons-material";
+import { Refresh, ArrowBackOutlined } from "@mui/icons-material";
 import UpdateHotspotPage from "./UpdateHotspotPage";
-// import KrpanoViewer from "@/app/components/KrpanoViewer";
+import AccordionGroup from "./AccordionGroup";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
+import KrpanoViewer from "@/app/components/KrpanoViewer";
 
 export default function GrandHyattContentPage(){
     const previewRef = useRef<HTMLIFrameElement | null>(null);
@@ -19,6 +21,10 @@ export default function GrandHyattContentPage(){
     const [open, setOpen] = useState(false)
     const [showUpdate, setShowUpdate] = useState(false)
     const { profile } = useUser()
+    const [hasOrderChanges, setHasOrderChanges] = useState(false);
+    const [savingOrder, setSavingOrder] = useState(false);
+
+
     const [snackbarSettings, setSnackbarSettings] = useState<SnackbarSettings>({
         open: false,
         message: '',
@@ -28,11 +34,13 @@ export default function GrandHyattContentPage(){
     const [updateDraft, setUpdateDraft] = useState<UpdateDraft>({
         name: '',
         description: null,
-        scene: '',
-        ath: null,
-        atv: null,
         image_url: null,
-        id: ''
+        id: '',
+        level: null,
+        startdate: null,
+        enddate: null,
+        starttime: null,
+        endtime: null,
     })
 
     function handleClose(){
@@ -43,10 +51,13 @@ export default function GrandHyattContentPage(){
         const fd = new FormData();
         fd.append("name", p.name);
         if (p.description) fd.append("description", p.description);
-        if (p.scene) fd.append("scene", p.scene);
-        if (p.ath != null) fd.append("ath", String(p.ath));
-        if (p.atv != null) fd.append("atv", String(p.atv));
         if (p.file) fd.append("file", p.file);
+        if (p.level) fd.append("level", p.level);
+        if (p.startdate) fd.append("startdate", p.startdate);
+        if (p.enddate) fd.append("enddate", p.enddate);
+        if (p.starttime) fd.append("starttime", p.starttime);
+        if (p.endtime) fd.append("endtime", p.endtime);
+
 
         const res = await fetch("/api/admin/hotspots/create", { method: "POST", body: fd });
         const data = await res.json();
@@ -126,13 +137,84 @@ export default function GrandHyattContentPage(){
         setUpdateDraft({
             name: selectedHotspot.name ?? '',
             description: selectedHotspot.description ?? '' ,
-            scene: selectedHotspot.scene ?? '',
-            ath: selectedHotspot.ath ?? 0,
-            atv: selectedHotspot.atv ?? 0,
             image_url: selectedHotspot.image_url ?? '',
             id: selectedHotspot.id,
+            level: selectedHotspot.level ?? '',
+            startdate: selectedHotspot.startdate ?? '',
+            enddate: selectedHotspot.enddate ?? '',
+            starttime: selectedHotspot.starttime ?? '',
+            endtime: selectedHotspot.endtime ?? '',
         });
     }, [selectedHotspot]);
+
+    function handleReorder(level: string, fromIndex: number, toIndex: number) {
+        setHotspots((prev) => {
+            if (!prev) return prev;
+            const list = [...prev];
+            const sameLevel = list.filter((h) => h.level === level);
+            const moved = sameLevel[fromIndex];
+            sameLevel.splice(fromIndex, 1);
+            sameLevel.splice(toIndex, 0, moved);
+
+            const updatedLevel = sameLevel.map((h, idx) => ({ ...h, order: idx }));
+
+            const others = list.filter((h) => h.level !== level);
+            const newHotspots = [...others, ...updatedLevel];
+
+            setHasOrderChanges(true);
+            return newHotspots;
+        });
+    }
+
+
+    function handleDragEnd(result: DropResult) {
+        const { source, destination } = result;
+        if (!destination) return;
+        if (source.droppableId === destination.droppableId) {
+            handleReorder(source.droppableId, source.index, destination.index);
+        }
+    }
+
+    async function saveOrder() {
+    if (!hotspots || !hasOrderChanges) return;
+
+    setSavingOrder(true);
+
+    // Prepare data grouped by level
+    const grouped = hotspots.reduce((acc, h) => {
+        if (!acc[h.level]) acc[h.level] = [];
+        acc[h.level].push({ id: h.id, order: h.order });
+        return acc;
+    }, {} as Record<string, { id: string; order: number }[]>);
+
+    try {
+        const res = await fetch("/api/admin/hotspots/reorder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ grouped }),
+        });
+
+        if (!res.ok) throw new Error("Failed to save order");
+
+        setHasOrderChanges(false);
+        setSnackbarSettings((prev) => ({
+        ...prev,
+        open: true,
+        message: "Order saved successfully",
+        severity: "success",
+        }));
+    } catch (e) {
+        setSnackbarSettings((prev) => ({
+        ...prev,
+        open: true,
+        message: e instanceof Error ? e.message : "Save failed",
+        severity: "error",
+        }));
+    } finally {
+        setSavingOrder(false);
+    }
+    }
+
 
     return(
         <div className="font-sans flex flex-col gap-4 md:flex-row min-h-screen md:h-screen p-8 md:gap-8 sm:px-20 bg-[#151c2f]">
@@ -154,6 +236,15 @@ export default function GrandHyattContentPage(){
                             className="bg-red-500 rounded-lg p-2 text-white hover:bg-red-600 hover:cursor-pointer"
                         >
                             Delete
+                        </button>
+                        <button
+                            onClick={saveOrder}
+                            disabled={savingOrder || !hasOrderChanges}
+                            className={`${
+                                savingOrder ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+                            } rounded-lg p-2 text-white transition disabled:opacity-50`}
+                            >
+                            {savingOrder ? "Saving…" : "Save Order"}
                         </button>
                     </div>
                 )}
@@ -193,37 +284,45 @@ export default function GrandHyattContentPage(){
                 </div>
 
                 {!loading && !showUpdate && (
-                    <ul
-                        className="divide-y divide-white/10 rounded-lg h-[150px] md:h-[670px]  overflow-scroll custom-scrollbar"
-                    >
-                        {hotspots?.map((hotspot, index) => (
-                            <li key={hotspot?.id}
-                                className={`flex items-center justify-between even:bg-[#151c2f] p-2 px-4  hover:bg-white/10 ${selectedHotspot?.id === hotspot?.id && 'bg-white/10 even:bg-white/10'}`}
-                            >
-                                <span
-                                    onClick={()=>{
-                                        setSelectedHotspot(hotspot)
-                                        setOpen(true)
-                                    }}
-                                    className="text-white hover:cursor-pointer truncate max-w-[70px] md:max-w-[150px]"
-                                >
-                                {hotspot?.name}
-                                </span>
-                                <span>
-                                    <IconButton size="small"
-                                        onClick={()=>{
-                                            setSelectedHotspot(hotspot)
-                                            setOpen(true)
-                                            setShowUpdate(true)
-                                        }}
-                                    >
-                                        <EditOutlined className='text-green-400 hover:text-green-500 transition duration-700 ease-in-out' />
-                                    </IconButton>
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
+                    <DragDropContext onDragEnd={handleDragEnd}>
+                        <div className="rounded-lg h-[150px] md:h-[670px] overflow-scroll custom-scrollbar space-y-2">
+                            {(() => {
+                            const groups: Record<string, Hotspots[]> = {};
+                            hotspots?.forEach((h) => {
+                                const group = h.level || "Uncategorized";
+                                if (!groups[group]) groups[group] = [];
+                                groups[group].push(h);
+                            });
+
+                            const levelOrder = [
+                                "Ground Level",
+                                "Second Level",
+                                "Third Level",
+                                "Fifth Level",
+                                "Sixth Level",
+                                "60th Level",
+                                "62nd Level",
+                                "66th Level",
+                            ];
+
+                            return levelOrder.map((level) => (
+                                <AccordionGroup
+                                key={level}
+                                title={level}
+                                droppableId={level}
+                                items={groups[level] || []}
+                                selectedHotspot={selectedHotspot}
+                                setSelectedHotspot={setSelectedHotspot}
+                                setOpen={setOpen}
+                                setShowUpdate={setShowUpdate}
+                                />
+                            ));
+                            })()}
+                        </div>
+                    </DragDropContext>
                 )}
+
+
                 {/* todo create a dynamic hotspot for me */}
                 {
                     showUpdate && (
@@ -244,9 +343,18 @@ export default function GrandHyattContentPage(){
                 }
             </div>
             <div className="md:w-[70%] h-[90%] md:overflow-scroll custom-scrollbar text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
-                <div className="mb-2 text-sm text-white/60">Live preview from website</div>
+                <div className="mb-2 text-sm text-white/60 w-full flex gap-x-2">
+                    <Refresh fontSize="small" className="text-white/60 hover:cursor-pointer  hover:text-white/80"/>
+                    <span>
+                        Live preview from website
+                    </span>
+                </div>
                 <div className="relative w-full h-[720px] md:h-full border border-white/10 bg-white rounded-xl overflow-hidden">
-                    <iframe ref={previewRef} src="/" title="Website Live Preview" className="absolute inset-0 object-contain h-full w-full" />
+                    {/* <iframe ref={previewRef} src="/" title="Website Live Preview" className="absolute inset-0 object-contain h-full w-full" /> */}
+                    <KrpanoViewer
+                        xml="/vtour/tour.xml"
+                        container="contained"
+                    />
                     <HotspotModal
                         open={isHotspotModalOpen}
                         onClose={() => {

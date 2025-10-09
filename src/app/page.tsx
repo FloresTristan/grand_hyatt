@@ -4,7 +4,7 @@
 // import Image from 'next/image';
 // import grandhyattmodel from "../app/assets/grandhyatt-resized.png"
 import EventModalOverlay from './components/EventModalOverlay';
-import { fetchEventsForClient, EventType, formatDateRange, to12h, fetchSeasons, Season } from './components/helpersAndInputs';
+import { fetchEventsForClient, EventType, formatDateRange, to12h, fetchSeasons, Season, formatTimeRange } from './components/helpersAndInputs';
 import { useEffect, useState } from 'react';
 import { IoInformationCircleSharp } from "react-icons/io5";
 import SeasonOverlay from './components/SeasonOverlay';
@@ -71,7 +71,7 @@ export default function Home() {
             subheading: e.subheading ?? "",
             description: e.description ?? "",
             dateRange: formatDateRange(e.start_date, e.end_date),
-            timeText: to12h(e.start_time),
+            timeText: formatTimeRange(e.start_time, e.end_time),
             ctaLabel: e.cta_label ?? "",
             ctaHref: e.cta_href ?? "",
           }))}

@@ -4,6 +4,8 @@ import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { Hotspots } from "@/app/components/helpersAndInputs";
 import { ImageLightbox } from "@/app/components/Lightbox";
+import { formatDateRange, formatTimeRange } from "@/app/components/helpersAndInputs";
+import { DateRange, Schedule } from "@mui/icons-material";
 
 type HotspotModalOverlayProps = {
   open: boolean;
@@ -21,6 +23,7 @@ export default function HotspotModalOverlay({
   const [busy, setBusy] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const imageRef = useRef<HTMLImageElement | null>(null);
+  const [current, setCurrent] = useState<{dateRange?: string | null; timeText?: string | null}>({})
 
   useEffect(() => {
     if (!open) {
@@ -28,10 +31,19 @@ export default function HotspotModalOverlay({
     }
   }, [open]);
 
+  useEffect(() => {
+    setCurrent({
+      dateRange: formatDateRange(hotspot?.startdate || '', hotspot?.enddate || ''),
+      timeText: formatTimeRange(hotspot?.starttime || '', hotspot?.endtime || '')
+    })
+  }, [hotspot?.startdate, hotspot?.enddate, hotspot?.starttime, hotspot?.endtime]);
+
+  console.log({hotspot})
   if (!hotspot) return null;
   if (!open) return null;
 
   console.log({hotspot})
+
 
 
   const pos = container === 'contained' ? 'absolute' : 'fixed';
@@ -77,6 +89,25 @@ export default function HotspotModalOverlay({
           <h2 className="text-center text-neutral-600 text-3xl font-semibold tracking-tight whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">
             {hotspot?.name}
           </h2>
+
+          {(current?.dateRange || current?.timeText) && (
+            <div className="mt-2 flex items-center justify-center gap-5 text-sm text-neutral-700">
+              {current?.dateRange && (
+                <span className="inline-flex items-center gap-1.5">
+                  <DateRange sx={{ fontSize: 20 }}/>
+                  {/* <span className="inline-block h-5 w-5 rounded-[4px] border border-neutral-400" /> */}
+                  {current?.dateRange}
+                </span>
+              )}
+              {current?.timeText && (
+                <span className="inline-flex items-center gap-1.5">
+                  <Schedule sx={{ fontSize: 20 }}/>
+                  {/* <span className="inline-block h-5 w-5 rounded-full border border-neutral-400" /> */}
+                  {current?.timeText}
+                </span>
+              )}
+            </div>
+          )}
 
           {!!hotspot?.description && (
             <div className="mt-4 max-h-56 overflow-y-auto">

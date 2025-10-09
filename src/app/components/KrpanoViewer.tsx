@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Script from "next/script";
 import { fetchHotspots, Hotspots } from "./helpersAndInputs";
 import HotspotModalOverlay from "../admin/grandhyatt/HotspotModal";
+import { usePathname } from "next/navigation";
 
 /** Minimal krpano API we use */
 interface Krpano {
@@ -28,103 +29,95 @@ declare global {
     embedpano?: (opts: EmbedPanoOptions) => void;
     removepano?: (id: string) => void;
     getkrpano?: (idOrDiv: string) => Krpano | undefined;
-    __readdHotspots?: () => void;
+    ReactKrpanoLayerClick?: (layerName: string) => void;
   }
 }
 
 type Props = {
   xml: string;
-  viewerId?: string;   // krpano instance id (stable!)
-  targetId?: string;   // div id to mount (stable!)
+  viewerId?: string;
+  targetId?: string;
   style?: React.CSSProperties;
-  options?: Record<string, unknown>; // pass a memoized object if you use this
+  options?: Record<string, unknown>;
+  container?: 'contained' | 'fullscreen';
 };
-
-function safeId(s: string) {
-  return s.replace(/[^a-zA-Z0-9_]/g, "_");
-}
 
 export default function KrpanoViewer({
   xml,
   viewerId = "krpano1",
   targetId = "pano1",
   style,
-  options, // do NOT put this in effect deps unless memoized
+  options,
+  container= 'fullscreen',
 }: Props) {
   const [scriptReady, setScriptReady] = useState(false);
   const [hotspots, setHotspots] = useState<Hotspots[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedHotspot, setSelectedHotspot] = useState<Hotspots|null>(null)
+  const [selectedHotspot, setSelectedHotspot] = useState<Hotspots | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const embeddedRef = useRef(false);     // prevent re-embeds
+  const embeddedRef = useRef(false);
   const krpanoRef = useRef<Krpano | null>(null);
+  const pathname = usePathname();
 
-  useEffect(() => {
-    (window as unknown as Record<string, unknown>).openHotspotById = (id: string) => {
-      const found = hotspots.find(h => h.id === id);
-      if (found) {
-        setSelectedHotspot(found);
-        setModalOpen(true);
-      }
-    };
-  }, [hotspots]);
-
+  // ==============================
+  //  FETCH HOTSPOTS
+  // ==============================
   useEffect(() => {
     fetchHotspots({ setHotspots, setLoading });
   }, []);
 
-  const addHotspots = useCallback((k: Krpano) => {
-    // remove previously-added db hotspots
-    k.call(`
-      for(set(i,0), i LT hotspot.count, inc(i),
-        set(hn, get(hotspot[get(i)].name));
-        if(startswith(hn, 'dbhs_'), removehotspot(get(hn)); dec(i););
+  // ==============================
+  //  LAYER CLICK HANDLER (submenu)
+  // ==============================
+  useEffect(() => {
+    console.log("before")
+    window.ReactKrpanoLayerClick = (layerName: string) => {
+      console.log("after")
+      const k = krpanoRef.current ?? window.getkrpano?.(viewerId);
+      console.log("layer clicked:", layerName)
+      if (!k) return;
+
+      // Only respond to submenu layers (submenu10, submenu11, etc)
+      if (!layerName.startsWith("submenu")) return;
+
+      // Get the visible text (HTML) from that submenu layer
+      const html = k.get(`layer[${layerName}].html`);
+      if (!html) return;
+
+      // Match it to your fetched hotspot names
+      const match = hotspots.find(
+        (h) =>
+          h.name?.trim().toLowerCase() ===
+          String(html).trim().toLowerCase()
       );
-    `);
 
-    hotspots.forEach((h, idx) => {
-      const hsId = `dbhs_${h.id ? safeId(h.id) : idx}`;
+      if (match) {
+        console.log("🟢 Submenu clicked:", html, "→ hotspot:", match);
+        setSelectedHotspot(match);
+        setModalOpen(true);
+      } else {
+        console.warn("⚠️ No hotspot matched submenu:", html);
+      }
+    };
 
-      k.call(`addhotspot(${hsId})`);
-      k.set(`hotspot[${hsId}].id`, h.id ?? "");
-      k.set(`hotspot[${hsId}].ath`, (h.ath ?? 0) as number);
-      k.set(`hotspot[${hsId}].atv`, (h.atv ?? 0) as number);
+    return () => {
+      delete window.ReactKrpanoLayerClick;
+    };
+  }, [hotspots, viewerId]);
 
-      // your style from XML (e.g., <style name="circular_hotspot" .../>)
-      k.call(`hotspot[${hsId}].loadstyle(hs_circle)`);
-      k.set(`hotspot[${hsId}].keep`, true);
-      k.set(`hotspot[${hsId}].visible`, true);
-      k.set(`hotspot[${hsId}].handcursor`, true);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      console.log("Path:", window.location.pathname);
+    }
+  }, []);
 
-      const title = h.name ?? "";
-      const desc  = h.description ?? "";
-      k.set(`hotspot[${hsId}].tag`, title);
-      k.set(`hotspot[${hsId}].data_title`, title);   // used by many circle/skin snippets
-      k.set(`hotspot[${hsId}].data_desc`,  desc);
-
-      // also set common alternatives so any skin variant works
-      k.set(`hotspot[${hsId}].title`,  title);
-      k.set(`hotspot[${hsId}].text`,   title);
-      k.set(`hotspot[${hsId}].tooltip`, title);
-      k.set(`hotspot[${hsId}].id`, h.id ?? "");
-
-      // optional custom icon
-      // if (h.image_url) k.set(`hotspot[${hsId}].url`, h.image_url);
-
-      const msg = (h.description || h.name || "hotspot").replace(/'/g, "\\'");
-      k.set(`hotspot[${hsId}].onclick`, `trace('clicked ${msg}')`)
-      k.set(`hotspot[${hsId}].onclick`, `jscall('openHotspotById("${h.id}")')`);
-
-
-    });
-  }, [hotspots]);
-
-  // Embed ONCE when script is ready; don't tear down on random renders
+  // ==============================
+  //  EMBED KRPANO
+  // ==============================
   useEffect(() => {
     if (!scriptReady || loading) return;
     if (!window.embedpano) return;
     if (embeddedRef.current) {
-      // already embedded; just ensure we capture the instance
       krpanoRef.current = window.getkrpano?.(viewerId) ?? null;
       return;
     }
@@ -137,34 +130,47 @@ export default function KrpanoViewer({
       consolelog: true,
       debugmode: false,
       passQueryParameters: true,
+      jsaccess: "full",
       onready: (k: Krpano) => {
         krpanoRef.current = k;
+        console.log(k)
 
-        // initial hotspots
-        addHotspots(k);
+        // Register global click listener for all KRPano layers
+        // Ensure submenu layers can capture clicks
+        console.log(pathname)
+        if (pathname.includes("grandhyatt") ) {
+          console.log("🌇 Loading admin default scene: ninort");
+          k.call(`
+             delayedcall(1,
+              loadscene(scene_ninort, null, MERGE, BLEND(get(transitiontime),get(transitiontweentype)));
+            );
+          `);
+        }
+        k.call(`
+          for(set(i,0), i LT layer.count, inc(i),
+            if(startswith(get(layer[get(i)].name), 'submenu'),
+              set(layer[get(i)].enabled, true);
+              set(layer[get(i)].bgcapture, true);
+              set(layer[get(i)].onclick, js(window.ReactKrpanoLayerClick(get(name))));
+            );
+          );
+        `);
 
-        // after each scene load, re-add hotspots
-        window.__readdHotspots = () => {
-          const inst = window.getkrpano?.(viewerId);
-          if (inst) addHotspots(inst);
-        };
-        k.call("set(events.onloadcomplete, js(window.__readdHotspots && window.__readdHotspots()))");
+
+        console.log("✅ KRPano ready, XML loaded");
       },
-      // spread options if you *must* (but memoize them in parent)
       ...(options || {}),
     });
 
     embeddedRef.current = true;
-  }, [scriptReady, loading, xml, viewerId, targetId, addHotspots]); // <-- no `options` here
+  }, [scriptReady, loading, xml, viewerId, targetId, options, pathname]);
 
-  // If hotspots change later, update without re-embedding
-  useEffect(() => {
-    if (!scriptReady || loading) return;
-    const k = krpanoRef.current ?? window.getkrpano?.(viewerId) ?? null;
-    if (k) addHotspots(k);
-  }, [hotspots, scriptReady, loading, viewerId, addHotspots]);
+  console.log({hotspots})
+  console.log({selectedHotspot})
 
-  // Clean up ONLY on unmount
+  // ==============================
+  //  CLEANUP ON UNMOUNT
+  // ==============================
   useEffect(() => {
     return () => {
       try {
@@ -175,25 +181,36 @@ export default function KrpanoViewer({
     };
   }, [viewerId]);
 
-  console.log({selectedHotspot})
-
+  // ==============================
+  //  RENDER
+  // ==============================
   return (
     <>
+      {/* Load the krpano engine */}
       <Script
         src="/vtour/tour.js"
         strategy="afterInteractive"
         onReady={() => setScriptReady(true)}
       />
+
+      {/* The actual pano container */}
       <div
         id={targetId}
-        style={{ width: "100%", height: "100%", position: "relative", ...style }}
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "relative",
+          ...style,
+        }}
       />
-      {selectedHotspot && (
+
+      {/* Hotspot Modal */}
+      {container === 'fullscreen' && selectedHotspot && (
         <HotspotModalOverlay
           open={modalOpen}
           onClose={() => setModalOpen(false)}
           hotspot={selectedHotspot}
-          container="fullscreen"
+          container={container}
         />
       )}
     </>

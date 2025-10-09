@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from "@/app/providers/UserProviders";
 import { Hotspots, UpdateDraft } from '@/app/components/helpersAndInputs';
 import SnackbarComponent, {SnackbarSettings} from '@/app/components/Snackbar';
+// import { LabeledDate } from '@/app/components/helpersAndInputs';
 
 type Props = {
   /** Optional: pass hotspot if you already have it */
@@ -38,11 +39,13 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
     initial ?? {
       id: '',
       name: '',
-      description: null,
-      scene: '',
-      ath: null,
-      atv: null,
+      description: '',
       image_url: null,
+      level: '',
+      startdate: '',
+      enddate: '',
+      starttime: '',
+      endtime: '',
     }
   );
 
@@ -77,11 +80,13 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
         const fetched: UpdateDraft = {
           id: one.id,
           name: one.name ?? '',
-          description: one.description ?? null,
-          scene: one.scene ?? '',
-          ath: one.ath ?? null,
-          atv: one.atv ?? null,
-          image_url: one.image_url ?? null,
+          description: one.description ?? '',
+          image_url: one.image_url ?? '',
+          level: one.level ?? '',
+          startdate: one.startdate ?? '',
+          enddate: one.enddate ?? '',
+          starttime: one.starttime ?? '',
+          endtime: one.endtime ?? '',
         };
         setDraft(fetched);
         setCurrentImageUrl(one.image_url ?? null);
@@ -137,21 +142,20 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
       setError('Missing hotspot id.');
       return;
     }
-    if (!draft.name.trim()) {
-      setError('Name is required.');
-      return;
-    }
     setBusy(true);
     setError(null);
     try {
       const fd = new FormData();
       fd.append('name', draft.name.trim());
-      if (draft.scene?.trim()) fd.append('scene', draft.scene.trim());
-      if (draft.description?.trim()) fd.append('description', draft.description.trim());
-      if (draft.ath != null) fd.append('ath', String(draft.ath));
-      if (draft.atv != null) fd.append('atv', String(draft.atv));
+      fd.append('description', draft.description?.trim() ?? '');
+      fd.append('level', draft.level?.trim() ?? '');
+      fd.append('startdate', draft.startdate ?? '');
+      fd.append('enddate', draft.enddate ?? '');
+      fd.append('starttime', draft.starttime ?? '');
+      fd.append('endtime', draft.endtime ?? '');
       if (file) fd.append('file', file);
 
+      console.log("fd", fd)
       const res = await fetch(`/api/admin/hotspots/${id}`, { method: 'PATCH', body: fd });
       const data: unknown = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -191,6 +195,32 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
     else router.back();
   }
 
+  function clearDate(){
+    setDraft((prev) => ({
+      ...prev,
+      startdate: '',
+      enddate: '',
+    }));
+    onChange?.({
+      ...draft,
+      startdate: '',
+      enddate: '',
+    });
+  }
+
+  function clearTime(){
+    setDraft((prev) => ({
+      ...prev,
+      starttime: '',
+      endtime: '',
+    }));
+    onChange?.({
+      ...draft,
+      starttime: '',
+      endtime: '',
+    });
+  }
+
   return (
     <div className="mt-4 space-y-4 text-white">
       <div className={`grid grid-cols-1 gap-3 ${profile?.role === 'super-admin' && 'md:grid-cols-2'}`}>
@@ -209,48 +239,79 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
         {profile?.role === 'super-admin' && (
           <>
             <label className="block">
-              <div className="mb-1 text-sm text-white/80">Scene (optional)</div>
-              <input
-                type="text"
-                value={draft.scene}
-                onChange={(e) => updateField("scene", e.target.value)}
-                className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
-                placeholder="e.g., scene_lobby"
+              <div className="mb-1 w-full text-sm text-white/80">Group</div>
+              <select
+                value={draft.level || ''}
+                onChange={(e) => updateField("level", e.target.value)}
                 disabled={busy}
-              />
-            </label>
-
-            <label className="block">
-              <div className="mb-1 text-sm text-white/80">ath (°)</div>
-              <input
-                type="number"
-                value={draft.ath ?? 0}
-                onChange={(e) => updateField("ath", parseFloat(e.target.value))}
-                step="0.1"
-                min={-180}
-                max={180}
                 className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
-                placeholder="e.g., 0"
-                disabled={busy}
-              />
-            </label>
-
-            <label className="block">
-              <div className="mb-1 text-sm text-white/80">atv (°)</div>
-              <input
-                type="number"
-                value={draft.atv ?? 0}
-                onChange={(e) => updateField("atv", parseFloat(e.target.value))}
-                step="0.1"
-                min={-90}
-                max={90}
-                className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
-                placeholder="e.g., 0"
-                disabled={busy}
-              />
+              >
+                <option value="">Select Level</option>
+                <option value="Ground Level">Ground Level</option>
+                <option value="Second Level">Second Level</option>
+                <option value="Third Level">Third Level</option>
+                <option value="Fifth Level">Fifth Level</option>
+                <option value="Sixth Level">Sixth Level</option>
+                <option value="60th Level">60th Level</option>
+                <option value="62nd Level">62nd Level</option>
+                <option value="66th Level">66th Level</option>
+              </select>
             </label>
           </>
         )}
+      </div>
+
+      <div className='w-full flex flex-col'>
+        <div className="grid grid-cols-2 gap-2">
+          <label className="block">
+            <div className="text-sm mb-1 text-white/80">Start date</div>
+            <input style={{ colorScheme: 'dark' }} type="date" value={draft.startdate || ''} onChange={(e) => updateField("startdate", e.target.value)} className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
+          </label>
+          <label className="block">
+            <div className="text-sm mb-1 text-white/80">End date</div>
+            <input style={{ colorScheme: 'dark' }} type="date" value={draft.enddate || ''} onChange={(e) => updateField("enddate", e.target.value)} className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
+          </label>
+          {/* <LabeledDate label="End date" value={enddate} onChange={setEnddate} min={startdate || undefined} /> */}
+        </div>
+        <span
+          onClick={()=>clearDate()}
+          className='w-full text-white/20 cursor-pointer hover:text-white/50 text-end px-2'>
+          clear
+        </span>
+      </div>
+
+      <div className='w-full flex flex-col'>
+        <div className="grid grid-cols-2 mt-1 gap-2">
+          <label className="block">
+            <div className="text-sm mb-1 text-white/80">
+              Start time
+            </div>
+            <input
+              style={{ colorScheme: 'dark' }}
+              type="time"
+              value={draft.starttime || ''}
+              onChange={(e) => updateField("starttime",e.target.value)}
+              className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+            />
+          </label>
+          <label className="block">
+            <div className="text-sm mb-1 text-white/80">
+              End time
+            </div>
+            <input
+              style={{ colorScheme: 'dark' }}
+              type="time"
+              value={draft.endtime || ''}
+              onChange={(e) => updateField("endtime",e.target.value)}
+              className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+            />
+          </label>
+        </div>
+        <span 
+          onClick={()=>clearTime()}
+          className='w-full text-white/20 cursor-pointer hover:text-white/50 text-end px-2'>
+          clear
+        </span>
       </div>
 
       <label className="block">
@@ -328,7 +389,7 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
         <button
           type="button"
           onClick={handleUpdate}
-          disabled={busy || !draft.name.trim() || !id}
+          disabled={busy || !id}
           className="rounded-lg px-3 py-2 text-sm font-medium text-black bg-green-400 hover:bg-green-500 disabled:opacity-50"
         >
           {busy ? 'Saving…' : 'Update'}

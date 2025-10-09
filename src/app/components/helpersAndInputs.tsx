@@ -144,19 +144,23 @@ export type Hotspots = {
   id: string;
   name: string;
   description?: string | null;
-  scene?: string | null;
-  ath?: number | null;
-  atv?: number | null;
   image_url?: string | null;
+  level?: string | null;
+  startdate?: string | null;
+  enddate?: string | null;
+  starttime?: string | null;
+  endtime?: string | null;
 }
 
 export type UpdateDraft = {
   name: string;
   description: string | null;
-  scene: string;
-  ath: number | null;
-  atv: number | null;
   image_url: string | null;
+  level: string | null,
+  startdate?: string | null;
+  enddate?: string | null;
+  starttime?: string | null;
+  endtime?: string | null;
   id: string;
 }
 

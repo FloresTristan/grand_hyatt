@@ -42,10 +42,13 @@ export async function POST(req: Request) {
     const form = await req.formData();
     const name = String(form.get('name') ?? '').trim();
     const description = String(form.get('description') ?? '').trim() || null;
-    const scene = String(form.get('scene') ?? '').trim() || null;
-    const athStr = String(form.get('ath') ?? '').trim();
-    const atvStr = String(form.get('atv') ?? '').trim();
     const fileMaybe = form.get('file');
+    const level = String(form.get('level')?? '').trim() || null;
+    const startdate = String(form.get('startdate')?? '').trim() || null;
+    const enddate = String(form.get('enddate')?? '').trim() || null;
+    const starttime = String(form.get('starttime')?? '').trim() || null;
+    const endtime = String(form.get('endtime')?? '').trim() || null;
+
 
     if (!name) return NextResponse.json({ error: 'Name is required' }, { status: 400 });
 
@@ -80,20 +83,19 @@ export async function POST(req: Request) {
       imageUrl = pub.publicUrl;
     }
 
-    const ath = athStr ? Number(athStr) : null;
-    const atv = atvStr ? Number(atvStr) : null;
-
     const { data: row, error: insErr } = await supa
       .from('hotspots')
       .insert({
         name,
         description,
         image_url: imageUrl,
-        scene,
-        ath,
-        atv,
+        level,
+        startdate,
+        enddate,
+        starttime,
+        endtime,
       })
-      .select('id,name,description,image_url,scene,ath,atv,created_at')
+      .select('id,name,description,image_url,level,startdate,enddate,starttime,endtime,created_at')
       .single();
 
     if (insErr) return NextResponse.json({ error: insErr.message }, { status: 500 });

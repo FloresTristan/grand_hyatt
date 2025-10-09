@@ -84,57 +84,50 @@ export async function DELETE(_req: Request, ctx: Ctx) {
   }
 }
 
-/** PATCH: update fields and optionally replace image */
 export async function PATCH(req: Request, ctx: Ctx) {
   try {
     const { id } = await ctx.params;
-    if (!id) return NextResponse.json({ error: 'Missing hotspot id' }, { status: 400 });
+    if (!id)
+      return NextResponse.json({ error: "Missing hotspot id" }, { status: 400 });
 
     const supa = await createSupabaseServer();
     const { data: auth } = await supa.auth.getUser();
-    if (!auth?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!auth?.user)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     // Fetch existing row once (for old image cleanup if needed)
     const { data: existing, error: fetchErr } = await supa
-      .from('hotspots')
-      .select('id,image_url')
-      .eq('id', id)
+      .from("hotspots")
+      .select("id,image_url")
+      .eq("id", id)
       .single();
-    if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 404 });
 
-    const ct = req.headers.get('content-type') || '';
+    if (fetchErr)
+      return NextResponse.json({ error: fetchErr.message }, { status: 404 });
+
+    const ct = req.headers.get("content-type") || "";
     const updates: Record<string, unknown> = {};
-
-    // Helpers
-    const toNum = (v: unknown): number | null => {
-      if (v === null || v === undefined) return null;
-      const n = Number(v);
-      return Number.isFinite(n) ? n : null;
-    };
 
     let uploadedPublicUrl: string | null = null;
     let replaceImage = false;
 
-    if (ct.includes('multipart/form-data')) {
-      // With file
+    // 🧩 Helper to clean strings
+    const clean = (v: unknown) =>
+      typeof v === "string" ? v.trim() || null : null;
+
+    if (ct.includes("multipart/form-data")) {
+      // ----- MULTIPART FORM -----
       const form = await req.formData();
 
-      const name = form.get('name');
-      const description = form.get('description');
-      const scene = form.get('scene');
-      const ath = form.get('ath');
-      const atv = form.get('atv');
+      updates.name = clean(form.get("name"));
+      updates.description = clean(form.get("description"));
+      updates.level = clean(form.get("level"));
+      updates.startdate = clean(form.get("startdate"));
+      updates.enddate = clean(form.get("enddate"));
+      updates.starttime = clean(form.get("starttime"));
+      updates.endtime = clean(form.get("endtime"));
 
-      if (typeof name === 'string' && name.trim()) updates.name = name.trim();
-      if (typeof description === 'string') updates.description = description.trim() || null;
-      if (typeof scene === 'string') updates.scene = scene.trim() || null;
-
-      const athNum = toNum(typeof ath === 'string' ? ath : null);
-      const atvNum = toNum(typeof atv === 'string' ? atv : null);
-      if (athNum !== null) updates.ath = athNum;
-      if (atvNum !== null) updates.atv = atvNum;
-
-      const fileMaybe = form.get('file');
+      const fileMaybe = form.get("file");
       if (fileMaybe && fileMaybe instanceof Blob) {
         // Upload new image
         await ensureBucket();
@@ -142,24 +135,27 @@ export async function PATCH(req: Request, ctx: Ctx) {
         const file = fileMaybe as File;
         const bytes = await file.arrayBuffer();
         const buf = Buffer.from(bytes);
-        const mime = (file.type || 'application/octet-stream').toLowerCase();
+        const mime = (file.type || "application/octet-stream").toLowerCase();
 
-        let ext = file.name?.split('.').pop()?.toLowerCase();
+        let ext = file.name?.split(".").pop()?.toLowerCase();
         if (!ext) {
-          if (mime.includes('png')) ext = 'png';
-          else if (mime.includes('jpeg') || mime.includes('jpg')) ext = 'jpg';
-          else if (mime.includes('webp')) ext = 'webp';
-          else if (mime.includes('gif')) ext = 'gif';
-          else ext = 'bin';
+          if (mime.includes("png")) ext = "png";
+          else if (mime.includes("jpeg") || mime.includes("jpg")) ext = "jpg";
+          else if (mime.includes("webp")) ext = "webp";
+          else if (mime.includes("gif")) ext = "gif";
+          else ext = "bin";
         }
 
         const objectPath = `hotspots/${crypto.randomUUID()}.${ext}`;
         const admin = createSupabaseAdmin();
-        const { error: upErr } = await admin.storage.from(BUCKET).upload(objectPath, buf, {
-          contentType: mime,
-          upsert: false,
-        });
-        if (upErr) return NextResponse.json({ error: upErr.message }, { status: 500 });
+        const { error: upErr } = await admin.storage
+          .from(BUCKET)
+          .upload(objectPath, buf, {
+            contentType: mime,
+            upsert: false,
+          });
+        if (upErr)
+          return NextResponse.json({ error: upErr.message }, { status: 500 });
 
         const { data: pub } = admin.storage.from(BUCKET).getPublicUrl(objectPath);
         uploadedPublicUrl = pub.publicUrl;
@@ -167,38 +163,43 @@ export async function PATCH(req: Request, ctx: Ctx) {
         replaceImage = true;
       }
     } else {
-      // JSON body
-      const body = (await req.json()) as unknown;
-      if (typeof body === 'object' && body !== null) {
-        const b = body as Record<string, unknown>;
-        if (typeof b.name === 'string' && b.name.trim()) updates.name = b.name.trim();
-        if (typeof b.description === 'string') updates.description = b.description.trim() || null;
-        if (typeof b.scene === 'string') updates.scene = b.scene.trim() || null;
+      // ----- JSON BODY -----
+      const body = (await req.json()) as Record<string, unknown>;
 
-        const athNum = toNum(b.ath);
-        const atvNum = toNum(b.atv);
-        if (athNum !== null) updates.ath = athNum;
-        if (atvNum !== null) updates.atv = atvNum;
+      updates.name = clean(body.name);
+      updates.description = clean(body.description);
+      updates.level = clean(body.level);
+      updates.startdate = clean(body.startdate);
+      updates.enddate = clean(body.enddate);
+      updates.starttime = clean(body.starttime);
+      updates.endtime = clean(body.endtime);
 
-        // Optional: allow clearing image via { imageUrl: null }
-        if (b.imageUrl === null) updates.image_url = null;
-      }
+      // Optional: allow clearing image via { imageUrl: null }
+      if (body.imageUrl === null) updates.image_url = null;
     }
 
+    // Remove undefined keys (but keep null)
+    Object.keys(updates).forEach((key) => {
+      if (updates[key] === undefined) delete updates[key];
+    });
+
     if (Object.keys(updates).length === 0) {
-      return NextResponse.json({ error: 'No changes provided' }, { status: 400 });
+      return NextResponse.json({ error: "No changes provided" }, { status: 400 });
     }
 
     const { data: updated, error: updErr } = await supa
-      .from('hotspots')
+      .from("hotspots")
       .update(updates)
-      .eq('id', id)
-      .select('id,name,description,image_url,scene,ath,atv,updated_at')
+      .eq("id", id)
+      .select(
+        "id,name,description,image_url,level,startdate,enddate,starttime,endtime,updated_at"
+      )
       .single();
 
-    if (updErr) return NextResponse.json({ error: updErr.message }, { status: 500 });
+    if (updErr)
+      return NextResponse.json({ error: updErr.message }, { status: 500 });
 
-    // If we uploaded a new image, try removing the old one
+    // 🧹 Remove old image if replaced
     if (replaceImage && existing?.image_url && uploadedPublicUrl) {
       try {
         const oldPath = toStoragePath(existing.image_url);
@@ -210,7 +211,8 @@ export async function PATCH(req: Request, ctx: Ctx) {
 
     return NextResponse.json({ item: updated });
   } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : 'Server error';
+    const msg = e instanceof Error ? e.message : "Server error";
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
+

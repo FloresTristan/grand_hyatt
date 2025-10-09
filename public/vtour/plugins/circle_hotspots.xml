@@ -14,7 +14,7 @@
     hotspot[get(hs_circle)].loadstyle(hs_circle_img);
     copy(hotspot[get(hs_circle)].ath,hotspot[get(h)].ath);
     copy(hotspot[get(hs_circle)].atv,hotspot[get(h)].atv);
-    <!-- txtadd(hotspot[get(hs_circle)].url, '%HTMLPATH%/plugins/circular_thumbs/',get(hotspot[get(h)].name),'.png'); -->
+    txtadd(hotspot[get(hs_circle)].url, '%HTMLPATH%\plugins\circular_thumbs\',get(hotspot[get(h)].name),'.png');
     set(hotspot[get(hs_circle)].scale,0.3);
 
     txtadd(hs_tag,get(hotspot[get(h)].name),'_tag');
@@ -23,7 +23,9 @@
     copy(hotspot[get(hs_tag)].ath,hotspot[get(h)].ath);
     copy(hotspot[get(hs_tag)].atv,hotspot[get(h)].atv);
     txtadd(hotspot[get(hs_tag)].html, '[h1]',get(hotspot[get(h)].tag),'[/h1]');
-    set(hotspot[get(hs_tag)].oy,65);););
+    <!-- set(hotspot[get(hs_tag)].oy,65););); -->
+    set(hotspot[get(hs_tag)].oy,-40);););
+
   </action>
 
   <action name="add_layers_hs_deselect_on_ondown_event" scope="local">
@@ -155,7 +157,33 @@
 
   <!-- Circle Hotspot Tag (Textfield) Style, shows the name of the next scene when hotspot is activated -->
 
-  <style name="hs_circle_tag" type="text" alpha="0" zorder="999999" flying="0.03" enabled="false" padding="2 5 2 5" bg="true" bgalpha="1" border="true" bordercolor="0xFFFFFF" borderalpha="1.0" borderwidth="1.0" bgcolor="0x021b54" bgroundedge="10" onautosized="false" oversampling="3" mipmapping="2" css="h1{font-family:Helvetica; font-size:14px; color:#ffffff; margin:0px;}" />
+  <!-- <style name="hs_circle_tag" type="text" alpha="0" zorder="999999" flying="0.03" enabled="false" padding="2 5 2 5" bg="true" bgalpha="1" border="true" bordercolor="0xFFFFFF" borderalpha="1.0" borderwidth="1.0" bgcolor="0x021b54" bgroundedge="10" onautosized="false" oversampling="3" mipmapping="2" css="h1{font-family:Helvetica; font-size:14px; color:#ffffff; margin:0px;}" /> -->
+
+  <style name="hs_circle_tag"
+       type="text"
+       alpha="0"
+       zorder="999999"
+       enabled="false"
+       bg="true"
+       bgalpha="1.0"
+       bgcolor="0xffffff"
+       border="true"
+       bordercolor="0xcccccc"
+       borderalpha="1.0"
+       borderwidth="1.0"
+       bgroundedge="12"
+       padding="6 12 6 12"
+       shadow="1"
+       shadowrange="8"
+       shadowcolor="0x000000"
+       shadowalpha="0.3"
+       css="h1{
+         font-family:Helvetica,Arial;
+         font-size:14px;
+         color:#BC0F42;
+         margin:0px;
+       }"/>
+
 
   <action name="select_hs">
     <!-- Deanimate Selected Hotspot, @selected_hs is a global variable which stores the name of the selected hotspot -->
@@ -211,7 +239,7 @@
 
     <!-- Hide circle thumbnail -->
     txtadd(hs_img, %1 , '_img');
-    tween(hotspot[get(hs_img)].scale,0.28,0.3,easeoutcubic);
+    tween(hotspot[get(hs_img)].scale,0.50,0.3,easeoutcubic);
     tween(hotspot[get(hs_img)].alpha,0,0.3,easeoutcubic);
   </action>
   <action name="pulse_hotspot">

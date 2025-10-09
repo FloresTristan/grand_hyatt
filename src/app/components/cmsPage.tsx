@@ -274,9 +274,6 @@ export default function CMSPage() {
       };
   }, [tab]);
 
-  // console.log(events)
-
-
   console.log('time', toUtcIso(publishAt), publishAt+':00.000Z')
   console.log('utctest', toLocalInputValue(toUtcIso(publishAt)))
 

@@ -7,56 +7,56 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
+import { LabeledDate } from "@/app/components/helpersAndInputs";
 
 export type NewHotspotPayload = {
   name: string;
   description?: string | null;
-  scene?: string | null;
-  ath?: number | null;
-  atv?: number | null;
-  file: File | null; // image/gif
+  file: File | null;
+  level?: string | null;
+  startdate?: string | null;
+  enddate?: string | null;
+  starttime?: string | null;
+  endtime?: string | null;
 };
 
 type AddHotspotModalProps = {
   open: boolean;
   onClose: () => void;
   onCreate: (payload: NewHotspotPayload) => Promise<void> | void;
-  pickedAth?: number | null;
-  pickedAtv?: number | null;
 };
 
 export default function AddHotspotModal({
   open,
   onClose,
   onCreate,
-  pickedAth = null,
-  pickedAtv = null,
 }: AddHotspotModalProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState<string>("");
-  const [scene, setScene] = useState<string>("");
-  const [ath, setAth] = useState<string>("");
-  const [atv, setAtv] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [level, setLevel] = useState<string>("");
+  const [startdate, setStartdate] = useState('');
+  const [enddate, setEnddate] = useState('');
+  const [starttime, setStarttime] = useState('');
+  const [endtime, setEndtime] = useState('');
 
   useEffect(() => {
     if (!open) {
       setName("");
       setDescription("");
-      setScene("");
-      setAth(pickedAth != null ? String(pickedAth) : "");
-      setAtv(pickedAtv != null ? String(pickedAtv) : "");
       setFile(null);
+      setLevel("");
+      setStartdate('');
+      setEnddate('');
+      setStarttime('');
+      setEndtime('');
       setBusy(false);
       setError(null);
-    } else {
-      if (pickedAth != null) setAth(String(pickedAth));
-      if (pickedAtv != null) setAtv(String(pickedAtv));
     }
-  }, [open, pickedAth, pickedAtv]);
+  }, [open]);
 
   const previewUrl = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
   useEffect(() => {
@@ -89,12 +89,12 @@ export default function AddHotspotModal({
     }
   }
 
-  const toNum = (v: string): number | null => {
-    const t = v.trim();
-    if (!t) return null;
-    const n = Number(t);
-    return Number.isFinite(n) ? n : null;
-  };
+  // const toNum = (v: string): number | null => {
+  //   const t = v.trim();
+  //   if (!t) return null;
+  //   const n = Number(t);
+  //   return Number.isFinite(n) ? n : null;
+  // };
 
   async function handleCreate() {
     try {
@@ -103,26 +103,17 @@ export default function AddHotspotModal({
         setError("Hotspot name is required.");
         return;
       }
-      // basic range checks for pano coords
-      const athNum = toNum(ath);
-      const atvNum = toNum(atv);
-      if (athNum != null && (athNum < -180 || athNum > 180)) {
-        setError("ath must be between -180 and 180.");
-        return;
-      }
-      if (atvNum != null && (atvNum < -90 || atvNum > 90)) {
-        setError("atv must be between -90 and 90.");
-        return;
-      }
 
       setBusy(true);
       await onCreate({
         name: name.trim(),
         description: description.trim() || null,
-        scene: scene.trim() || null,
-        ath: athNum,
-        atv: atvNum,
         file,
+        level: level || null,
+        startdate: startdate || null,
+        enddate: enddate || null,
+        starttime: starttime || null,
+        endtime: endtime || null
       });
       onClose();
     } catch (e: unknown) {
@@ -154,7 +145,7 @@ export default function AddHotspotModal({
                   />
                 </label>
 
-                <label className="block">
+                {/* <label className="block">
                   <div className="mb-1 text-sm text-white/80">Scene (optional)</div>
                   <input
                     type="text"
@@ -164,35 +155,56 @@ export default function AddHotspotModal({
                     placeholder="e.g., scene_lobby"
                     disabled={busy}
                   />
+                </label> */}
+                <label className="block">
+                  <div className="mb-1 w-full text-sm text-white/80">Group</div>
+                  <select
+                    value={level}
+                    onChange={(e) => setLevel(e.target.value)}
+                    disabled={busy}
+                    className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                  >
+                    <option value="">Select Level</option>
+                    <option value="Ground Level">Ground Level</option>
+                    <option value="Second Level">Second Level</option>
+                    <option value="Third Level">Third Level</option>
+                    <option value="Fifth Level">Fifth Level</option>
+                    <option value="Sixth Level">Sixth Level</option>
+                    <option value="60th Level">60th Level</option>
+                    <option value="62nd Level">62nd Level</option>
+                    <option value="66th Level">66th Level</option>
+                  </select>
                 </label>
 
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <LabeledDate label="Start date" value={startdate} onChange={setStartdate} />
+                <LabeledDate label="End date" value={enddate} onChange={setEnddate} min={startdate || undefined} />
+              </div>
+  
+              <div className="grid grid-cols-2 mt-1 gap-2">
                 <label className="block">
-                  <div className="mb-1 text-sm text-white/80">ath (°)</div>
+                  <div className="text-sm mb-1 text-white/80">
+                    Start time
+                  </div>
                   <input
-                    type="number"
-                    value={ath}
-                    onChange={(e) => setAth(e.target.value)}
-                    step="0.1"
-                    min={-180}
-                    max={180}
+                    style={{ colorScheme: 'dark' }}
+                    type="time"
+                    value={starttime}
+                    onChange={(e) => setStarttime(e.target.value)}
                     className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
-                    placeholder="e.g., 0"
-                    disabled={busy}
                   />
                 </label>
-
                 <label className="block">
-                  <div className="mb-1 text-sm text-white/80">atv (°)</div>
+                  <div className="text-sm mb-1 text-white/80">
+                    End time
+                  </div>
                   <input
-                    type="number"
-                    value={atv}
-                    onChange={(e) => setAtv(e.target.value)}
-                    step="0.1"
-                    min={-90}
-                    max={90}
+                    style={{ colorScheme: 'dark' }}
+                    type="time"
+                    value={endtime}
+                    onChange={(e) => setEndtime(e.target.value)}
                     className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
-                    placeholder="e.g., 0"
-                    disabled={busy}
                   />
                 </label>
               </div>
