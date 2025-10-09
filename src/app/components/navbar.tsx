@@ -34,10 +34,27 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
 
   async function logout() {
     try {
-      await supabase.auth.signOut();
+      setLoggingOut(true);
+
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        document.cookie.split(';').forEach(cookie => {
+          const eqPos = cookie.indexOf('=');
+          const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+          if (name.includes('auth') || name.includes('session') || name.includes('supabase')) {
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+          }
+        });
+      }
+      
+      supabase.auth.signOut().catch(() => {});
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
     } finally {
-      window.location.href = '/login';
-      // r.replace('/login');
+      window.location.replace('/login');
     }
   }
 
