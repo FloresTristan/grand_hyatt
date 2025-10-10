@@ -1,20 +1,20 @@
 {
   "version": 1,
   "functions": {
-    "/api/admin/events/[id]": {},
-    "/api/admin/events": {},
     "/api/admin/events/reorder": {},
-    "/api/admin/seasons": {},
+    "/api/admin/events": {},
+    "/api/admin/events/[id]": {},
     "/api/admin/hotspots/create": {},
     "/api/admin/hotspots": {},
+    "/api/admin/seasons": {},
     "/api/admin/hotspots/[id]": {},
     "/api/admin/seasons/create": {},
     "/api/admin/seasons/set_season/[id]": {},
-    "/api/admin/users/create": {},
     "/api/admin/users/[uid]": {},
     "/api/admin/users": {},
-    "/api/events": {},
+    "/api/admin/users/create": {},
     "/api/bootstrap/create-first-admin": {},
+    "/api/events": {},
     "/api/seasons": {},
     "/api/hotspots": {}
   }

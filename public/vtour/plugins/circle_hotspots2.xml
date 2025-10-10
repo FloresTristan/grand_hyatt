@@ -129,7 +129,20 @@
        scale="0.1"
        flying="0.03"
        onover="select_hs2(get(name)); show_info_card(get(name));trythisone(get(name));"
-       onout ="hide_info_card(get(name));trythistwo(get(name));"
+       onout.desktop="hide_info_card(get(name));trythistwo(get(name));"
+       onclick2="hide_info_card(get(name));trythistwo(get(name));set(enabled,true);"
+        onclick="if(name != @selected_hs2,
+                    select_hs2(get(name));
+                    looktohotspot(get(name),get(view.fov));
+                     show_info_card(get(name));
+                    ,
+                    set(enabled,false);
+                    select_hs2();
+                    onclick2());
+                    "
+        onclick.desktop="
+                    set(enabled,false);
+                    onclick2();"
        onloaded="pulse_hotspot2(get(name)); "/>
 
 
