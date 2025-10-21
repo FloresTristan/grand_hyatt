@@ -40,6 +40,7 @@ export default function HotspotModalOverlay({
 
   console.log({hotspot})
   if (!hotspot) return null;
+  if (!hotspot.title && !hotspot.description && !hotspot.image_url && !current.dateRange && !current.timeText) return null;
   if (!open) return null;
 
   console.log({hotspot})
@@ -67,7 +68,7 @@ export default function HotspotModalOverlay({
             <div className={`relative mx-auto mb-4 h-32 w-full overflow-hidden rounded-xl  ${container === 'fullscreen'? 'md:h-60' : 'md:h-32' }`}>
               <Image
                 src={hotspot.image_url}
-                alt={hotspot.name || ''}
+                alt={hotspot.title || ''}
                 fill
                 unoptimized
                 className="object-contain object-center bg-black/50 cursor-zoom-in
@@ -87,7 +88,7 @@ export default function HotspotModalOverlay({
           )}
 
           <h2 className="text-center text-neutral-600 text-3xl font-semibold tracking-tight whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">
-            {hotspot?.name}
+            {hotspot?.title}
           </h2>
 
           {(current?.dateRange || current?.timeText) && (
@@ -114,6 +115,25 @@ export default function HotspotModalOverlay({
               <p className="text-sm leading-relaxed text-neutral-800 whitespace-pre-wrap break-words [overflow-wrap:anywhere] hyphens-auto">
                 {hotspot?.description}
               </p>
+            </div>
+          )}
+
+          {(hotspot?.cta_label || hotspot?.cta_href) && (
+            <div className="mt-6 flex justify-center">
+              {hotspot?.cta_href ? (
+                <a
+                  href={hotspot?.cta_href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center rounded-full bg-red-600 hover:bg-red-500 hover:shadow-2xl duration-300 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow hover:opacity-95"
+                >
+                  {hotspot?.cta_label ?? 'Learn more'}
+                </a>
+              ) : (
+                <button className="inline-flex items-center justify-center rounded-full bg-red-600 hover:bg-red-500 hover:shadow-2xl duration-300 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow hover:opacity-95" >
+                  {hotspot?.cta_label ?? 'Learn more'}
+                </button>
+              )}
             </div>
           )}
         </div>

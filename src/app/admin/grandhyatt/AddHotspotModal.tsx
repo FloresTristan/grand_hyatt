@@ -18,6 +18,9 @@ export type NewHotspotPayload = {
   enddate?: string | null;
   starttime?: string | null;
   endtime?: string | null;
+  title?: string | null;
+  cta_label?: string | null;
+  cta_href?: string | null;
 };
 
 type AddHotspotModalProps = {
@@ -42,6 +45,9 @@ export default function AddHotspotModal({
   const [enddate, setEnddate] = useState('');
   const [starttime, setStarttime] = useState('');
   const [endtime, setEndtime] = useState('');
+  const [title, setTitle] = useState('');
+  const [cta_label, setCta_label] = useState('');
+  const [cta_href, setCta_href] = useState('');
 
   useEffect(() => {
     if (!open) {
@@ -53,6 +59,9 @@ export default function AddHotspotModal({
       setEnddate('');
       setStarttime('');
       setEndtime('');
+      setTitle('');
+      setCta_href('');
+      setCta_label('');
       setBusy(false);
       setError(null);
     }
@@ -113,7 +122,10 @@ export default function AddHotspotModal({
         startdate: startdate || null,
         enddate: enddate || null,
         starttime: starttime || null,
-        endtime: endtime || null
+        endtime: endtime || null,
+        title: title || null,
+        cta_label: cta_label || null,
+        cta_href: cta_href || null
       });
       onClose();
     } catch (e: unknown) {
@@ -134,7 +146,7 @@ export default function AddHotspotModal({
             <div className="mt-4 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <label className="block">
-                  <div className="mb-1 text-sm text-white/80">Name</div>
+                  <div className="mb-1 text-sm text-white/80">Ammenity</div>
                   <input
                     type="text"
                     value={name}
@@ -144,6 +156,7 @@ export default function AddHotspotModal({
                     disabled={busy}
                   />
                 </label>
+                
 
                 {/* <label className="block">
                   <div className="mb-1 text-sm text-white/80">Scene (optional)</div>
@@ -175,8 +188,18 @@ export default function AddHotspotModal({
                     <option value="66th Level">66th Level</option>
                   </select>
                 </label>
-
               </div>
+              <label className="block">
+                  <div className="mb-1 text-sm text-white/80">Title</div>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                    placeholder="e.g., Lobby"
+                    disabled={busy}
+                  />
+                </label>
               <div className="grid grid-cols-2 gap-2">
                 <LabeledDate label="Start date" value={startdate} onChange={setStartdate} />
                 <LabeledDate label="End date" value={enddate} onChange={setEnddate} min={startdate || undefined} />
@@ -206,6 +229,16 @@ export default function AddHotspotModal({
                     onChange={(e) => setEndtime(e.target.value)}
                     className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
                   />
+                </label>
+              </div>
+              <div className='grid grid-cols-2 mt-1 gap-2'>
+                <label className="block">
+                  <div className="text-sm mb-1 text-white/80">CTA Label</div>
+                  <input value={cta_label || ''} onChange={()=>{}} placeholder="Learn More" className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
+                </label>
+                <label className="block">
+                  <div className="text-sm mb-1 text-white/80">CTA Link</div>
+                  <input value={cta_href || ''} onChange={()=>{}} placeholder="https://example.com" className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
                 </label>
               </div>
 

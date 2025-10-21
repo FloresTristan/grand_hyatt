@@ -1,4 +1,67 @@
 <krpano>
+	<action name="kinaunhan">
+		set(layer[all].bgalpha , 1);
+		set(layer[all].alpha , 1);
+		set(layer[all].bgborder , 0);
+		set(layer[allchild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
+		set(layer[safety].bgalpha , 1);
+		set(layer[safety].alpha , 1);
+		set(layer[safety].bgborder , 0);
+		set(layer[safetychild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
+		set(layer[art].bgalpha , 1);
+		set(layer[art].alpha , 1);
+		set(layer[art].bgborder , 0);
+		set(layer[artchild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
+		set(layer[nightlife].bgalpha , 1);
+		set(layer[nightlife].alpha , 1);
+		set(layer[nightlife].bgborder , 0);
+		set(layer[nightlifechild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
+		set(layer[park].bgalpha , 1);
+		set(layer[park].alpha , 1);
+		set(layer[park].bgborder , 0);
+		set(layer[parkchild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
+		set(layer[shopping].bgalpha , 1);
+		set(layer[shopping].alpha , 1);
+		set(layer[shopping].bgborder , 0);
+		set(layer[shoppingchild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
+		set(layer[healthcare].bgalpha , 1);
+		set(layer[healthcare].alpha , 1);
+		set(layer[healthcare].bgborder , 0);
+		set(layer[healthcarechild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
+		set(hotspot[sm_aura].visible , true);
+		set(hotspot[sm].visible , true);
+		set(hotspot[high_street_south].visible , true);
+		set(hotspot[highstreet].visible , true);
+		set(hotspot[bgc_ac].visible , true);
+		set(hotspot[bgc].visible , true);
+		set(hotspot[global_city_pol_station].visible , true);
+		set(hotspot[global].visible , true);
+		set(hotspot[boni_hight_street].visible , true);
+		set(hotspot[bonifacio].visible , true);
+		set(hotspot[terra28].visible , true);
+		set(hotspot[terra280].visible , true);
+		set(hotspot[track30].visible , true);
+		set(hotspot[track300].visible , true);
+		set(hotspot[mind_museum].visible , true);
+		set(hotspot[mind].visible , true);
+		set(hotspot[lukes_hospital].visible , true);
+		set(hotspot[luke].visible , true);
+		set(hotspot[convenience1].visible , true);
+		set(hotspot[conv_store_1].visible , true);
+		set(hotspot[convenience2].visible , true);
+		set(hotspot[conv_store_2].visible , true);
+		set(hotspot[mitsukoshi_mall].visible , true);
+		set(hotspot[mitsoki].visible , true);
+		set(hotspot[palace_manila].visible , true);
+		set(hotspot[palace].visible , true);
+		set(hotspot[uptown_mall].visible , true);
+		set(hotspot[uptown].visible , true);
+		set(hotspot[market_market].visible , true);
+		set(hotspot[market].visible , true);
+		generate_circle_hotspots_images2();
+	</action>
+
+
 	<action name="all">
 	if(layer[all].bgalpha == 0,
 		set(layer[all].bgalpha , 1);

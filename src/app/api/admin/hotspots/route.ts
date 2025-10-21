@@ -21,7 +21,7 @@ export async function GET(req: Request) {
 
     let q = supabase
       .from('hotspots')
-      .select('id,name,description,image_url,level,order,startDate,endDate,startTime,endTime,created_at,updated_at')
+      .select('id,name,description,image_url,level,order,startdate,enddate,starttime,endtime,title,cta_label,cta_href,created_at,updated_at')
       .order('order', { ascending:  true });
 
     if (scene) q = q.eq('scene', scene);

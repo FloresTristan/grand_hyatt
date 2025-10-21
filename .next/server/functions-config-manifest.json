@@ -4,18 +4,18 @@
     "/api/admin/events/reorder": {},
     "/api/admin/events": {},
     "/api/admin/events/[id]": {},
-    "/api/admin/hotspots/create": {},
     "/api/admin/hotspots": {},
-    "/api/admin/seasons": {},
-    "/api/admin/hotspots/[id]": {},
-    "/api/admin/seasons/create": {},
+    "/api/admin/hotspots/create": {},
     "/api/admin/seasons/set_season/[id]": {},
-    "/api/admin/users/[uid]": {},
-    "/api/admin/users": {},
+    "/api/admin/seasons": {},
+    "/api/admin/seasons/create": {},
     "/api/admin/users/create": {},
     "/api/bootstrap/create-first-admin": {},
+    "/api/admin/users/[uid]": {},
     "/api/events": {},
     "/api/seasons": {},
-    "/api/hotspots": {}
+    "/api/hotspots": {},
+    "/api/admin/users": {},
+    "/api/admin/hotspots/[id]": {}
   }
 }

@@ -48,6 +48,10 @@ export async function POST(req: Request) {
     const enddate = String(form.get('enddate')?? '').trim() || null;
     const starttime = String(form.get('starttime')?? '').trim() || null;
     const endtime = String(form.get('endtime')?? '').trim() || null;
+    const title = String(form.get('title')?? '').trim() || null;
+    const cta_label = String(form.get('cta_label')?? '').trim() || null;
+    const cta_href = String(form.get('cta_href')?? '').trim() || null;
+
 
 
     if (!name) return NextResponse.json({ error: 'Name is required' }, { status: 400 });
@@ -94,6 +98,9 @@ export async function POST(req: Request) {
         enddate,
         starttime,
         endtime,
+        title,
+        cta_label,
+        cta_href
       })
       .select('id,name,description,image_url,level,startdate,enddate,starttime,endtime,created_at')
       .single();

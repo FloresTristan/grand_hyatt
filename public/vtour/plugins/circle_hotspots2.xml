@@ -16,8 +16,7 @@
             hotspot[get(hs_circle2)].loadstyle(hs_circle_img2);
             copy(hotspot[get(hs_circle2)].ath,hotspot[get(h)].ath);
             copy(hotspot[get(hs_circle2)].atv,hotspot[get(h)].atv);
-            <!-- txtadd(hotspot[get(hs_circle2)].url, '%HTMLPATH%/vtour/plugins/circular_thumbs/',get(hotspot[get(h)].name),'.png'); -->
-            txtadd(hotspot[get(hs_circle2)].url, '/vtour/plugins/circular_thumbs/',get(hotspot[get(h)].name),'.png');
+            txtadd(hotspot[get(hs_circle2)].url, 'vtour/plugins/circular_thumbs/',get(hotspot[get(h)].name),'.png');
             set(hotspot[get(hs_circle2)].scale,0.3);
 
             <!-- tag hotspot (only if showtag="true") -->
@@ -123,13 +122,16 @@
         onout.desktop="select_hs2(); pulse_hotspot2(get(name));"
         onloaded="pulse_hotspot2(get(name));"/> -->
 
+
+<!-- I remove this
+  show_info_card(get(name));    
+       onout.desktop="hide_info_card(get(name));trythistwo(get(name));" -->
     <style name="hs_circle2" 
        type="image"
        url="hs_circle.png"
        scale="0.1"
        flying="0.03"
-       onover="select_hs2(get(name)); show_info_card(get(name));trythisone(get(name));"
-       onout.desktop="hide_info_card(get(name));trythistwo(get(name));"
+       onover="select_hs2(get(name));trythisone(get(name));set(hotspot[get(hotspot[get(name)].baw)].visible,true);"
        onclick2="hide_info_card(get(name));trythistwo(get(name));set(enabled,true);"
         onclick="if(name != @selected_hs2,
                     select_hs2(get(name));
@@ -194,7 +196,19 @@
             h1{font-family:Helvetica,Arial; font-size:20px; font-weight:bold; color:#BC0F42; margin:0 0 6px 0; text-align:center;}
             p{font-family:Helvetica,Arial; font-size:16px; color:#333; line-height:1.1;  margin:0; max-width:260px; max-height:260px; flow-wrap: break-word; text-align: left;}
        "/>
-
+<action name="ambot">
+    set(local_target, get(hotspot[get(name)].baw));                   
+    if(hotspot[get(local_target)],                                     
+        txtadd(hs_tag2, get(local_target), '_tag2');
+        addhotspot(get(hs_tag2));
+        hotspot[get(hs_tag2)].loadstyle(hs_circle_tag2);
+        copy(hotspot[get(hs_tag2)].ath, hotspot[get(local_target)].ath);
+        copy(hotspot[get(hs_tag2)].atv, hotspot[get(local_target)].atv);
+        txtadd(hotspot[get(hs_tag2)].html, '[h1]', get(hotspot[get(local_target)].tag), '[/h1]');
+        set(hotspot[get(hs_tag2)].oy, -55);
+        set(hotspot[get(hs_tag2)].visible, true);
+    );
+</action>
        <action name="trythisone" args="hsname">
         set(var_name, get(name));
     if(var_name == sm_aura,

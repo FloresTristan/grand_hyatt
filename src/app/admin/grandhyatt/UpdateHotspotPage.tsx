@@ -46,16 +46,27 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
       enddate: '',
       starttime: '',
       endtime: '',
+      title: '',
+      cta_label: '',
+      cta_href: '',
     }
   );
 
   const [file, setFile] = useState<File | null>(null);
-  const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(initial?.image_url ?? null);
+  const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (initial) setDraft(initial);
+    if (initial) {
+      setDraft(initial)
+      setCurrentImageUrl(initial.image_url);
+    };
   }, [initial]);
+
+  useEffect(() => {
+    console.log('🔄 Rerender:', { file, currentImageUrl });
+  }, [file, currentImageUrl]);
+
 
   function updateField<K extends keyof UpdateDraft>(key: K, value: UpdateDraft[K]) {
     const updated = { ...draft, [key]: value };
@@ -87,6 +98,9 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
           enddate: one.enddate ?? '',
           starttime: one.starttime ?? '',
           endtime: one.endtime ?? '',
+          title: one.title ?? '',
+          cta_label: one.cta_label ?? '',
+          cta_href: one.cta_href ?? ''
         };
         setDraft(fetched);
         setCurrentImageUrl(one.image_url ?? null);
@@ -114,6 +128,7 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
     fileInputRef.current?.click();
   }
 
+  console.log('file', file)
   function onFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
     if (!f) return;
@@ -123,6 +138,14 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
     }
     setError(null);
     setFile(f);
+
+    const url = URL.createObjectURL(f);
+    setCurrentImageUrl(url);
+
+    setDraft((prev)=>({
+      ...prev,
+      image_url: currentImageUrl,
+    }))
   }
 
   function onDrop(e: React.DragEvent<HTMLDivElement>) {
@@ -135,6 +158,9 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
     }
     setError(null);
     setFile(f);
+
+    const url = URL.createObjectURL(f);
+    setCurrentImageUrl(url);
   }
 
   async function handleUpdate() {
@@ -153,7 +179,18 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
       fd.append('enddate', draft.enddate ?? '');
       fd.append('starttime', draft.starttime ?? '');
       fd.append('endtime', draft.endtime ?? '');
-      if (file) fd.append('file', file);
+      fd.append('title', draft.title ?? '');
+      fd.append('cta_label', draft.cta_label ?? '');
+      fd.append('cta_href', draft.cta_href ?? '');
+      // console.log("file", file)
+      if (file) {
+        console.log("file", file)
+
+        fd.append('file', file);
+      }
+      else if (!file && !currentImageUrl) {
+        fd.append('clearImage', 'true');
+      }
 
       console.log("fd", fd)
       const res = await fetch(`/api/admin/hotspots/${id}`, { method: 'PATCH', body: fd });
@@ -166,6 +203,7 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
             }))
         throw new Error((data as { error?: string })?.error || 'Update failed')
       }
+      console.log ({data})
 
       const updated = (data as { item?: Hotspots })?.item;
       if (updated) {
@@ -208,6 +246,26 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
     });
   }
 
+  function clearImage(){
+    setDraft((prev) => ({
+      ...prev,
+      image_url: '',
+    }));
+
+    setFile(null);
+
+    setCurrentImageUrl(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+
+    onChange?.({
+      ...draft,
+      image_url: '',
+    });
+  }
+
   function clearTime(){
     setDraft((prev) => ({
       ...prev,
@@ -224,20 +282,19 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
   return (
     <div className="mt-4 space-y-4 text-white">
       <div className={`grid grid-cols-1 gap-3 ${profile?.role === 'super-admin' && 'md:grid-cols-2'}`}>
-        <label className="block">
-          <div className="mb-1 text-sm text-white/80">Name</div>
-          <input
-            type="text"
-            value={draft.name}
-            onChange={(e) => updateField("name", e.target.value)}
-            className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
-            placeholder="e.g., Lobby"
-            disabled={busy}
-          />
-        </label>
-
         {profile?.role === 'super-admin' && (
           <>
+          <label className="block">
+            <div className="mb-1 text-sm text-white/80">Name</div>
+            <input
+              type="text"
+              value={draft.name ?? ''}
+              onChange={(e) => updateField("name", e.target.value)}
+              className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+              placeholder="e.g., Lobby"
+              disabled={busy}
+            />
+          </label>
             <label className="block">
               <div className="mb-1 w-full text-sm text-white/80">Group</div>
               <select
@@ -259,6 +316,19 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
             </label>
           </>
         )}
+      </div>
+      <div className='w-full '>
+        <label className="block">
+          <div className="mb-1 w-full text-sm text-white/80">Title</div>
+          <input
+            type="text"
+            value={draft.title ?? ''}
+            onChange={(e) => updateField("title", e.target.value)}
+            className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+            placeholder="e.g., Lobby"
+            disabled={busy}
+          />
+        </label>
       </div>
 
       <div className='w-full flex flex-col'>
@@ -325,6 +395,16 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
           disabled={busy}
         />
       </label>
+      <div className='grid grid-cols-2 mt-1 gap-2'>
+        <label className="block">
+          <div className="text-sm mb-1 text-white/80">CTA Label</div>
+          <input value={draft.cta_label || ''} onChange={(e)=>{updateField("cta_label", e.target.value)}} placeholder="Learn More" className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
+        </label>
+        <label className="block">
+          <div className="text-sm mb-1 text-white/80">CTA Link</div>
+          <input value={draft.cta_href || ''} onChange={(e)=>{updateField("cta_href", e.target.value)}} placeholder="https://example.com" className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
+        </label>
+      </div>
 
       <div
         className="rounded-xl border border-dashed border-white/15 bg-[#131a2a] p-3"
@@ -335,6 +415,13 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
           <div>
             <div className="text-sm text-white/80">Hotspot image (optional)</div>
             <div className="text-xs text-white/50">PNG / JPG / WEBP / GIF</div>
+          </div>
+          <div>
+            <span
+              onClick={()=>clearImage()}
+              className='text-white/20 cursor-pointer hover:text-white/50 px-2'>
+              clear
+            </span>
           </div>
         </div>
 

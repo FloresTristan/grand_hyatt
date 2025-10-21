@@ -20,7 +20,7 @@ export async function GET(req: Request) {
 
     let q = supabase
       .from('hotspots')
-      .select('id,name,description,image_url,level,order,startdate,enddate,starttime,endtime,created_at,updated_at', { count: 'exact' });
+      .select('id,name,description,image_url,level,order,startdate,enddate,starttime,endtime,title,cta_label,cta_href,created_at,updated_at', { count: 'exact' });
 
     // Always sort first by level (grouping)
     q = q.order('level', { ascending: true });

@@ -95,7 +95,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
     if (!auth?.user)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    // Fetch existing row once (for old image cleanup if needed)
+    // 🧩 Fetch existing row for cleanup
     const { data: existing, error: fetchErr } = await supa
       .from("hotspots")
       .select("id,image_url")
@@ -107,16 +107,14 @@ export async function PATCH(req: Request, ctx: Ctx) {
 
     const ct = req.headers.get("content-type") || "";
     const updates: Record<string, unknown> = {};
-
     let uploadedPublicUrl: string | null = null;
     let replaceImage = false;
 
-    // 🧩 Helper to clean strings
     const clean = (v: unknown) =>
       typeof v === "string" ? v.trim() || null : null;
 
+    // ========== 🧠 FORM-DATA PATCH ==========
     if (ct.includes("multipart/form-data")) {
-      // ----- MULTIPART FORM -----
       const form = await req.formData();
 
       updates.name = clean(form.get("name"));
@@ -126,10 +124,16 @@ export async function PATCH(req: Request, ctx: Ctx) {
       updates.enddate = clean(form.get("enddate"));
       updates.starttime = clean(form.get("starttime"));
       updates.endtime = clean(form.get("endtime"));
+      updates.title = clean(form.get("title"));
+      updates.cta_label = clean(form.get("cta_label"));
+      updates.cta_href = clean(form.get("cta_href"));
 
+
+      const clearImage = form.get("clearImage") === "true";
       const fileMaybe = form.get("file");
+
+      // --- CASE 1: New image uploaded ---
       if (fileMaybe && fileMaybe instanceof Blob) {
-        // Upload new image
         await ensureBucket();
 
         const file = fileMaybe as File;
@@ -162,8 +166,20 @@ export async function PATCH(req: Request, ctx: Ctx) {
         updates.image_url = uploadedPublicUrl;
         replaceImage = true;
       }
-    } else {
-      // ----- JSON BODY -----
+
+      // --- CASE 2: Image was cleared ---
+      else if (clearImage && existing?.image_url) {
+        const oldPath = toStoragePath(existing.image_url);
+        if (oldPath) {
+          const admin = createSupabaseAdmin();
+          await admin.storage.from(BUCKET).remove([oldPath]);
+        }
+        updates.image_url = null;
+      }
+    }
+
+    // ========== 🧠 JSON PATCH (fallback) ==========
+    else {
       const body = (await req.json()) as Record<string, unknown>;
 
       updates.name = clean(body.name);
@@ -173,33 +189,43 @@ export async function PATCH(req: Request, ctx: Ctx) {
       updates.enddate = clean(body.enddate);
       updates.starttime = clean(body.starttime);
       updates.endtime = clean(body.endtime);
+      updates.title = clean(body.title);
+      updates.cta_href = clean(body.cta_href);
+      updates.cta_label = clean(body.cta_label);
 
-      // Optional: allow clearing image via { imageUrl: null }
-      if (body.imageUrl === null) updates.image_url = null;
+
+      if (body.imageUrl === null && existing?.image_url) {
+        const oldPath = toStoragePath(existing.image_url);
+        if (oldPath) {
+          const admin = createSupabaseAdmin();
+          await admin.storage.from(BUCKET).remove([oldPath]);
+        }
+        updates.image_url = null;
+      }
     }
 
-    // Remove undefined keys (but keep null)
+    // 🔹 Remove undefined keys but keep nulls
     Object.keys(updates).forEach((key) => {
       if (updates[key] === undefined) delete updates[key];
     });
 
-    if (Object.keys(updates).length === 0) {
+    if (Object.keys(updates).length === 0)
       return NextResponse.json({ error: "No changes provided" }, { status: 400 });
-    }
 
+    // 🔹 Apply DB update
     const { data: updated, error: updErr } = await supa
       .from("hotspots")
       .update(updates)
       .eq("id", id)
       .select(
-        "id,name,description,image_url,level,startdate,enddate,starttime,endtime,updated_at"
+        "id,name,description,image_url,level,startdate,enddate,starttime,endtime,title,cta_label, cta_href,updated_at"
       )
       .single();
 
     if (updErr)
       return NextResponse.json({ error: updErr.message }, { status: 500 });
 
-    // 🧹 Remove old image if replaced
+    // 🧹 Cleanup old file if replaced
     if (replaceImage && existing?.image_url && uploadedPublicUrl) {
       try {
         const oldPath = toStoragePath(existing.image_url);
@@ -215,4 +241,5 @@ export async function PATCH(req: Request, ctx: Ctx) {
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
+
 

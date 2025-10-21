@@ -150,9 +150,13 @@ export type Hotspots = {
   enddate?: string | null;
   starttime?: string | null;
   endtime?: string | null;
+  title?: string | null;
+  cta_label?: string | null;
+  cta_href?: string | null;
 }
 
 export type UpdateDraft = {
+  id: string;
   name: string;
   description: string | null;
   image_url: string | null;
@@ -161,7 +165,9 @@ export type UpdateDraft = {
   enddate?: string | null;
   starttime?: string | null;
   endtime?: string | null;
-  id: string;
+  title?: string | null;
+  cta_label?: string | null;
+  cta_href?: string | null;
 }
 
 export async function fetchHotspots({setHotspots, setLoading}:{setHotspots: (items: Hotspots[])=>void; setLoading?: (loading:boolean)=>void;}){

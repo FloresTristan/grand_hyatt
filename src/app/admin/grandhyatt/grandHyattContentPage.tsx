@@ -41,6 +41,9 @@ export default function GrandHyattContentPage(){
         enddate: null,
         starttime: null,
         endtime: null,
+        title: null,
+        cta_label: null,
+        cta_href: null
     })
 
     function handleClose(){
@@ -57,6 +60,9 @@ export default function GrandHyattContentPage(){
         if (p.enddate) fd.append("enddate", p.enddate);
         if (p.starttime) fd.append("starttime", p.starttime);
         if (p.endtime) fd.append("endtime", p.endtime);
+        if (p.title) fd.append("title", p.title);
+        if (p.cta_label) fd.append("cta_label", p.cta_label);
+        if (p.cta_href) fd.append("cta_href", p.cta_href);
 
 
         const res = await fetch("/api/admin/hotspots/create", { method: "POST", body: fd });
@@ -144,6 +150,9 @@ export default function GrandHyattContentPage(){
             enddate: selectedHotspot.enddate ?? '',
             starttime: selectedHotspot.starttime ?? '',
             endtime: selectedHotspot.endtime ?? '',
+            title: selectedHotspot.title ?? '',
+            cta_label: selectedHotspot.cta_label ?? '',
+            cta_href: selectedHotspot.cta_href ?? '',
         });
     }, [selectedHotspot]);
 
@@ -255,7 +264,9 @@ export default function GrandHyattContentPage(){
                     <span
                         className="text-md text-white/60"
                     >
-                        Ammenities
+                        {
+                            selectedHotspot?.level ?? "Ammenities"
+                        }
                     </span>
                     {
                         showUpdate ? (
@@ -307,14 +318,14 @@ export default function GrandHyattContentPage(){
 
                             return levelOrder.map((level) => (
                                 <AccordionGroup
-                                key={level}
-                                title={level}
-                                droppableId={level}
-                                items={groups[level] || []}
-                                selectedHotspot={selectedHotspot}
-                                setSelectedHotspot={setSelectedHotspot}
-                                setOpen={setOpen}
-                                setShowUpdate={setShowUpdate}
+                                    key={level}
+                                    title={level}
+                                    droppableId={level}
+                                    items={groups[level] || []}
+                                    selectedHotspot={selectedHotspot}
+                                    setSelectedHotspot={setSelectedHotspot}
+                                    setOpen={setOpen}
+                                    setShowUpdate={setShowUpdate}
                                 />
                             ));
                             })()}
