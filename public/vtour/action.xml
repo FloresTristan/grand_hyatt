@@ -125,34 +125,49 @@
 		generate_circle_hotspots_images2();
 		,
 		set(hotspot[sm_aura].visible , false);
+		set(hotspot[sm_aura2].visible , false);
 		set(hotspot[sm].visible , false);
 		set(hotspot[high_street_south].visible , false);
+		set(hotspot[high_street_south2].visible , false);
 		set(hotspot[highstreet].visible , false);
 		set(hotspot[bgc_ac].visible , false);
+		set(hotspot[bgc_ac2].visible , false);
 		set(hotspot[bgc].visible , false);
 		set(hotspot[global_city_pol_station].visible , false);
+		set(hotspot[global_city_pol_station2].visible , false);
 		set(hotspot[global].visible , false);
 		set(hotspot[boni_hight_street].visible , false);
+		set(hotspot[boni_hight_street2].visible , false);
 		set(hotspot[bonifacio].visible , false);
 		set(hotspot[terra28].visible , false);
+		set(hotspot[terra282].visible , false);
 		set(hotspot[terra280].visible , false);
 		set(hotspot[track30].visible , false);
+		set(hotspot[track302].visible , false);
 		set(hotspot[track300].visible , false);
 		set(hotspot[mind_museum].visible , false);
+		set(hotspot[mind_museum2].visible , false);
 		set(hotspot[mind].visible , false);
 		set(hotspot[lukes_hospital].visible , false);
+		set(hotspot[lukes_hospital2].visible , false);
 		set(hotspot[luke].visible , false);
 		set(hotspot[convenience1].visible , false);
 		set(hotspot[conv_store_1].visible , false);
+		set(hotspot[conv_store_12].visible , false);
 		set(hotspot[convenience2].visible , false);
 		set(hotspot[conv_store_2].visible , false);
+		set(hotspot[conv_store_22].visible , false);
 		set(hotspot[mitsukoshi_mall].visible , false);
+		set(hotspot[mitsukoshi_mall2].visible , false);
 		set(hotspot[mitsoki].visible , false);
 		set(hotspot[palace_manila].visible , false);
+		set(hotspot[palace_manila2].visible , false);
 		set(hotspot[palace].visible , false);
 		set(hotspot[uptown_mall].visible , false);
+		set(hotspot[uptown_mall2].visible , false);
 		set(hotspot[uptown].visible , false);
 		set(hotspot[market_market].visible , false);
+		set(hotspot[market_market2].visible , false);
 		set(hotspot[market].visible , false);
 		delayedcall(.3,generate_circle_hotspots_images2(););
 		set(layer[all].bgalpha , .0);
@@ -257,27 +272,28 @@
 
 
 <action name="check_scene_visible" scope="local" keep="true">
-    set(all_visible,true);
-    set(currentscene,get(xml.scene));
+    <!-- Assume everything is visible initially -->
+    set(all_alpha, true);
 
-    for(set(i,0), i LT hotspot.count, inc(i),
-        if(hotspot[get(i)].parent == get(currentscene) OR hotspot[get(i)].linkedscene == get(currentscene),
-            if(hotspot[get(i)].visible == false,
-                set(all_visible,false);
-            );
-        );
-    );
+    <!-- Check each category layer -->
+    if(layer[healthcare].alpha LT 1, set(all_alpha,false););
+    if(layer[shopping].alpha LT 1, set(all_alpha,false););
+    if(layer[park].alpha LT 1, set(all_alpha,false););
+    if(layer[nightlife].alpha LT 1, set(all_alpha,false););
+    if(layer[art].alpha LT 1, set(all_alpha,false););
+    if(layer[safety].alpha LT 1, set(all_alpha,false););
 
-    if(all_visible == true,
-        set(layer[all].bgalpha , 1);
-		set(layer[all].alpha , 1);
-		set(layer[all].bgborder , 0);
-		set(layer[allchild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
+    <!-- Now handle the ALL button state -->
+    if(all_alpha == true,
+        set(layer[all].bgalpha, 1);
+        set(layer[all].alpha, 1);
+        set(layer[all].bgborder, 0);
+        set(layer[allchild].css, fontfamily:Roboto; color:#FFFFFF; text-align:center; font-size:100%;);
     ,
-        set(layer[all].bgalpha , .0);
-		set(layer[all].alpha , .7);
-		set(layer[all].bgborder , 1);
-		set(layer[allchild].css , fontfamily:Roboto ;color: #000000;text-align:center; font-size: 100%;);
+        set(layer[all].bgalpha, 0.0);
+        set(layer[all].alpha, 0.7);
+        set(layer[all].bgborder, 1);
+        set(layer[allchild].css, fontfamily:Roboto; color:#000000; text-align:center; font-size:100%;);
     );
 </action>
 
@@ -292,6 +308,7 @@
 		generate_circle_hotspots_images2();
 		,
 		set(hotspot[lukes_hospital].visible , false);
+		set(hotspot[lukes_hospital2].visible , false);
 		set(hotspot[luke].visible , false);
 		delayedcall(.2,generate_circle_hotspots_images2(););
 		set(layer[healthcare].bgalpha , .0);
@@ -318,12 +335,16 @@
 		generate_circle_hotspots_images2();
 		,
 		set(hotspot[sm_aura].visible, false);
+		set(hotspot[sm_aura2].visible, false);
 		set(hotspot[sm].visible, false);
 		set(hotspot[mitsukoshi_mall].visible , false);
+		set(hotspot[mitsukoshi_mall2].visible , false);
 		set(hotspot[mitsoki].visible , false);
 		set(hotspot[market_market].visible , false);
+		set(hotspot[market_market2].visible , false);
 		set(hotspot[market].visible , false);
 		set(hotspot[uptown_mall].visible , false);
+		set(hotspot[uptown_mall2].visible , false);
 		set(hotspot[uptown].visible , false);
 		delayedcall(.2,generate_circle_hotspots_images2(););
 		set(layer[shopping].bgalpha , .0);
@@ -350,12 +371,16 @@
 		generate_circle_hotspots_images2();
 		,
 		set(hotspot[boni_hight_street].visible , false);
+		set(hotspot[boni_hight_street2].visible , false);
 		set(hotspot[bonifacio].visible , false);
 		set(hotspot[terra28].visible , false);
+		set(hotspot[terra282].visible , false);
 		set(hotspot[terra280].visible , false);
 		set(hotspot[track30].visible , false);
+		set(hotspot[track302].visible , false);
 		set(hotspot[track300].visible , false);
 		set(hotspot[high_street_south].visible, false);
+		set(hotspot[high_street_south2].visible, false);
 		set(hotspot[highstreet].visible, false);
 		delayedcall(.2,generate_circle_hotspots_images2(););
 		set(layer[park].bgalpha , .0);
@@ -376,6 +401,7 @@
 		generate_circle_hotspots_images2();
 		,
 		set(hotspot[palace_manila].visible , false);
+		set(hotspot[palace_manila2].visible , false);
 		set(hotspot[palace].visible , false);
 		delayedcall(.2,generate_circle_hotspots_images2(););
 		set(layer[nightlife].bgalpha , .0);
@@ -399,8 +425,10 @@
 		generate_circle_hotspots_images2();
 		,
 		set(hotspot[bgc_ac].visible, false);
+		set(hotspot[bgc_ac2].visible, false);
 		set(hotspot[bgc].visible, false);
 		set(hotspot[mind_museum].visible , false);
+		set(hotspot[mind_museum2].visible , false);
 		set(hotspot[mind].visible , false);
 		delayedcall(.2,generate_circle_hotspots_images2(););
 		set(layer[art].bgalpha , .0);
@@ -425,10 +453,13 @@
 		generate_circle_hotspots_images2();
 		,
 		set(hotspot[global_city_pol_station].visible , false);
+		set(hotspot[global_city_pol_station2].visible , false);
 		set(hotspot[global].visible , false);
 		set(hotspot[conv_store_1].visible , false);
+		set(hotspot[conv_store_12].visible , false);
 		set(hotspot[convenience2].visible , false);
 		set(hotspot[conv_store_2].visible , false);
+		set(hotspot[conv_store_22].visible , false);
 		set(hotspot[convenience1].visible , false);
 		delayedcall(.2,generate_circle_hotspots_images2(););
 		set(layer[safety].bgalpha , .0);
