@@ -81,7 +81,13 @@ export default function Home() {
 
       {/* Manual open button */}
       <button onClick={() => setOpen(true)}>
-        <IoInformationCircleSharp className="absolute bottom-4 z-30 right-4 h-12 w-12 cursor-pointer hover:text-red-500 duration-300" />
+        <IoInformationCircleSharp className="absolute
+          top-4 left-4 bottom-auto right-auto
+          md:top-auto md:bottom-4 md:right-4 md:left-auto
+          h-12 w-12 cursor-pointer
+          text-[#B30D3B] hover:text-red-500
+          duration-300
+          z-30" />
       </button>
     </div>
   );
