@@ -22,6 +22,7 @@ import { StatusPill } from './statusPill';
 import { ArrowBackOutlined } from '@mui/icons-material';
 
 export default function CMSPage() {
+  const [mounted, setMounted] = useState(false);
   const [title, setTitle] = useState('');
   const [subheading, setSubheading] = useState('');
   const [description, setDescription] = useState('');
@@ -81,6 +82,9 @@ export default function CMSPage() {
   const DRAFT_KEY = 'cmsDraft_v1';
   const inputRef = useRef<HTMLInputElement | null>(null);
   const previewRef = useRef<HTMLIFrameElement | null>(null);
+  const [ready, setReady] = useState(false);
+  useEffect(() => setMounted(true), []);
+  useEffect(() => setReady(true), []);
 
   /**  from localStorage */
   useEffect(() => {
@@ -482,7 +486,7 @@ export default function CMSPage() {
   }, [tab])
 
   const filteredEvents = useMemo(() => applyFilter(events, filterTab, setDisableDrag), [ events, filterTab]);
-
+  if (!mounted) return null;
   return (
     <div className="font-sans flex flex-col gap-4 md:flex-row min-h-screen md:h-screen p-8 md:gap-8 sm:px-20 bg-[#151c2f]">
       {/* editor side ni */}
@@ -843,7 +847,7 @@ export default function CMSPage() {
 
             <div className="flex gap-2 mt-1 pt-2">
               <button onClick={onSave} 
-                disabled={buttonLoading}
+                disabled={!ready || buttonLoading}
                 className="px-3 py-2 rounded-lg bg-green-400 hover:bg-green-500 hover:cursor-pointer text-black font-medium disabled:cursor-not-allowed">
                   {buttonLoading ? (
                     <span className="inline-flex items-center gap-2">
