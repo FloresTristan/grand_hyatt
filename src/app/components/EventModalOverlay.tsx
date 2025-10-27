@@ -95,10 +95,10 @@ export default function EventModalOverlay({
   const next = () => setIndex((i) => (i + 1) % events.length);
 
   return (
-    <div className={`${pos} inset-0 ${z} flex items-center justify-center`} role="dialog" aria-modal="true">
+    <div className={`${pos} inset-0 ${z} flex items-center p-4 lg:p-0 justify-center`} role="dialog" aria-modal="true">
       <div className={`${pos} inset-0 bg-black/60 backdrop-blur-[1px]`} onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-[290px] md:max-w-[560px] rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="relative z-10 w-full max-w-[400px] md:max-w-[560px] rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={onClose}
           aria-label="Close"

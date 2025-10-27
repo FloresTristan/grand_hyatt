@@ -51,10 +51,10 @@ export default function HotspotModalOverlay({
   const z   = container === 'contained' ? 'z-10' : 'z-[50]';
 
   return (
-    <div id="hotspotModal" className={`${pos} inset-0 ${z} flex items-center justify-center`} role="dialog" aria-modal="true">
+    <div id="hotspotModal" className={`${pos} inset-0 ${z} flex p-4 lg:p-0 items-center justify-center`} role="dialog" aria-modal="true">
       <div className={`${pos} inset-0 bg-black/60 backdrop-blur-[1px]`} onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-[290px] md:max-w-[560px] rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="relative z-10 w-full max-w-[400px] md:max-w-[560px] rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={onClose}
           aria-label="Close"

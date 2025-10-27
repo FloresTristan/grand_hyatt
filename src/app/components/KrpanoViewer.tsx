@@ -66,6 +66,12 @@ export default function KrpanoViewer({
     fetchHotspots({ setHotspots, setLoading });
   }, []);
 
+
+  const callKrpanoAction = (action: string) => {
+    const k = krpanoRef.current ?? window.getkrpano?.(viewerId);
+    if (k) k.call(`${action}()`);
+  };
+
   // ==============================
   //  LAYER CLICK HANDLER (submenu)
   // ==============================
@@ -95,6 +101,9 @@ export default function KrpanoViewer({
         console.log("🟢 Submenu clicked:", html, "→ hotspot:", match);
         setSelectedHotspot(match);
         setModalOpen(true);
+
+        k.call("closem()");
+        k.call("close()");
       } else {
         console.warn("⚠️ No hotspot matched submenu:", html);
       }
@@ -208,7 +217,12 @@ export default function KrpanoViewer({
       {container === 'fullscreen' && selectedHotspot && (
         <HotspotModalOverlay
           open={modalOpen}
-          onClose={() => setModalOpen(false)}
+          onClose={() => {
+            setModalOpen(false);
+            // setTimeout(() => {
+              callKrpanoAction("open")
+            // }, 100);
+          }}
           hotspot={selectedHotspot}
           container={container}
         />
