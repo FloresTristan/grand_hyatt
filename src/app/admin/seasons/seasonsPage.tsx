@@ -30,6 +30,7 @@ export default function SeasonsPage(){
         if (imageFile) body.append('image', imageFile);
         if (gifFile) body.append('gif', gifFile);
         const res = await fetch('/api/admin/seasons/create', { method: 'POST', body });
+        console.log({res})
         if (!res.ok) {
             setSnackbarSettings((prev) => ({...prev,
                 open: true,

@@ -281,112 +281,259 @@ export default function CMSPage() {
   console.log('time', toUtcIso(publishAt), publishAt+':00.000Z')
   console.log('utctest', toLocalInputValue(toUtcIso(publishAt)))
 
+  // async function onSave() {
+  //   // Reset loading state at the start
+  //   setButtonLoading(true);
+    
+  //   try {
+  //     if (title == '' || title == null) {
+  //       setSnackbarSettings((prev) => ({
+  //         ...prev,
+  //         open: true,
+  //         message: 'Title Needed',
+  //         severity: 'error'
+  //       }));
+  //       return;
+  //     }
+
+  //     let image_path: string | null = null;
+  //     let image_url: string | null = null;
+
+  //     const oldPath = (selectedEvent as EventType)?.image_path as string | undefined;
+
+  //     if (imageFile) {
+  //       console.log("Im here")
+  //       const up = await uploadEventImage(imageFile, { oldPath });
+  //       console.log("imageUp",up)
+  //       image_path = up.path;
+  //       image_url = up.publicUrl;
+  //     } else {
+  //       console.log("No new image file")
+  //       if (tab === 1 && eventId) {
+  //         image_path = selectedEvent?.image_path ?? null;
+  //         image_url = selectedEvent?.image_url ?? null;
+  //       }
+  //     }
+
+  //     const payload = {
+  //       title, subheading, description,
+  //       startDate: startDate || null,
+  //       endDate: endDate || null,
+  //       startTime: startTime || null,
+  //       endTime: endTime || null,
+  //       ctaLabel, ctaHref,
+  //       image_path,
+  //       image_url,
+  //       published,
+  //       publishAt: toUtcIso(publishAt) || null,
+  //       unpublishAt: toUtcIso(unpublishAt) || null,
+  //     };
+
+  //     let res, data;
+  //     if (!eventId || tab === 0) {
+  //       // CREATE
+  //       res = await fetch('/api/admin/events', {
+  //         method: 'POST',
+  //         credentials: "include",
+  //         headers: { 'Content-Type': 'application/json' },
+  //         body: JSON.stringify(payload),
+  //       });
+  //       data = await res.json();
+        
+  //       if (!res.ok) {
+  //         setSnackbarSettings((prev) => ({
+  //           ...prev,
+  //           open: true,
+  //           message: 'Event Creation failed',
+  //           severity: 'error'
+  //         }));
+  //         throw new Error(data?.error || 'Create failed');
+  //       } else {
+  //         const raw = localStorage.getItem(DRAFT_KEY);
+  //         const s = raw ? JSON.parse(raw) : {};
+  //         localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...s, eventId: data.id }));
+  //         if (tab === 0) {
+  //           setSnackbarSettings((prev) => ({
+  //             ...prev,
+  //             open: true,
+  //             message: 'Event Created Successfully',
+  //             severity: 'success'
+  //           }));
+  //         }
+  //       }
+  //     } else {
+  //       // UPDATE
+  //       res = await fetch(`/api/admin/events/${eventId}`, {
+  //         method: 'PATCH',
+  //         credentials: "include",
+  //         headers: { 'Content-Type': 'application/json' },
+  //         body: JSON.stringify(payload),
+  //       });
+  //       data = await res.json();
+        
+  //       if (!res.ok) {
+  //         setSnackbarSettings((prev) => ({
+  //           ...prev,
+  //           open: true,
+  //           message: 'Event Update failed',
+  //           severity: 'error'
+  //         }));
+  //         throw new Error(data?.error || 'Update failed');
+  //       } else {
+  //         setSnackbarSettings((prev) => ({
+  //           ...prev,
+  //           open: true,
+  //           message: 'Event Updated Successfully',
+  //           severity: 'success'
+  //         }));
+  //       }
+  //     }
+
+  //     if (tab !== 0) {
+  //       await fetchEventsForAdmin({ setEvents, setLoadingEvents });
+  //     }
+      
+  //     if (image_url) setImageUrl(image_url);
+      
+  //   } catch (e: unknown) {
+  //     setSnackbarSettings((prev) => ({
+  //       ...prev,
+  //       open: true,
+  //       message: e instanceof Error ? e.message : 'Save failed',
+  //       severity: 'error'
+  //     }));
+  //   } finally {
+  //     // ALWAYS reset loading state, even on errors or early returns
+  //     setButtonLoading(false);
+  //   }
+    
+  //   resetAll();
+  // }
+
   async function onSave() {
+    setButtonLoading(true);
+
     try {
-      if (title=='' || title == null){
-        setSnackbarSettings((prev) => ({...prev,
+      if (!title?.trim()) {
+        setSnackbarSettings((prev) => ({
+          ...prev,
           open: true,
-          message: 'Title Needed',
-          severity: 'error'
-        }))
-        return
+          message: "Title Needed",
+          severity: "error",
+        }));
+        return;
       }
 
-      setButtonLoading(true)
+      // Build FormData instead of JSON
+      const form = new FormData();
 
-      let image_path: string | null = null;
-      let image_url: string | null = null;
+      form.append("title", title);
+      form.append("subheading", subheading);
+      form.append("description", description);
 
-      const oldPath = (selectedEvent as EventType)?.image_path as string | undefined;
+      form.append("start_date", startDate || "");
+      form.append("end_date", endDate || "");
+      form.append("start_time", startTime || "");
+      form.append("end_time", endTime || "");
 
-      if (imageFile) {
-        const up = await uploadEventImage(imageFile, { oldPath });
-        image_path = up.path;
-        image_url = up.publicUrl; 
-      } else {
-        if (tab === 1 && eventId) {
-          image_path = selectedEvent?.image_path ?? null;
-          image_url  = selectedEvent?.image_url ?? null;
-        }
-      }
+      form.append("cta_label", ctaLabel || "");
+      form.append("cta_href", ctaHref || "");
 
-      const payload = {
-        title, subheading, description,
-        startDate: startDate || null,
-        endDate: endDate||null,
-        startTime: startTime||null,
-        endTime: endTime||null,
-        ctaLabel, ctaHref,
-        image_path,
-        image_url,
-        published,
-        publishAt:toUtcIso(publishAt) || null,
-        unpublishAt: toUtcIso(unpublishAt) || null,
-      };
+      form.append("published", String(published));
+      form.append("publish_at", toUtcIso(publishAt) || "");
+      form.append("unpublish_at", toUtcIso(unpublishAt) || "");
+
+      // Image — only send if new file selected
+      if (imageFile) form.append("image", imageFile);
 
       let res, data;
+
       if (!eventId || tab === 0) {
         // CREATE
-        res = await fetch('/api/admin/events', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+        res = await fetch("/api/admin/events", {
+          method: "POST",
+          body: form,
+          credentials: "include",
         });
+
         data = await res.json();
+
         if (!res.ok) {
-          setSnackbarSettings((prev) => ({...prev,
+          setSnackbarSettings((prev) => ({
+            ...prev,
             open: true,
-            message: 'Event Creation failed',
-            severity: 'error'
-          }))
-          throw new Error(data?.error || 'Create failed')
-        } else {
-          const raw = localStorage.getItem(DRAFT_KEY);
-          const s = raw ? JSON.parse(raw) : {};
-          localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...s, eventId: data.id }));
-          if (tab === 0){
-            setSnackbarSettings((prev) => ({...prev,
-              open: true,
-              message: 'Event Created Successfully',
-              severity: 'success'
-            }))
-          };
+            message: "Event Creation failed",
+            severity: "error",
+          }));
+          throw new Error(data?.error || "Create failed");
         }
 
-      } else {
-        res = await fetch(`/api/admin/events/${eventId}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        data = await res.json();
-        if (!res.ok) {
-          setSnackbarSettings((prev) => ({...prev,
+        const raw = localStorage.getItem(DRAFT_KEY);
+        const s = raw ? JSON.parse(raw) : {};
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...s, eventId: data.id }));
+
+        if (tab === 0) {
+          setSnackbarSettings((prev) => ({
+            ...prev,
             open: true,
-            message: 'Event Update failed',
-            severity: 'error'
-          }))
-          throw new Error(data?.error || 'Update failed')
-        }else{
-          setSnackbarSettings((prev) => ({...prev,
-            open: true,
-            message: 'Event Updated Successfully',
-            severity: 'success'
-          }))
+            message: "Event Created Successfully",
+            severity: "success",
+          }));
         }
-      }
-      if (tab !== 0) fetchEventsForAdmin({ setEvents, setLoadingEvents });
-      if (image_url) setImageUrl(image_url);
-    } catch (e: unknown) {
-        setSnackbarSettings((prev) => ({...prev,
+      } else {
+        // UPDATE — same FormData, but use PATCH
+        res = await fetch(`/api/admin/events/${eventId}`, {
+          method: "PATCH",
+          body: form,
+          credentials: "include",
+        });
+
+        data = await res.json();
+
+        if (!res.ok) {
+          setSnackbarSettings((prev) => ({
+            ...prev,
+            open: true,
+            message: "Event Update failed",
+            severity: "error",
+          }));
+          throw new Error(data?.error || "Update failed");
+        }
+
+        setSnackbarSettings((prev) => ({
+          ...prev,
           open: true,
-          message: e instanceof Error ? e.message : 'Save failed',
-          severity: 'error'
-        }))
+          message: "Event Updated Successfully",
+          severity: "success",
+        }));
+      }
+
+      // Refresh events list
+      if (tab !== 0) {
+        await fetchEventsForAdmin({ setEvents, setLoadingEvents });
+      }
+
+      if (data?.image_url) setImageUrl(data.image_url);
+
+    } catch (e: unknown) {
+      setSnackbarSettings((prev) => ({
+        ...prev,
+        open: true,
+        message: e instanceof Error ? e.message : "Save failed",
+        severity: "error",
+      }));
+    } finally {
+      setButtonLoading(false);
+      resetAll();
     }
-    setButtonLoading(false)
-    resetAll();
   }
+
+  useEffect(() => {
+    return () => {
+      // Cleanup when component unmounts
+      setButtonLoading(false);
+    };
+  }, []);
 
   console.log(selectedEvent)
 

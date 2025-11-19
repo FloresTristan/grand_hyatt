@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createSupabaseServer } from '../../../../../../lib/supabase/server';
+import { createSupabaseRoute } from '../../../../../../lib/supabase/route';
 import { createSupabaseAdmin } from '../../../../../../lib/supabase/admin';
 
 export const runtime = 'nodejs';
@@ -26,7 +26,17 @@ function toNumber(n: number | string | undefined): number {
 }
 
 function isFile(v: FormDataEntryValue | null): v is File {
-  return typeof File !== 'undefined' && v instanceof File;
+  if (v === null) return false;
+  if (typeof v !== "object") return false;
+
+  // Use `in` operator to avoid `any`
+  const hasName = "name" in v && typeof v.name === "string";
+  const hasType = "type" in v && typeof v.type === "string";
+  const hasSize = "size" in v && typeof v.size === "number";
+  const hasArrayBuffer =
+    "arrayBuffer" in v && typeof v.arrayBuffer === "function";
+
+  return hasName && hasType && hasSize && hasArrayBuffer;
 }
 
 async function ensureBucket(): Promise<void> {
@@ -105,11 +115,14 @@ async function uploadFile(file: File, folder: 'images' | 'gifs'): Promise<string
 
 export async function POST(req: Request) {
   try {
-    const supa = await createSupabaseServer();
+    // ✅ Use createSupabaseRoute for auth operations
+    const supabase = await createSupabaseRoute();
 
-    const { data: userWrap } = await supa.auth.getUser();
-    const user = userWrap?.user ?? null;
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     const form = await req.formData();
     const nameRaw = form.get('name');
@@ -119,10 +132,13 @@ export async function POST(req: Request) {
 
     // Accept: image (static), gif (animated), or fallback file
     const imageEntry = form.get('image');
+    console.log("imageEntry", imageEntry)
     const gifEntry = form.get('gif');
     const fallbackEntry = form.get('file');
 
     let imageFile: File | null = isFile(imageEntry) ? imageEntry : null;
+    console.log("imageFile", imageFile)
+
     let gifFile: File | null = isFile(gifEntry) ? gifEntry : null;
 
     if (!imageFile && !gifFile && isFile(fallbackEntry)) {
@@ -131,6 +147,7 @@ export async function POST(req: Request) {
       else imageFile = fallbackEntry;
     }
 
+    // ✅ Still use admin client for bucket operations (this is correct)
     await ensureBucket();
 
     let imageUrl: string | null = null;
@@ -139,9 +156,15 @@ export async function POST(req: Request) {
     if (imageFile) imageUrl = await uploadFile(imageFile, 'images');
     if (gifFile) gifUrl = await uploadFile(gifFile, 'gifs');
 
-    const { data: row, error: insErr } = await supa
+    // ✅ Use the route client for database operations
+    const { data: row, error: insErr } = await supabase
       .from('seasons')
-      .insert({ name, image_url: imageUrl, gif_url: gifUrl })
+      .insert({ 
+        name, 
+        image_url: imageUrl, 
+        gif_url: gifUrl,
+        created_by: user.id // Optional: track who created it
+      })
       .select('id,name,image_url,gif_url,created_at')
       .single();
 
@@ -152,6 +175,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ item: row });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : 'Server error';
+    console.error('Season upload error:', e);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

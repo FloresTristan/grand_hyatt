@@ -1,99 +1,52 @@
-import { NextResponse } from 'next/server';
-import { createSupabaseServer } from '../../../../../../lib/supabase/server';
+import { NextResponse } from "next/server";
+import { createSupabaseRoute } from "../../../../../../lib/supabase/route";
+import { createSupabaseAdmin } from "../../../../../../lib/supabase/admin";
 
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
 type Ctx = { params: Promise<{ id: string }> };
 
-export async function GET(_req: Request, {params}: Ctx) {
-  const { id } = await params;
-  const supabase = await createSupabaseServer();
-  const { data, error } = await supabase
-    .from('events_with_status')
-    .select('*')
-    .eq('id', id)
-    .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 404 });
-  return NextResponse.json({ item: data });
+function isFile(v: FormDataEntryValue | null): v is File {
+  if (v === null) return false;
+  if (typeof v !== "object") return false;
+
+  const hasName = "name" in v && typeof v.name === "string";
+  const hasType = "type" in v && typeof v.type === "string";
+  const hasSize = "size" in v && typeof v.size === "number";
+  const hasBuffer = "arrayBuffer" in v && typeof v.arrayBuffer === "function";
+
+  return hasName && hasType && hasSize && hasBuffer;
 }
 
-export async function PATCH(req: Request, {params}: Ctx) {
-  const { id } = await params;
-  const supabase = await createSupabaseServer();
-  const body = await req.json();
+async function uploadEventImage(file: File) {
+  const admin = createSupabaseAdmin();
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  const buf = Buffer.from(await file.arrayBuffer());
+  const id = crypto.randomUUID();
+  const objectPath = `events/${id}.${ext}`;
 
-  const update = {
-    title: body.title ?? undefined,
-    subheading: body.subheading ?? undefined,
-    description: body.description ?? undefined,
-    start_date: body.startDate ?? undefined,
-    end_date: body.endDate ?? undefined,
-    start_time: body.startTime ?? undefined,
-    end_time: body.endTime ?? undefined,
-    cta_label: body.ctaLabel ?? undefined,
-    cta_href: body.ctaHref ?? undefined,
-    image_url: body.image_url ?? undefined,
-    published: typeof body.published === 'boolean' ? body.published : undefined,
-    publish_at: body.publishAt === undefined ? undefined : body.publishAt,
-    unpublish_at: body.unpublishAt === undefined ? undefined : body.unpublishAt,
-    order: typeof body.order === 'number' ? body.order : undefined,
-  } as const;
+  const { error: upErr } = await admin.storage
+    .from("events")
+    .upload(objectPath, buf, {
+      contentType: file.type || "image/jpeg",
+      upsert: false,
+    });
 
-  const { data, error } = await supabase
-    .from('events')
-    .update(update)
-    .eq('id', id)
-    .select()
-    .single();
+  if (upErr) throw upErr;
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ item: data });
+  const { data: pub } = admin.storage.from("events").getPublicUrl(objectPath);
+
+  return {
+    image_url: pub?.publicUrl ?? null,
+    image_path: objectPath,
+  };
 }
 
-
-export async function DELETE(
-  _req: Request,
-  {params}: Ctx
-) {
-  const { id } = await params;
-  const supabase = await createSupabaseServer();
-
-  const { data: ev, error: readErr } = await supabase
-    .from('events')
-    .select('image_url')
-    .eq('id', id)
-    .single();
-
-  if (readErr) return NextResponse.json({ error: readErr.message }, { status: 404 });
-
-  const { error } = await supabase.from('events').delete().eq('id', id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-
-  const path = toStoragePath(
-    ev?.image_url,
-    'events'
-  );
-  if (path) {
-    try {
-      await supabase.storage.from('events').remove([path]);
-    } catch {
-      // ignore; keep delete successful even if storage remove fails
-    }
-  }
-
-  return NextResponse.json({ ok: true });
-}
-
-export function toStoragePath(
-  urlOrPath?: string | null,
-  bucket = 'events'
-): string | null {
+export function toStoragePath(urlOrPath?: string | null, bucket = "events") {
   if (!urlOrPath) return null;
 
   if (!/^https?:\/\//i.test(urlOrPath)) {
-    const noBucket = urlOrPath.replace(new RegExp(`^${bucket}/`), '');
+    const noBucket = urlOrPath.replace(new RegExp(`^${bucket}/`), "");
     return noBucket || null;
   }
 
@@ -103,14 +56,142 @@ export function toStoragePath(
       new RegExp(`/object/(?:public|sign)/${bucket}/(.+)$`)
     );
     if (m && m[1]) return m[1];
-  } catch {
-    // ignore parsing errors
-  }
+  } catch {}
+
   return null;
 }
 
-export function ensureUtcIso(v?: string | null) {
-  if (!v) return null;
-  if (/[zZ]$/.test(v) || /[+\-]\d\d:\d\d$/.test(v)) return v;
-  return new Date(v).toISOString();
+export async function GET(_req: Request, { params }: Ctx) {
+  const { id } = await params;
+  const supabase = await createSupabaseRoute();
+
+  const { data, error } = await supabase
+    .from("events_with_status")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 404 });
+  }
+
+  return NextResponse.json({ item: data });
+}
+
+export async function PATCH(req: Request, { params }: Ctx) {
+  try {
+    const { id } = await params;
+    const supabase = await createSupabaseRoute();
+    const admin = createSupabaseAdmin();
+
+    const form = await req.formData();
+
+    // AUTH
+    const { data: auth, error: authErr } = await supabase.auth.getUser();
+    if (authErr || !auth.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Read existing row
+    const { data: existing, error: existErr } = await supabase
+      .from("events")
+      .select("image_url")
+      .eq("id", id)
+      .single();
+
+    if (existErr) {
+      return NextResponse.json({ error: existErr.message }, { status: 404 });
+    }
+
+    let imageFile = form.get("image");
+    imageFile = isFile(imageFile) ? imageFile : null;
+
+    let newImageUrl = null;
+
+    // If new file, upload via admin
+    if (imageFile) {
+      const uploaded = await uploadEventImage(imageFile);
+      newImageUrl = uploaded.image_url;
+
+      // remove old file
+      const oldPath = toStoragePath(existing.image_url, "events");
+      if (oldPath) {
+        await admin.storage.from("events").remove([oldPath]).catch(() => {});
+      }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const payload: any = {
+      title: form.get("title") || null,
+      subheading: form.get("subheading") || null,
+      description: form.get("description") || null,
+      start_date: form.get("start_date") || null,
+      end_date: form.get("end_date") || null,
+      start_time: form.get("start_time") || null,
+      end_time: form.get("end_time") || null,
+      cta_label: form.get("cta_label") || null,
+      cta_href: form.get("cta_href") || null,
+      published: form.get("published") === "true",
+      publish_at: form.get("publish_at") || null,
+      unpublish_at: form.get("unpublish_at") || null,
+      updated_by: auth.user.id,
+    };
+
+    if (newImageUrl) {
+      payload.image_url = newImageUrl;
+    }
+
+    const { data, error } = await supabase
+      .from("events")
+      .update(payload)
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ item: data });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error? e?.message : "Server error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(_req: Request, { params }: Ctx) {
+  try {
+    const { id } = await params;
+    const supabase = await createSupabaseRoute();
+    const admin = createSupabaseAdmin();
+
+    const { data: ev, error: readErr } = await supabase
+      .from("events")
+      .select("image_url")
+      .eq("id", id)
+      .single();
+
+    if (readErr) {
+      return NextResponse.json({ error: readErr.message }, { status: 404 });
+    }
+
+    const { error } = await supabase.from("events").delete().eq("id", id);
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    const path = toStoragePath(ev?.image_url, "events");
+    if (path) {
+      await admin.storage.from("events").remove([path]).catch(() => {});
+    }
+
+    return NextResponse.json({ ok: true });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message :"Server error" },
+      { status: 500 }
+    );
+  }
 }

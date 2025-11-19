@@ -104,6 +104,8 @@ export default function AddSeasonModal({ open, onClose, onCreate }: AddSeasonMod
     setGifFile(f);
   }
 
+  console.log({ name, imageFile, gifFile });
+
   async function handleCreate() {
     try {
       setError(null);
