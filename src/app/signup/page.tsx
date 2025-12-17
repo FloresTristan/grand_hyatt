@@ -36,7 +36,7 @@ export default function FirstUserPage() {
 
       r.replace('/admin');
     } catch (e: unknown) {
-      setErr(e?.message || 'Something went wrong');
+      setErr(e instanceof Error ? e.message : 'An unknown error occurred');
     } finally {
       setBusy(false);
     }
