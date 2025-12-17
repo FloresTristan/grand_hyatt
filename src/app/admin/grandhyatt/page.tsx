@@ -1,4 +1,4 @@
-import GrandHyattContentPage from "./GrandHyattContentPage"
+import GrandHyattContentPage from "./grandHyattContentPage"
 
 export default function GrandHyatt(){
     return(
