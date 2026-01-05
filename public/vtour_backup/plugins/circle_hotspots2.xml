@@ -51,7 +51,7 @@
             hotspot[get(hs_circle2)].loadstyle(hs_circle_img2);
             copy(hotspot[get(hs_circle2)].ath, hotspot[get(h)].ath);
             copy(hotspot[get(hs_circle2)].atv, hotspot[get(h)].atv);
-            txtadd(hotspot[get(hs_circle2)].url, '%HTMLPATH%/plugins/circular_thumbs/', get(hotspot[get(h)].name), '.png');
+            txtadd(hotspot[get(hs_circle2)].url, 'vtour/plugins/circular_thumbs/', get(hotspot[get(h)].name), '.png');
             set(hotspot[get(hs_circle2)].scale, 0.3);
 
             /* tag label above thumb */
@@ -127,12 +127,14 @@
        scale="0.1"
        flying="0.03"
        onover="defaultcardsshown();defaultcards();select_hs2(get(name));trythisone(get(name));set(hotspot[get(hotspot[get(name)].baw)].visible,true);"
+       onout.desktop="hide_info_card(get(name));trythistwo(get(name));" 
        onclick2="hide_info_card(get(name));trythistwo(get(name));set(enabled,true);"
         onclick="if(name != @selected_hs2,
                     select_hs2(get(name));
                     defaultcards();
                     set(hotspot[get(hotspot[get(name)].baw)].visible,true);
                     looktohotspot(get(name),get(view.fov));
+                    
                     ,
                     set(enabled,false);
                     select_hs2();
