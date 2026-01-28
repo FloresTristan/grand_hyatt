@@ -635,7 +635,7 @@ export default function CMSPage() {
   const filteredEvents = useMemo(() => applyFilter(events, filterTab, setDisableDrag), [ events, filterTab]);
   if (!mounted) return null;
   return (
-    <div className="font-sans flex flex-col gap-4 md:flex-row min-h-screen md:h-screen p-8 md:gap-8 sm:px-20 bg-[#151c2f]">
+    <div className="font-sans flex flex-col gap-4 md:flex-row md:h-[90vh] p-8 md:gap-8 sm:px-20 bg-[#151c2f]">
       {/* editor side ni */}
       <div className="md:w-[30%] text-white h-[90%] md:overflow-scroll custom-scrollbar shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-4">
         {/* tabs header */}

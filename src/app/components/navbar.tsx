@@ -62,7 +62,7 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
 
   return (
     <nav
-      className={`sticky top-0 z-50 bg-[#212e3f] text-white transition-colors
+      className={`sticky md:h-[10vh] top-0 z-50 bg-[#212e3f] text-white transition-colors
         ${isScrolled ? 'bg-opacity-90 backdrop-blur-md' : ''}`}
     >
       <div className="mx-auto  px-4 py-4 flex items-center justify-between">

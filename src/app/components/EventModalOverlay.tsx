@@ -128,15 +128,15 @@ export default function EventModalOverlay({
 
         <div className="px-5 pb-5 pt-6">
           {current?.imageUrl && (
-            <div className={`relative mx-auto mb-4 h-32 w-full overflow-hidden rounded-xl  ${container === 'fullscreen'? 'md:h-60' : 'md:h-32' }`}>
+            <div className="relative mx-auto mb-4 h-48 w-full overflow-hidden rounded-xl border border-black/10 md:h-60">
               <Image
                 src={current.imageUrl}
                 alt={current.title || ''}
                 fill
                 unoptimized
-                className="object-contain object-center bg-black/50 cursor-zoom-in
+                className="object-contain object-center bg-white cursor-zoom-in
                   hover:scale-[1.02] transition-transform duration-300 hover:opacity-70 hover:duration-500"
-                sizes="(max-width: 640px) 100vw, 560px"
+                // sizes="(max-width: 640px) 100vw, 560px"
                 priority
                 onClick={() => setLightboxOpen(true)}
               />
