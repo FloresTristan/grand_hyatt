@@ -71,7 +71,7 @@ export default function HotspotModalOverlay({
                 alt={hotspot.title || ''}
                 fill
                 unoptimized
-                className="object-contain object-center bg-black/50 cursor-zoom-in
+                className="object-contain object-center bg-white cursor-zoom-in
                   hover:scale-[1.02] transition-transform duration-300 hover:opacity-70 hover:duration-500"
                 sizes="(max-width: 640px) 100vw, 560px"
                 priority

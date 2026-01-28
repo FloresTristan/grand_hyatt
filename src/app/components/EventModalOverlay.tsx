@@ -128,7 +128,7 @@ export default function EventModalOverlay({
 
         <div className="px-5 pb-5 pt-6">
           {current?.imageUrl && (
-            <div className="relative mx-auto mb-4 h-48 w-full overflow-hidden rounded-xl border border-black/10 md:h-60">
+            <div className="relative mx-auto mb-4 h-48 w-full overflow-hidden rounded-xl border-black/10 md:h-60">
               <Image
                 src={current.imageUrl}
                 alt={current.title || ''}
