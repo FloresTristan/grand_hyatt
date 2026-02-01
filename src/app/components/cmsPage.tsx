@@ -20,6 +20,7 @@ import { LabeledDate, LabeledInput, LabeledTextarea,
   toUtcIso, applyFilter, toLocalInputValue} from './helpersAndInputs';
 import { StatusPill } from './statusPill';
 import { ArrowBackOutlined } from '@mui/icons-material';
+import KrpanoViewer from './KrpanoViewer';
 
 export default function CMSPage() {
   const [mounted, setMounted] = useState(false);
@@ -637,7 +638,7 @@ export default function CMSPage() {
   return (
     <div className="font-sans flex flex-col gap-4 md:flex-row md:h-[90vh] p-8 md:gap-8 sm:px-20 bg-[#151c2f]">
       {/* editor side ni */}
-      <div className="md:w-[30%] text-white h-[90%] md:overflow-scroll custom-scrollbar shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-4">
+      <div className="md:w-[30%] text-white md:overflow-scroll custom-scrollbar shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-4">
         {/* tabs header */}
         <Box sx={{ borderBottom: 1, borderColor: 'rgba(255,255,255,0.1)' }}>
           <Tabs
@@ -1014,10 +1015,15 @@ export default function CMSPage() {
       </div>
 
       {/* RIGHT: live website preview + modal overlay */}
-      <div className="md:w-[70%] h-[90%] md:overflow-scroll custom-scrollbar text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
+      <div className="md:w-[70%] md:overflow-scroll custom-scrollbar text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
         <div className="mb-2 text-sm text-white/60">Live preview from website</div>
         <div className="relative w-full h-[720px] md:h-full border border-white/10 bg-white rounded-xl overflow-hidden">
-          <iframe ref={previewRef} src="/" title="Website Live Preview" className="absolute inset-0 object-contain h-full w-full" />
+          {/* <iframe ref={previewRef} src="/" title="Website Live Preview" className="absolute inset-0 object-contain h-full w-full" /> */}
+          <KrpanoViewer
+            xml="/vtour/tour.xml"
+            container="contained"
+            whichPage='popup'
+          />
           <EventModalOverlay
             container="contained"
             open={modalOpen}

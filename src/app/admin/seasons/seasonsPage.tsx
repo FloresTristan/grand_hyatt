@@ -149,8 +149,8 @@ export default function SeasonsPage(){
     console.log({selectedSeasonId})
 
     return(
-        <div className="font-sans flex flex-col gap-4 md:flex-row min-h-screen md:h-screen p-8 md:gap-8 sm:px-20 bg-[#151c2f]">
-            <div className="md:w-[25%] text-white h-[90%] md:overflow-scroll custom-scrollbar shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-4">
+        <div className="font-sans flex flex-col gap-4 md:flex-row md:h-[90vh] p-8 md:gap-8 sm:px-20 bg-[#151c2f]">
+            <div className="md:w-[25%] text-white md:overflow-scroll custom-scrollbar shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-4">
                {profile?.role === 'super-admin' && (
                     <div className='sticky w-full top-0 bg-[#212e3f] z-20 rounded-lg flex justify-between'>
                         <div className='flex gap-x-2'>
@@ -227,7 +227,7 @@ export default function SeasonsPage(){
                     </button>
                 </div>
             </div>
-            <div className="md:w-[75%] h-[90%] md:overflow-scroll custom-scrollbar text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
+            <div className="md:w-[75%] md:overflow-scroll custom-scrollbar text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
                 <div className="mb-2 text-sm text-white/60">
                     Live preview from website with frames
                 </div>

@@ -40,6 +40,7 @@ type Props = {
   style?: React.CSSProperties;
   options?: Record<string, unknown>;
   container?: 'contained' | 'fullscreen';
+  whichPage?: 'default' | 'popup' | 'grandhyatt' | 'seasons';
 };
 
 export default function KrpanoViewer({
@@ -49,6 +50,7 @@ export default function KrpanoViewer({
   style,
   options,
   container= 'fullscreen',
+  whichPage = 'default',
 }: Props) {
   const [scriptReady, setScriptReady] = useState(false);
   const [hotspots, setHotspots] = useState<Hotspots[]>([]);
@@ -72,9 +74,7 @@ export default function KrpanoViewer({
     if (k) k.call(`${action}()`);
   };
 
-  // ==============================
   //  LAYER CLICK HANDLER (submenu)
-  // ==============================
   useEffect(() => {
     console.log("before")
     window.ReactKrpanoLayerClick = (layerName: string) => {
@@ -155,6 +155,17 @@ export default function KrpanoViewer({
             );
           `);
         }
+
+        if ( pathname.includes("admin")) {
+          console.log("click here");
+          k.call(`
+            delayedcall(1,
+              loadscene(scene_gh_map, null, MERGE, BLEND(get(transitiontime),get(transitiontweentype)));
+              delayedcall(0.1, forpopup());
+            );
+          `);
+        }
+
         k.call(`
           for(set(i,0), i LT layer.count, inc(i),
             if(startswith(get(layer[get(i)].name), 'submenu'),
@@ -165,14 +176,26 @@ export default function KrpanoViewer({
           );
         `);
 
+        
 
+        // if (container === 'fullscreen') {
+        //   k.call(`
+        //     if(hotspot[building],
+        //       set(hotspot[building].enabled, true);
+        //       set(hotspot[building].onclick,
+        //         loadscene(scene_ninort, null, MERGE, BLEND(get(transitiontime),get(transitiontweentype)));
+        //       );
+        //       set(hotspot[building].cursor, pointer);
+        //     );
+        //   `);
+        // }
         console.log("✅ KRPano ready, XML loaded");
       },
       ...(options || {}),
     });
 
     embeddedRef.current = true;
-  }, [scriptReady, loading, xml, viewerId, targetId, options, pathname]);
+  }, [scriptReady, loading, xml, viewerId, targetId, options, pathname, whichPage]);
 
   console.log({hotspots})
   console.log({selectedHotspot})

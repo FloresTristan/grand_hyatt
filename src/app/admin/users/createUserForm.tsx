@@ -163,12 +163,12 @@ export default function UsersPage() {
 
       setOpen(false);
     } catch (e: unknown) {
-      alert(e?.message || 'Save failed');
+      alert(e instanceof Error ? e.message :'Save failed');
     }
   }
 
   return (
-    <div className="min-h-screen bg-[#151c2f] text-white p-6">
+    <div className="h-[90vh] bg-[#151c2f] text-white p-6">
       <div className="mx-auto max-w-5xl space-y-4">
         <header className="md:flex flex-col md:flex-row items-center justify-end">
           <div className="flex justify-center items-center gap-2">
