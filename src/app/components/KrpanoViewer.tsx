@@ -156,15 +156,15 @@ export default function KrpanoViewer({
           `);
         }
 
-        if ( pathname.includes("admin")) {
-          console.log("click here");
-          k.call(`
-            delayedcall(1,
-              loadscene(scene_gh_map, null, MERGE, BLEND(get(transitiontime),get(transitiontweentype)));
-              delayedcall(0.1, forpopup());
-            );
-          `);
-        }
+        // if ( pathname.includes("admin")) {
+        //   console.log("click here");
+        //   k.call(`
+        //     delayedcall(1,
+        //       loadscene(scene_gh_map, null, MERGE, BLEND(get(transitiontime),get(transitiontweentype)));
+        //       delayedcall(0.1, forpopup());
+        //     );
+        //   `);
+        // }
 
         k.call(`
           for(set(i,0), i LT layer.count, inc(i),

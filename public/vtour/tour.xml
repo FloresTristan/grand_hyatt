@@ -138,7 +138,7 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV2();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV2" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV2" style="header" css="font-family: 'Roboto', serif; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Third Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              <layer enabled="false" name="AV2" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Third Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
 		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
 		              				<layer type="container" name="down2" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up2" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
@@ -169,7 +169,7 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV3();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV3" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV3" style="header" css="font-family: 'Roboto', serif; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Fifth Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              <layer enabled="false" name="AV3" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Fifth Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
 		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
 		              				<layer type="container" name="down3" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up3" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
@@ -190,7 +190,7 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV4();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV4" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV4" style="header" css="font-family: 'Roboto', serif; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Sixth Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              <layer enabled="false" name="AV4" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Sixth Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
 		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
 		              				<layer type="container" name="down4" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up4" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
@@ -218,7 +218,7 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV5();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV5" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV5" style="header" css="font-family: 'Roboto', serif; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="60th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              <layer enabled="false" name="AV5" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="60th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
 		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
 		              				<layer type="container" name="down5" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up5" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
@@ -241,7 +241,7 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV7();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV7" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV7" style="header" css="font-family: 'Roboto', serif; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="62th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              <layer enabled="false" name="AV7" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="62nd Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
 		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
 		              				<layer type="container" name="down7" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up7" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
@@ -263,7 +263,7 @@
 
 		            		<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV8();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV8" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV8" style="header" css="font-family: 'Roboto', serif; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="66th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              <layer enabled="false" name="AV8" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="66th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
 		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
 		              				<layer type="container" name="down8" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up8" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
