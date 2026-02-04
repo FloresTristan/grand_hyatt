@@ -20,7 +20,7 @@ import { LabeledDate, LabeledInput, LabeledTextarea,
   toUtcIso, applyFilter, toLocalInputValue} from './helpersAndInputs';
 import { StatusPill } from './statusPill';
 import { ArrowBackOutlined } from '@mui/icons-material';
-import KrpanoViewer from './KrpanoViewer';
+import KrpanoViewerAdmin from './KrpanoViewerAdmin';
 
 export default function CMSPage() {
   const [mounted, setMounted] = useState(false);
@@ -1019,7 +1019,7 @@ export default function CMSPage() {
         <div className="mb-2 text-sm text-white/60">Live preview from website</div>
         <div className="relative w-full h-[720px] md:h-full border border-white/10 bg-white rounded-xl overflow-hidden">
           {/* <iframe ref={previewRef} src="/" title="Website Live Preview" className="absolute inset-0 object-contain h-full w-full" /> */}
-          <KrpanoViewer
+          <KrpanoViewerAdmin
             xml="/vtour/tour.xml"
             container="contained"
             whichPage='popup'

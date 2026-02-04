@@ -146,48 +146,42 @@ export default function KrpanoViewer({
 
         // Register global click listener for all KRPano layers
         // Ensure submenu layers can capture clicks
-        console.log(pathname)
-        if (pathname.includes("grandhyatt") ) {
-          console.log("🌇 Loading admin default scene: ninort");
-          k.call(`
-             delayedcall(1,
-              loadscene(scene_ninort, null, MERGE, BLEND(get(transitiontime),get(transitiontweentype)));
-            );
-          `);
-
-          k.call(`
-            delayedcall(1.2,
-
-              /* 🔒 Disable exit / back / scene-switch buttons */
-              for(set(i,0), i LT layer.count, inc(i),
-                if(
-                  layer[get(i)].url == "skin/exit.png"
-                  OR layer[get(i)].name == "sceneonly"
-                  OR find(layer[get(i)].onclick, "loadscene(") GE 0
-                  OR find(layer[get(i)].onclick, "closem(") GE 0,
-
-                  set(layer[get(i)].enabled, false);
-                  set(layer[get(i)].onclick, );
-                  set(layer[get(i)].onover, );
-                  set(layer[get(i)].onout, );
-                  set(layer[get(i)].cursor, default);
-                );
-              );
-
-              trace("✅ grandhyatt: UI buttons disabled, scene intact");
-            );
-          `);
-        }
-
-        // if ( pathname.includes("admin")) {
-        //   console.log("click here");
+        // console.log(pathname)
+        // if (pathname.includes("grandhyatt") ) {
+        //   console.log("🌇 Loading admin default scene: ninort");
         //   k.call(`
-        //     delayedcall(1,
-        //       loadscene(scene_gh_map, null, MERGE, BLEND(get(transitiontime),get(transitiontweentype)));
-        //       delayedcall(0.1, forpopup());
+        //      delayedcall(1,
+        //       loadscene(scene_ninort, null, MERGE, BLEND(get(transitiontime),get(transitiontweentype)));
         //     );
         //   `);
         // }
+
+        if (pathname.includes("admin")) {
+          k.call(`set(admin_mode, true);`);
+
+          k.call(`
+            loadscene(scene_gh_map, null, MERGE,
+              BLEND(get(transitiontime),get(transitiontweentype))
+            );
+          `);
+
+          k.call(`
+            delayedcall(0.2,
+              if(hotspot[boni],
+                set(hotspot[boni].enabled, false);
+                set(hotspot[boni].visible, false);
+                set(hotspot[boni].onclick, );
+                set(hotspot[boni].onover, );
+                set(hotspot[boni].onout, );
+                trace('✅ admin: disabled hotspot boni');
+              ,
+                trace('⚠️ admin: hotspot boni not found yet');
+              );
+            );
+          `);
+
+          k.call(`delayedcall(0.25, forpopup());`);
+      }
 
         k.call(`
           for(set(i,0), i LT layer.count, inc(i),
