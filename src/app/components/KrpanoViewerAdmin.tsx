@@ -167,15 +167,15 @@ export default function KrpanoViewer({
 
           k.call(`
             delayedcall(0.2,
-              if(hotspot[boni],
-                set(hotspot[boni].enabled, false);
-                set(hotspot[boni].visible, false);
-                set(hotspot[boni].onclick, );
-                set(hotspot[boni].onover, );
-                set(hotspot[boni].onout, );
-                trace('✅ admin: disabled hotspot boni');
+              if(hotspot[building],
+                set(hotspot[building].enabled, false);
+                set(hotspot[building].visible, false);
+                set(hotspot[building].onclick, );
+                set(hotspot[building].onover, );
+                set(hotspot[building].onout, );
+                trace('✅ admin: disabled hotspot building');
               ,
-                trace('⚠️ admin: hotspot boni not found yet');
+                trace('⚠️ admin: hotspot building not found yet');
               );
             );
           `);

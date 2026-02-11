@@ -28,8 +28,16 @@
 		set(layer[healthcare].alpha , 1);
 		set(layer[healthcare].bgborder , 0);
 		set(layer[healthcarechild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
+		set(layer[school].bgborder , 0);
+		set(layer[school].bgalpha , 1);
+		set(layer[school].alpha , 1);
+		set(layer[schoolchild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
 		set(hotspot[sm_aura].visible , true);
 		set(hotspot[sm].visible , true);
+		set(hotspot[serende].visible , true);
+		set(hotspot[serende2].visible , true);
+		set(hotspot[bonifacio0].visible , true);
+		set(hotspot[bonifacio02].visible , true);
 		set(hotspot[high_street_south].visible , true);
 		set(hotspot[highstreet].visible , true);
 		set(hotspot[bgc_ac].visible , true);
@@ -44,6 +52,22 @@
 		set(hotspot[track300].visible , true);
 		set(hotspot[mind_museum].visible , true);
 		set(hotspot[mind].visible , true);
+		set(hotspot[metro].visible , true);
+		set(hotspot[metro2].visible , true);
+		set(hotspot[lady].visible , true);
+		set(hotspot[lady2].visible , true);
+		set(hotspot[art].visible , true);
+		set(hotspot[art2].visible , true);
+		set(hotspot[art22].visible , true);
+		set(hotspot[art222].visible , true);
+		set(hotspot[interconnect].visible , true);
+		set(hotspot[interconnect2].visible , true);
+		set(hotspot[magsasaka].visible , true);
+		set(hotspot[magsasaka2].visible , true);
+		set(hotspot[astronaut].visible , true);
+		set(hotspot[astronaut2].visible , true);
+		set(hotspot[mike].visible , true);
+		set(hotspot[mike2].visible , true);
 		set(hotspot[lukes_hospital].visible , true);
 		set(hotspot[luke].visible , true);
 		set(hotspot[convenience1].visible , true);
@@ -64,12 +88,16 @@
 		set(hotspot[international2].visible , true);
 		set(hotspot[landers].visible , true);
 		set(hotspot[landers2].visible , true);
+		set(hotspot[sr].visible , true);
+		set(hotspot[sr2].visible , true);
 		set(hotspot[maybank].visible , true);
 		set(hotspot[maybank2].visible , true);
 		set(hotspot[turf].visible , true);
 		set(hotspot[turf2].visible , true);
 		set(hotspot[padel].visible , true);
 		set(hotspot[padel2].visible , true);
+		set(hotspot[burgos].visible , true);
+		set(hotspot[burgos2].visible , true);
 		set(hotspot[japanese].visible , true);
 		set(hotspot[japanese2].visible , true);
 		generate_circle_hotspots_images2();
@@ -106,8 +134,16 @@
 		set(layer[healthcare].alpha , 1);
 		set(layer[healthcare].bgborder , 0);
 		set(layer[healthcarechild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
+		set(layer[school].bgborder , 0);
+		set(layer[school].bgalpha , 1);
+		set(layer[school].alpha , 1);
+		set(layer[schoolchild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
 		set(hotspot[sm_aura].visible , true);
 		set(hotspot[sm].visible , true);
+		set(hotspot[serende].visible , true);
+		set(hotspot[serende2].visible , true);
+		set(hotspot[bonifacio0].visible , true);
+		set(hotspot[bonifacio02].visible , true);
 		set(hotspot[high_street_south].visible , true);
 		set(hotspot[highstreet].visible , true);
 		set(hotspot[bgc_ac].visible , true);
@@ -122,6 +158,22 @@
 		set(hotspot[track300].visible , true);
 		set(hotspot[mind_museum].visible , true);
 		set(hotspot[mind].visible , true);
+		set(hotspot[metro].visible , true);
+		set(hotspot[metro2].visible , true);
+		set(hotspot[lady].visible , true);
+		set(hotspot[lady2].visible , true);
+		set(hotspot[art].visible , true);
+		set(hotspot[art2].visible , true);
+		set(hotspot[art22].visible , true);
+		set(hotspot[art222].visible , true);
+		set(hotspot[interconnect].visible , true);
+		set(hotspot[interconnect2].visible , true);
+		set(hotspot[magsasaka].visible , true);
+		set(hotspot[magsasaka2].visible , true);
+		set(hotspot[astronaut].visible , true);
+		set(hotspot[astronaut2].visible , true);
+		set(hotspot[mike].visible , true);
+		set(hotspot[mike2].visible , true);
 		set(hotspot[lukes_hospital].visible , true);
 		set(hotspot[luke].visible , true);
 		set(hotspot[convenience1].visible , true);
@@ -142,12 +194,16 @@
 		set(hotspot[international2].visible , true);
 		set(hotspot[landers].visible , true);
 		set(hotspot[landers2].visible , true);
+		set(hotspot[sr].visible , true);
+		set(hotspot[sr2].visible , true);
 		set(hotspot[maybank].visible , true);
 		set(hotspot[maybank2].visible , true);
 		set(hotspot[turf].visible , true);
 		set(hotspot[turf2].visible , true);
 		set(hotspot[padel].visible , true);
 		set(hotspot[padel2].visible , true);
+		set(hotspot[burgos].visible , true);
+		set(hotspot[burgos2].visible , true);
 		set(hotspot[japanese].visible , true);
 		set(hotspot[japanese2].visible , true);
 		generate_circle_hotspots_images2();
@@ -155,6 +211,10 @@
 		set(hotspot[sm_aura].visible , false);
 		set(hotspot[sm_aura2].visible , false);
 		set(hotspot[sm].visible , false);
+		set(hotspot[serende].visible , false);
+		set(hotspot[serende2].visible , false);
+		set(hotspot[bonifacio0].visible , false);
+		set(hotspot[bonifacio02].visible , false);
 		set(hotspot[high_street_south].visible , false);
 		set(hotspot[high_street_south2].visible , false);
 		set(hotspot[highstreet].visible , false);
@@ -176,6 +236,22 @@
 		set(hotspot[mind_museum].visible , false);
 		set(hotspot[mind_museum2].visible , false);
 		set(hotspot[mind].visible , false);
+		set(hotspot[metro].visible , false);
+		set(hotspot[metro2].visible , false);
+		set(hotspot[lady].visible , false);
+		set(hotspot[lady2].visible , false);
+		set(hotspot[art].visible , false);
+		set(hotspot[art2].visible , false);
+		set(hotspot[art22].visible , false);
+		set(hotspot[art222].visible , false);
+		set(hotspot[interconnect].visible , false);
+		set(hotspot[interconnect2].visible , false);
+		set(hotspot[magsasaka].visible , false);
+		set(hotspot[magsasaka2].visible , false);
+		set(hotspot[astronaut].visible , false);
+		set(hotspot[astronaut2].visible , false);
+		set(hotspot[mike].visible , false);
+		set(hotspot[mike2].visible , false);
 		set(hotspot[lukes_hospital].visible , false);
 		set(hotspot[lukes_hospital2].visible , false);
 		set(hotspot[luke].visible , false);
@@ -203,12 +279,16 @@
 		set(hotspot[international2].visible , false);
 		set(hotspot[landers].visible , false);
 		set(hotspot[landers2].visible , false);
+		set(hotspot[sr].visible , false);
+		set(hotspot[sr2].visible , false);
 		set(hotspot[maybank].visible , false);
 		set(hotspot[maybank2].visible , false);
 		set(hotspot[turf].visible , false);
 		set(hotspot[turf2].visible , false);
 		set(hotspot[padel].visible , false);
 		set(hotspot[padel2].visible , false);
+		set(hotspot[burgos].visible , false);
+		set(hotspot[burgos2].visible , false);
 		set(hotspot[japanese].visible , false);
 		set(hotspot[japanese2].visible , false);
 		delayedcall(.3,generate_circle_hotspots_images2(););
@@ -220,6 +300,10 @@
 		set(layer[healthcare].alpha , .7);
 		set(layer[healthcare].bgborder , 1);
 		set(layer[healthcarechild].css , fontfamily:Roboto ;color: #000000;text-align:center; font-size: 100%;);
+		set(layer[school].bgborder , 1);
+		set(layer[school].bgalpha , 0);
+		set(layer[school].alpha , .7);
+		set(layer[schoolchild].css , fontfamily:Roboto ;color: #000000;text-align:center; font-size: 100%;);
 		set(layer[safety].bgalpha , .0);
 		set(layer[safety].alpha , .7);
 		set(layer[safety].bgborder , 1);
@@ -258,6 +342,10 @@
 			set(layer[shoppingchild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
 			set(hotspot[sm_aura].visible, true);
 			set(hotspot[sm].visible, true);
+			set(hotspot[serende].visible, true);
+			set(hotspot[serende2].visible, true);
+			set(hotspot[bonifacio0].visible, true);
+			set(hotspot[bonifacio02].visible, true);
 			set(hotspot[mitsukoshi_mall].visible , true);
 			set(hotspot[mitsoki].visible , true);
 			set(hotspot[market_market].visible , true);
@@ -266,6 +354,8 @@
 			set(hotspot[uptown].visible , true);
 			set(hotspot[landers].visible , true);
 			set(hotspot[landers2].visible , true);
+			set(hotspot[sr].visible , true);
+			set(hotspot[sr2].visible , true);
 			generate_circle_hotspots_images2();
 			);
 		if(layer[park].bgalpha == 1,
@@ -284,6 +374,8 @@
 			set(hotspot[turf2].visible , true);
 			set(hotspot[padel].visible , true);
 			set(hotspot[padel2].visible , true);
+			set(hotspot[burgos].visible , true);
+			set(hotspot[burgos2].visible , true);
 			generate_circle_hotspots_images2();
 			);
 		if(layer[nightlife].bgalpha == 1,
@@ -302,6 +394,22 @@
 			set(hotspot[bgc].visible, true);	
 			set(hotspot[mind_museum].visible , true);
 			set(hotspot[mind].visible , true);
+			set(hotspot[metro].visible , true);
+			set(hotspot[metro2].visible , true);
+			set(hotspot[lady].visible , true);
+			set(hotspot[lady2].visible , true);
+			set(hotspot[art].visible , true);
+			set(hotspot[art2].visible , true);
+			set(hotspot[art22].visible , true);
+			set(hotspot[art222].visible , true);
+			set(hotspot[interconnect].visible , true);
+			set(hotspot[interconnect2].visible , true);
+			set(hotspot[magsasaka].visible , true);
+			set(hotspot[magsasaka2].visible , true);
+			set(hotspot[astronaut].visible , true);
+			set(hotspot[astronaut2].visible , true);
+			set(hotspot[mike].visible , true);
+			set(hotspot[mike2].visible , true);
 			set(hotspot[maybank].visible , true);
 			set(hotspot[maybank2].visible , true);
 			generate_circle_hotspots_images2();
@@ -315,7 +423,13 @@
 			set(hotspot[conv_store_1].visible , true);
 			set(hotspot[convenience2].visible , true);
 			set(hotspot[conv_store_2].visible , true);
-			set(hotspot[convenience1].visible , true);
+			set(hotspot[convenience1].visible , true);	
+			generate_circle_hotspots_images2();
+			);
+			if(layer[school].bgalpha == 1,
+			set(layer[school].alpha , 1);
+			set(layer[school].bgborder , 0);
+			set(layer[schoolchild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
 			set(hotspot[british].visible , true);
 			set(hotspot[british2].visible , true);
 			set(hotspot[international].visible , true);
@@ -338,6 +452,7 @@
     if(layer[nightlife].alpha LT 1, set(all_alpha,false););
     if(layer[art].alpha LT 1, set(all_alpha,false););
     if(layer[safety].alpha LT 1, set(all_alpha,false););
+    if(layer[school].alpha LT 1, set(all_alpha,false););
 
     <!-- Now handle the ALL button state -->
     if(all_alpha == true,
@@ -374,6 +489,7 @@
 		);
 		check_scene_visible();
 	</action>
+
 	<action name="shopping">
 	if(layer[shopping].bgalpha == 0,
 		set(layer[shopping].bgalpha , 1);
@@ -382,6 +498,10 @@
 		set(layer[shoppingchild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
 		set(hotspot[sm_aura].visible, true);
 		set(hotspot[sm].visible, true);
+		set(hotspot[serende].visible, true);
+		set(hotspot[serende2].visible, true);
+		set(hotspot[bonifacio0].visible, true);
+		set(hotspot[bonifacio02].visible, true);
 		set(hotspot[mitsukoshi_mall].visible , true);
 		set(hotspot[mitsoki].visible , true);
 		set(hotspot[market_market].visible , true);
@@ -390,11 +510,17 @@
 		set(hotspot[uptown].visible , true);
 		set(hotspot[landers].visible , true);
 		set(hotspot[landers2].visible , true);
+		set(hotspot[sr].visible , true);
+		set(hotspot[sr2].visible , true);
 		generate_circle_hotspots_images2();
 		,
 		set(hotspot[sm_aura].visible, false);
 		set(hotspot[sm_aura2].visible, false);
 		set(hotspot[sm].visible, false);
+		set(hotspot[serende].visible, false);
+		set(hotspot[serende2].visible, false);
+		set(hotspot[bonifacio0].visible, false);
+		set(hotspot[bonifacio02].visible, false);
 		set(hotspot[mitsukoshi_mall].visible , false);
 		set(hotspot[mitsukoshi_mall2].visible , false);
 		set(hotspot[mitsoki].visible , false);
@@ -406,6 +532,8 @@
 		set(hotspot[uptown].visible , false);
 		set(hotspot[landers].visible , false);
 		set(hotspot[landers2].visible , false);
+		set(hotspot[sr].visible , false);
+		set(hotspot[sr2].visible , false);
 		delayedcall(.2,generate_circle_hotspots_images2(););
 		set(layer[shopping].bgalpha , .0);
 		set(layer[shopping].alpha , .7);
@@ -432,6 +560,8 @@
 		set(hotspot[turf2].visible , true);
 		set(hotspot[padel].visible , true);
 		set(hotspot[padel2].visible , true);
+		set(hotspot[burgos].visible , true);
+		set(hotspot[burgos2].visible , true);
 		generate_circle_hotspots_images2();
 		,
 		set(hotspot[boni_hight_street].visible , false);
@@ -450,6 +580,8 @@
 		set(hotspot[turf2].visible , false);
 		set(hotspot[padel].visible , false);
 		set(hotspot[padel2].visible , false);
+		set(hotspot[burgos].visible , false);
+		set(hotspot[burgos2].visible , false);
 		delayedcall(.2,generate_circle_hotspots_images2(););
 		set(layer[park].bgalpha , .0);
 		set(layer[park].alpha , .7);
@@ -490,6 +622,22 @@
 		set(hotspot[bgc].visible, true);	
 		set(hotspot[mind_museum].visible , true);
 		set(hotspot[mind].visible , true);
+		set(hotspot[metro].visible , true);
+		set(hotspot[metro2].visible , true);
+		set(hotspot[lady].visible , true);
+		set(hotspot[lady].visible , true);
+		set(hotspot[art].visible , true);
+		set(hotspot[art2].visible , true);
+		set(hotspot[art22].visible , true);
+		set(hotspot[art222].visible , true);
+		set(hotspot[interconnect].visible , true);
+		set(hotspot[interconnect2].visible , true);
+		set(hotspot[magsasaka].visible , true);
+		set(hotspot[magsasaka2].visible , true);
+		set(hotspot[astronaut].visible , true);
+		set(hotspot[astronaut2].visible , true);
+		set(hotspot[mike].visible , true);
+		set(hotspot[mike2].visible , true);
 		set(hotspot[maybank].visible , true);
 		set(hotspot[maybank2].visible , true);
 		generate_circle_hotspots_images2();
@@ -500,6 +648,22 @@
 		set(hotspot[mind_museum].visible , false);
 		set(hotspot[mind_museum2].visible , false);
 		set(hotspot[mind].visible , false);
+		set(hotspot[metro].visible , false);
+		set(hotspot[metro2].visible , false);
+		set(hotspot[lady].visible , false);
+		set(hotspot[lady2].visible , false);
+		set(hotspot[art].visible , false);
+		set(hotspot[art2].visible , false);
+		set(hotspot[art22].visible , false);
+		set(hotspot[art222].visible , false);
+		set(hotspot[interconnect].visible , false);
+		set(hotspot[interconnect2].visible , false);
+		set(hotspot[magsasaka].visible , false);
+		set(hotspot[magsasaka2].visible , false);
+		set(hotspot[astronaut].visible , false);
+		set(hotspot[astronaut2].visible , false);
+		set(hotspot[mike].visible , false);
+		set(hotspot[mike2].visible , false);
 		set(hotspot[maybank].visible , false);
 		set(hotspot[maybank2].visible , false);
 		delayedcall(.2,generate_circle_hotspots_images2(););
@@ -522,12 +686,7 @@
 		set(hotspot[convenience2].visible , true);
 		set(hotspot[conv_store_2].visible , true);
 		set(hotspot[convenience1].visible , true);
-		set(hotspot[british].visible , true);
-		set(hotspot[british2].visible , true);
-		set(hotspot[international].visible , true);
-		set(hotspot[international2].visible , true);
-		set(hotspot[japanese].visible , true);
-		set(hotspot[japanese2].visible , true);
+
 		generate_circle_hotspots_images2();
 		,
 		set(hotspot[global_city_pol_station].visible , false);
@@ -539,6 +698,29 @@
 		set(hotspot[conv_store_2].visible , false);
 		set(hotspot[conv_store_22].visible , false);
 		set(hotspot[convenience1].visible , false);
+
+		delayedcall(.2,generate_circle_hotspots_images2(););
+		set(layer[safety].bgalpha , .0);
+		set(layer[safety].alpha , .7);
+		set(layer[safety].bgborder , 1);
+		set(layer[safetychild].css , fontfamily:Roboto ;color: #000000;text-align:center; font-size: 100%;);
+		);
+		check_scene_visible();
+	</action>
+	<action name="school">
+	if(layer[school].bgalpha == 0,
+		set(layer[school].bgalpha , 1);
+		set(layer[school].alpha , 1);
+		set(layer[school].bgborder , 0);
+		set(layer[schoolchild].css , fontfamily:Roboto ;color: #FFFFFF;text-align:center; font-size: 100%;);
+		set(hotspot[british].visible , true);
+		set(hotspot[british2].visible , true);
+		set(hotspot[international].visible , true);
+		set(hotspot[international2].visible , true);
+		set(hotspot[japanese].visible , true);
+		set(hotspot[japanese2].visible , true);
+		generate_circle_hotspots_images2();
+		,
 		set(hotspot[british].visible , false);
 		set(hotspot[british2].visible , false);
 		set(hotspot[international].visible , false);
@@ -546,10 +728,10 @@
 		set(hotspot[japanese].visible , false);
 		set(hotspot[japanese2].visible , false);
 		delayedcall(.2,generate_circle_hotspots_images2(););
-		set(layer[safety].bgalpha , .0);
-		set(layer[safety].alpha , .7);
-		set(layer[safety].bgborder , 1);
-		set(layer[safetychild].css , fontfamily:Roboto ;color: #000000;text-align:center; font-size: 100%;);
+		set(layer[school].bgalpha , .0);
+		set(layer[school].alpha , .7);
+		set(layer[school].bgborder , 1);
+		set(layer[schoolchild].css , fontfamily:Roboto ;color: #000000;text-align:center; font-size: 100%;);
 		);
 		check_scene_visible();
 	</action>
