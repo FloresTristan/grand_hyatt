@@ -229,8 +229,16 @@ export async function PATCH(req: Request, ctx: Ctx) {
     if (replaceImage && existing?.image_url && uploadedPublicUrl) {
       try {
         const oldPath = toStoragePath(existing.image_url);
-        if (oldPath) await supa.storage.from(BUCKET).remove([oldPath]);
-      } catch {
+        // if (oldPath) await supa.storage.from(BUCKET).remove([oldPath]);
+        if (oldPath) {
+          const admin = createSupabaseAdmin();
+          await admin.storage.from(BUCKET).remove([oldPath]);
+          // console.log("DELETE RESULT:", { data, error });
+        }
+
+
+      } catch (e) {
+        console.error("Cleanup error:", e);
         /* ignore cleanup errors */
       }
     }
@@ -241,5 +249,3 @@ export async function PATCH(req: Request, ctx: Ctx) {
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
-
-

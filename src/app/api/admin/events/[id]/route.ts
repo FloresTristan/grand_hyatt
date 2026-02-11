@@ -116,7 +116,9 @@ export async function PATCH(req: Request, { params }: Ctx) {
       // remove old file
       const oldPath = toStoragePath(existing.image_url, "events");
       if (oldPath) {
-        await admin.storage.from("events").remove([oldPath]).catch(() => {});
+        // await admin.storage.from("events").remove([oldPath]).catch(() => {});
+        const admin = createSupabaseAdmin();
+        await admin.storage.from("events").remove([oldPath]);
       }
     }
 
