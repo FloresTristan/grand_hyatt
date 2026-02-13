@@ -128,7 +128,7 @@
        flying="0.03"
        onover="defaultcardsshown();defaultcards();select_hs2(get(name));trythisone(get(name));set(hotspot[get(hotspot[get(name)].baw)].visible,true);"
        onout.desktop="hide_info_card(get(name));trythistwo(get(name));" 
-       onclick2="hide_info_card(get(name));trythistwo(get(name));set(enabled,true);"
+       onclick2="hide_info_card(get(name));trythistwo(get(name));"
         onclick="if(name != @selected_hs2,
                     select_hs2(get(name));
                     defaultcards();
@@ -136,13 +136,13 @@
                     looktohotspot(get(name),get(view.fov));
                     
                     ,
-                    set(enabled,false);
+                    
                     select_hs2();
                     defaultcards();
                     onclick2());
                     "
         onclick.desktop="
-                    set(enabled,false);
+                    
                     onclick2();"
        onloaded="pulse_hotspot2(get(name)); "/>
 
@@ -466,8 +466,8 @@
         pulse_hotspot2(%1);
     </action>
      <action name="pulse_hotspot2">
-        tween(hotspot[%1].scale, 0.60, 0.6, easeinoutquad,
-            tween(hotspot[%1].scale, 0.5, 0.6, easeinoutquad,
+        tween(hotspot[%1].scale, 0.45, 0.6, easeinoutquad,
+            tween(hotspot[%1].scale, 0.35, 0.6, easeinoutquad,
                 pulse_hotspot2(%1)
             )
         );

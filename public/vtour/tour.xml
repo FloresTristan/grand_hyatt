@@ -138,7 +138,7 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV2();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV2" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV2" style="header" css="font-family: 'Roboto', serif; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Third Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              <layer enabled="false" name="AV2" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Third Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
 		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
 		              				<layer type="container" name="down2" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up2" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
@@ -169,7 +169,7 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV3();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV3" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV3" style="header" css="font-family: 'Roboto', serif; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Fifth Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              <layer enabled="false" name="AV3" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Fifth Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
 		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
 		              				<layer type="container" name="down3" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up3" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
@@ -190,7 +190,7 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV4();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV4" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV4" style="header" css="font-family: 'Roboto', serif; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Sixth Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              <layer enabled="false" name="AV4" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Sixth Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
 		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
 		              				<layer type="container" name="down4" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up4" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
@@ -218,7 +218,7 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV5();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV5" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV5" style="header" css="font-family: 'Roboto', serif; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="60th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              <layer enabled="false" name="AV5" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="60th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
 		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
 		              				<layer type="container" name="down5" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up5" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
@@ -241,7 +241,7 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV7();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV7" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV7" style="header" css="font-family: 'Roboto', serif; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="62th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              <layer enabled="false" name="AV7" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="62nd Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
 		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
 		              				<layer type="container" name="down7" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up7" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
@@ -263,7 +263,7 @@
 
 		            		<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV8();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV8" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV8" style="header" css="font-family: 'Roboto', serif; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="66th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              <layer enabled="false" name="AV8" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="66th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
 		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
 		              				<layer type="container" name="down8" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up8" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
@@ -551,7 +551,7 @@ Arts Center" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Mani
 		<hotspot name="lady" style="hs_circle2" ath="-0.23431893259768752" atv="0.031354217109065975" depth="1000.0" distorted="false" zoom="false" linkedscene="scene_ninort" linkedscene_hoffset="0.0" use3dtransition="true"  tag="Japanese School Manila" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1635+Metro+Manila/Maybank,+Unit+6+G%2FF+Maybank+Corporate+Centre,+7th+Ave,+Cor+28th+St,+Taguig,+1634/@14.5533222,121.0479795,938m/data=!3m3!1e3!4b1!5s0x87f62a3afe093df3:0xdc7b24f5daec44ce!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0521212!2d14.5565294!1m5!1m1!1s0x3397c8f19f9cbff1:0x88bf6c2220c60f0c!2m2!1d121.0490314!2d14.5501541?entry=ttu&amp;g_ep=EgoyMDI2MDIwOC4wIKXMDSoASAFQAw%3D%3D')"/>
 		<hotspot name="lady2" url="skin/lady.png" ath="-0.21713125430588726" atv="0.009270346433582858" scale="0.1247999999999993" zorder="100" visible="true"/>
 
-		<hotspot name="bonifacio0" style="hs_circle2" ath="-0.2327564188924072" atv="-0.013959052381860645" depth="1000.0" distorted="false" zoom="false" linkedscene="scene_ninort" linkedscene_hoffset="0.0" use3dtransition="true"  tag="Japanese School Manila" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+35th+Street,+Bonifacio+Global+City,+Taguig,+Metro+Manila/Manila+Japanese+School,+Taguig,+Metro+Manila/@14.5568751,121.0536806,499m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0520219!2d14.5565544!1m5!1m1!1s0x3397c88abe482783:0x569684bafec53cd9!2m2!1d121.0579195!2d14.5571451?entry=ttu&amp;g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D')"/>
+		<hotspot name="bonifacio0" style="hs_circle2" ath="-0.2327564188924072" atv="-0.013959052381860645" depth="1000.0" distorted="false" zoom="false" linkedscene="scene_ninort" linkedscene_hoffset="0.0" use3dtransition="true"  tag="Japanese School Manila" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1635+Metro+Manila/One+Bonifacio+High+Street+by+Ayala+Malls,+5th+Avenue,+Corner+28th+St,+Taguig,+Metro+Manila/@14.553773,121.0460183,938m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0521212!2d14.5565294!1m5!1m1!1s0x3397c9e4c405839f:0x1e6f9ee524ab4ad!2m2!1d121.0469302!2d14.5511735?entry=ttu&amp;g_ep=EgoyMDI2MDIwOS4wIKXMDSoASAFQAw%3D%3D')"/>
 		<hotspot name="bonifacio02" url="skin/bonifacio 2.png" ath="-0.20567278612698164" atv="-0.034480471218908515" scale="0.1247999999999993" zorder="100" visible="true"/>
 
 		<hotspot name="mike" style="hs_circle2" ath="0.38600216806476007" atv="-0.12385478724920648" depth="1000.0" distorted="false" zoom="false" linkedscene="scene_ninort" linkedscene_hoffset="0.0" use3dtransition="true"  tag="Japanese School Manila" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1635+Metro+Manila/St.+Michael+the+Archangel+Parish,+1928+10th+Ave,+Taguig,+Metro+Manila/@14.5593103,121.0514319,843m/data=!3m2!1e3!4b1!4m14!4m13!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0521212!2d14.5565294!1m5!1m1!1s0x3397c85fc770a3a5:0xc789b843a2966a65!2m2!1d121.0552038!2d14.5599521!3e0?entry=ttu&amp;g_ep=EgoyMDI2MDIwOC4wIKXMDSoASAFQAw%3D%3D')"/>
