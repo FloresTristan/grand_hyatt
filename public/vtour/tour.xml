@@ -76,23 +76,26 @@
 
        <layer name="open" url="skin/open.png" width="prop" height="8%" onclick="open();" minwidth="30" minheight="50" align="left" visible="true" zorder="-1" keep="true" devices="tablet|desktop"/>
 
-<layer name="open" type="container" width="100%" height="6%" bgalpha="1" minwidth="30"  onclick="open();" bgcapture="true" minheight="50" bgcolor="0xFFFFFF" align="bottom" keep="true" devices="mobile">
-	<layer url="skin/openM.png" width="prop" height="8%" onclick="open();" minwidth="20" minheight="40" align="bottom" visible="true" y="5" zorder="-1" keep="true" devices="mobile"/>
+<layer name="open" type="container" width="100%" height="6%" bgalpha="0" minwidth="30"  onclick="open();" bgcapture="true" minheight="50" bgcolor="0xFFFFFF" align="left" keep="true" devices="mobile">
+	<layer url="skin/openM.png" width="prop" height="8%" onclick="open();gehmobile3" minwidth="30" minheight="60" align="left" visible="true"  keep="true" devices="mobile"/>
 </layer>
 
-	<layer type="container" name="parent" width.desktop="17%" width.tablet="23%"  width.mobile="100%" height="100%" maxwidth.desktop="350" zorder="999999" minwidth.desktop="300" minwidth.tablet="350" y.mobile="100%" x.desktop="-0%" x.tablet="-50%" bgcolor="0xBC0F42" bgalpha="1" keep="true" visible="false"  css="box-shadow: 8px 0px 12px -2px rgba(0,0,0,0.6);">
+
+	<layer type="container" name="parent" width.desktop="17%" width.tablet="23%"  width.mobile="60%" height="100%" maxwidth.desktop="350" zorder="999999" minwidth.desktop="300" minwidth.tablet="350" x.mobile="0%" y.mobile="0%" x.desktop="0%" x.tablet="-50%" bgcolor="0xBC0F42" bgalpha="1" keep="true" visible="false"  css="box-shadow: 8px 0px 12px -2px rgba(0,0,0,0.6);">
+		<layer type="container" onclick="closem();gehmobile4" width="100%" height="100%" align="center" y="15" x="15" devices="mobile">
+			<layer url="skin/closem.png" onclick="closem();gehmobile4" width="13%" height="prop" align="right" x="-6" y="-15"/>
+		</layer>
 		<layer type="container" width="100%" height="100%" bgcolor="0x000000" bgalpha="0" flowchildren="v">
 			<layer type="container" width="100%" height="25%" bgcolor="0xFFFFF" bgalpha="0">
 				<layer url="skin/logo.png" width="prop" height="80%" align="center"/>
-				<layer url="skin/exit.png" onclick="closem();" width="prop" height="20%" align="topright" y="15" x="15" devices="mobile"/>
 			</layer>
 			<layer name="scrollarea_parent" type="container" width="88%" height="68%" align="centertop" bgcolor="0x178071" bgalpha="0">
 				<layer name="scrollarea" type="scrollarea" width="100%" flowchildren="v" scrolltype.desktop="inetia" scrolltype.tablet.or.mobile="inertia" direction="v" draggable="true" mwheel="true" capturechildren="true" autoscrollbars="null,vscrollbar_grip,10" onhover_autoscrolling="false" onscroll="" >
 
 					<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV1();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" />
-		              <layer enabled="false" name="AV1" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Ground Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
-		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
+		              <layer enabled="false" name="AV1" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Ground Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              			<layer type="container" height="75%" width="16%" x="5.5%" align="right" >
 		              				<layer type="container" name="down1" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up1" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
 		              			</layer>
@@ -102,19 +105,19 @@
 		            <layer name="submenu1" type="container" height="0" width="100%" bgcolor="0x6E102C" bgalpha="1" >
 		            		<layer name="scrollarea1" type="scrollarea" width="100%" flowchildren="v" scrolltype.desktop="inetia" scrolltype.tablet.or.mobile="inertia" direction="v" draggable="true" mwheel="true" capturechildren="true" autoscrollbars="null,vscrollbar_grip,10" onhover_autoscrolling="false" onscroll="" >
 
-		            		<layer enabled="true" name="submenu10" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Lobby"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
+		            		<layer enabled="true" name="submenu10" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Lobby"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu11" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Florentine"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
+		              		<layer enabled="true" name="submenu11" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Florentine"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu12" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="The Gallery"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_intensive_care_unit" 
+		              		<layer enabled="true" name="submenu12" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="The Gallery"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_intensive_care_unit" 
 		              		accordion_container="6" />
 		            		</layer>
 		            	</layer>
 
 		            <layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV6();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV6" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV6" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Second Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
-		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
+		              <layer enabled="false" name="AV6" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Second Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              			<layer type="container" height="75%" width="16%" x="5.5%" align="right" >
 		              				<layer type="container" name="down6" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up6" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
 		              			</layer>
@@ -124,13 +127,13 @@
 		            <layer name="submenu6" type="container" height="0" width="100%" bgcolor="0x6E102C" bgalpha="1" >
 		            		<layer name="scrollarea6" type="scrollarea" width="100%" flowchildren="v" scrolltype.desktop="inetia" scrolltype.tablet.or.mobile="inertia" direction="v" draggable="true" mwheel="true" capturechildren="true" autoscrollbars="null,vscrollbar_grip,10" onhover_autoscrolling="false" onscroll="" >
 
-		            		<layer enabled="true" name="submenu60" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="The Lounge"  width="100%" bgcolor="0x6E102C" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
+		            		<layer enabled="true" name="submenu60" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="The Lounge"  width="100%" bgcolor="0x6E102C" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu61" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="The Grand Kitchen"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
+		              		<layer enabled="true" name="submenu61" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="The Grand Kitchen"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu62" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="The Cellar"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_intensive_care_unit" 
+		              		<layer enabled="true" name="submenu62" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="The Cellar"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_intensive_care_unit" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu63" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Round Bar"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_orthopedics" 
+		              		<layer enabled="true" name="submenu63" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Round Bar"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_orthopedics" 
 		              		accordion_container="6" />
 		              	
 		            		</layer>
@@ -138,8 +141,8 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV2();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV2" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV2" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Third Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
-		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
+		              <layer enabled="false" name="AV2" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Third Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              			<layer type="container" height="75%" width="16%" x="5.5%" align="right" >
 		              				<layer type="container" name="down2" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up2" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
 		              			</layer>
@@ -149,19 +152,19 @@
 		            <layer name="submenu2" type="container" height="0" width="100%" bgcolor="0x6E102C" bgalpha="1" >
 		            		<layer name="scrollarea2" type="scrollarea" width="100%" flowchildren="v" scrolltype.desktop="inetia" scrolltype.tablet.or.mobile="inertia" direction="v" draggable="true" mwheel="true" capturechildren="true" autoscrollbars="null,vscrollbar_grip,10" onhover_autoscrolling="false" onscroll="" >
 
-		            		<layer enabled="true" name="submenu20" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Grand Ballroom"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
+		            		<layer enabled="true" name="submenu20" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Grand Ballroom"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu21" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Show Kitchen"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
+		              		<layer enabled="true" name="submenu21" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Show Kitchen"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu22" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Apartment Lounge"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_intensive_care_unit" 
+		              		<layer enabled="true" name="submenu22" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Apartment Lounge"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_intensive_care_unit" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu23" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Apartments"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_orthopedics" 
+		              		<layer enabled="true" name="submenu23" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Apartments"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_orthopedics" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu24" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Loft Kitchen"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_recovery_room" 
+		              		<layer enabled="true" name="submenu24" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Loft Kitchen"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_recovery_room" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu25" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Library"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_operating_room" 
+		              		<layer enabled="true" name="submenu25" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Library"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_operating_room" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu26" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Bridal Room"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_delivery_room" 
+		              		<layer enabled="true" name="submenu26" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Bridal Room"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_delivery_room" 
 		              		accordion_container="6" />
 		              		
 		            		</layer>
@@ -169,8 +172,8 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV3();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV3" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV3" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Fifth Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
-		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
+		              <layer enabled="false" name="AV3" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Fifth Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              			<layer type="container" height="75%" width="16%" x="5.5%" align="right" >
 		              				<layer type="container" name="down3" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up3" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
 		              			</layer>
@@ -180,9 +183,9 @@
 		            <layer name="submenu3" type="container" height="0" width="100%" bgcolor="0x6E102C" bgalpha="1" >
 		            		<layer name="scrollarea3" type="scrollarea" width="100%" flowchildren="v" scrolltype.desktop="inetia" scrolltype.tablet.or.mobile="inertia" direction="v" draggable="true" mwheel="true" capturechildren="true" autoscrollbars="null,vscrollbar_grip,10" onhover_autoscrolling="false" onscroll="" >
 
-		            		<layer enabled="true" name="submenu30" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="No. 8 China House"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
+		            		<layer enabled="true" name="submenu30" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="No. 8 China House"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu31" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Grand Salon"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
+		              		<layer enabled="true" name="submenu31" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Grand Salon"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
 		              		accordion_container="6" />
 		              		
 		            		</layer>
@@ -190,8 +193,8 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV4();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV4" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV4" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Sixth Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
-		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
+		              <layer enabled="false" name="AV4" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="Sixth Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              			<layer type="container" height="75%" width="16%" x="5.5%" align="right" >
 		              				<layer type="container" name="down4" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up4" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
 		              			</layer>
@@ -200,17 +203,17 @@
 		            </layer>
 		            <layer name="submenu4" type="container" height="0" width="100%" bgcolor="0x6E102C" bgalpha="1" >
 		            		<layer name="scrollarea4" type="scrollarea" width="100%" flowchildren="v" scrolltype.desktop="inetia" scrolltype.tablet.or.mobile="inertia" direction="v" draggable="true" mwheel="true" capturechildren="true" autoscrollbars="null,vscrollbar_grip,10" onhover_autoscrolling="false" onscroll="" >
-		            			<layer enabled="true" name="submenu40" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Illume Spa"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
+		            			<layer enabled="true" name="submenu40" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Illume Spa"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu41" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Lap Pool"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
+		              		<layer enabled="true" name="submenu41" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Lap Pool"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu42" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Kiddie Pool"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_intensive_care_unit" 
+		              		<layer enabled="true" name="submenu42" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Kiddie Pool"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_intensive_care_unit" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu43" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Pool House"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_orthopedics" 
+		              		<layer enabled="true" name="submenu43" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Pool House"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_orthopedics" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu44" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Wellness Deck"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_recovery_room" 
+		              		<layer enabled="true" name="submenu44" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Wellness Deck"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_recovery_room" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu45" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Garden Pavilion"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_operating_room" 
+		              		<layer enabled="true" name="submenu45" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Garden Pavilion"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_operating_room" 
 		              		accordion_container="6" />
 		              	
 		            		</layer>
@@ -218,8 +221,8 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV5();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV5" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV5" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="60th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
-		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
+		              <layer enabled="false" name="AV5" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="60th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              			<layer type="container" height="75%" width="16%" x="5.5%" align="right" >
 		              				<layer type="container" name="down5" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up5" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
 		              			</layer>
@@ -229,11 +232,11 @@
 		            <layer name="submenu5" type="container" height="0" width="100%" bgcolor="0x6E102C" bgalpha="1" >
 		            		<layer name="scrollarea5" type="scrollarea" width="100%" flowchildren="v" scrolltype.desktop="inetia" scrolltype.tablet.or.mobile="inertia" direction="v" draggable="true" mwheel="true" capturechildren="true" autoscrollbars="null,vscrollbar_grip,10" onhover_autoscrolling="false" onscroll="" >
 
-		            		<layer enabled="true" name="submenu50" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="The Peak Grill"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
+		            		<layer enabled="true" name="submenu50" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="The Peak Grill"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu51" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="The Peak Music Lounge"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
+		              		<layer enabled="true" name="submenu51" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="The Peak Music Lounge"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu52" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Le Petit Chef"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_intensive_care_unit" 
+		              		<layer enabled="true" name="submenu52" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Le Petit Chef"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_intensive_care_unit" 
 		              		accordion_container="6" />
 		              		
 		            		</layer>
@@ -241,8 +244,8 @@
 
 		            	<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV7();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV7" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV7" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="62nd Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
-		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
+		              <layer enabled="false" name="AV7" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="62nd Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              			<layer type="container" height="75%" width="16%" x="5.5%" align="right" >
 		              				<layer type="container" name="down7" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up7" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
 		              			</layer>
@@ -251,11 +254,11 @@
 		            </layer>
 		            <layer name="submenu7" type="container" height="0" width="100%" bgcolor="0x6E102C" bgalpha="1" >
 		            		<layer name="scrollarea7" type="scrollarea" width="100%" flowchildren="v" scrolltype.desktop="inetia" scrolltype.tablet.or.mobile="inertia" direction="v" draggable="true" mwheel="true" capturechildren="true" autoscrollbars="null,vscrollbar_grip,10" onhover_autoscrolling="false" onscroll="" >
-		            			<layer enabled="true" name="submenu70" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Speakeasy"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
+		            			<layer enabled="true" name="submenu70" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Speakeasy"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu71" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Whisky Lounge"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
+		              		<layer enabled="true" name="submenu71" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Whisky Lounge"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_emergency_room" 
 		              		accordion_container="6" />
-		              		<layer enabled="true" name="submenu72" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Whisky Bar &amp; Sunset Deck"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_intensive_care_unit" 
+		              		<layer enabled="true" name="submenu72" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Whisky Bar &amp; Sunset Deck"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_intensive_care_unit" 
 		              		accordion_container="6" />
 		              		
 		            		</layer>
@@ -263,8 +266,8 @@
 
 		            		<layer type="container" align="top" edge="top" width="100%" flowchildren="v" onclick="forAV8();" bgcapture="true" linkedscene="scene_nursing_nurse_station" >
 		              <layer name="lineAV8" enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="false" />
-		              <layer enabled="false" name="AV8" style="header" css="font-family: 'Roboto', Arial; font-size: 130%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="66th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
-		              			<layer type="container" height="75%" width="10%" x="5.5%" align="right" >
+		              <layer enabled="false" name="AV8" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:8px 0 8px 8px;" align-items="center" html="66th Level"  width="100%" bgcolor="0x6E102C" bgalpha="0">
+		              			<layer type="container" height="75%" width="16%" x="5.5%" align="right" >
 		              				<layer type="container" name="down8" url="skin/down.png" height="100%" width="100%" align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="0"  visible="true"/>
 		              				<layer type="container" name="up8" url="skin/up.png" height="100%" width="100%"  align="center" bgcolor="0xFFFFF" bgalpha=".5" rotate="-180" visible="false"/>
 		              			</layer>
@@ -274,7 +277,7 @@
 		            <layer name="submenu8" type="container" height="0" width="100%" bgcolor="0x6E102C" bgalpha="1" >
 		            		<layer name="scrollarea8" type="scrollarea" width="100%" flowchildren="v" scrolltype.desktop="inetia" scrolltype.tablet.or.mobile="inertia" direction="v" draggable="true" mwheel="true" capturechildren="true" autoscrollbars="null,vscrollbar_grip,10" onhover_autoscrolling="false" onscroll="" >
 
-		            		<layer enabled="true" name="submenu80" style="header" css="font-family: 'Roboto', Arial; font-size: 120%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Penthouse No. 66"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
+		            		<layer enabled="true" name="submenu80" style="header" css="font-family: 'Roboto', Arial; font-size: 110%; color:#FFFFFF; padding:4px 0 4px 5px;" align-items="center" html="Penthouse No. 66"  width="100%" bgcolor="0xbc0f42" bgalpha="0" onclick="nav();" linkedscene="scene_nursing_nurse_station" 
 		              		accordion_container="6" />
 
 		              		<layer  enabled="false" type="container" align="top" edge="top" width="100%" height="1px" bgcolor="0xFFFFFF" bgalpha=".5" y="0%" keep="true" visible="true" />
@@ -303,51 +306,79 @@
 	<!-- <include url="skin/vtourskin_design_117.xml"         /> -->
 	<!-- <include url="skin/vtourskin_design_117round.xml"    /> -->
 	<!-- <include url="skin/vtourskin_design_black.xml"       /> -->
-	<layer type="container" name="filter" width="100%"  height.mobile="37%" minwidth="360" align.mobile="bottom" bgcapture="true" keep="true" bgalpha="1" bgcolor="0xF6F6F6" bgroundedge="15" y="-1%" devices="mobile" onclick="if(layer[filter].y == -1% ,tween(layer[filter].y , -33%); , tween(layer[filter].y , -1%););">
-		<layer url="skin/ambot.png" scale="1" align="top" width="25%" height="prop" y="15" enabled="false"/>
-	<layer type="container"  width.desktop="25%" width.tablet="30%" width.mobile="88%" y.mobile="2" align.desktop="bottomleft" align.tablet="bottom" align.mobile="center"  y.desktop="15" x.desktop="15" y.tablet="15" x.tablet="0" bgroundedge="15" minwidth.desktop="470" minheight.desktop="110" minwidth.tablet="550" minheight.tablet="115"  height.desktop="12%" height.tablet="10%" height.mobile="75%" bgcolor="0xffffff" bgalpha="1" keep="true" flowchildren="v" >
-		<layer type="container" align="center" width="95%" height="10" />
-		<layer type="container" align="center" width="auto" height="auto" bgcolor="0xFFFFF"  bgalpha="0" flowspacing="5" flowoverflow="true"  flowchildren="h" >
-				<layer name="all" type="container" align="center" width.desktop="60" width.tablet="50" width.mobile="50" height="40" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="all();">
-				 	<layer name="allchild" type="text" width="100%" height="auto" enabled="false" bgalpha="0" align="center" css.mobile="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 50%;" text="All" background="true" />
-				</layer>
-				<layer name="healthcare" type="container" align="center" width.desktop="105" width.tablet="120" width.mobile="100" height="40" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" bgbordermode="outside" bgroundedge="25" bgborder="1" flowspacing="5" onclick="healthcare();">
-				 	<layer name="healthcarechild" type="text" width="100%" enabled="false" height="auto" bgalpha="0" align="center" css.mobile="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 50%;" text="Healthcare" background="true" />
-				</layer>
-				<layer name="shopping" type="container" align="center" width.desktop="145" width.tablet="150" width.mobile="142" height="40" bgcolor="0xBC0F42"  alpha=".70" bgalpha="0" bgcapture="true" bgbordermode="outside" bgroundedge="25" bgborder="1" flowspacing="5" onclick="shopping">
-				 	<layer name="shoppingchild" type="text" width="100%" height="auto" enabled="false" bgalpha="0" align="center" css.mobile="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 50%;" text="Shopping &amp; Malls" background="true" />
-				</layer>
-				
-			</layer>
-			<layer type="container" width="auto" height="3" />
-		<layer type="container" align="center" width="auto" height="auto" bgcolor="0xFFFFF" bgalpha="0" flowoverflow="true"  flowchildren="h" >
-				<layer name="nightlife" type="container" align="center" width.desktop="140" width.tablet="140" width.mobile="130" height="40" bgcolor="0xBC0F42" bgcapture="true" alpha=".70" bgalpha="0" bgbordermode="outside" bgroundedge="25" bgborder="1" flowspacing="5" onclick="nightlife">
-				 	<layer name="nightlifechild" type="text" width="100%" height="auto" bgalpha="0" enabled="false" align="center" css.mobile="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 50%;" text="Food &amp; Nightlife" background="true" />
-				</layer>
-				<layer name="park" type="container" align="center" width.desktop="135" width.tablet="140" width.mobile="130" height="40" bgcolor="0xBC0F42" bgcapture="true" alpha=".70" bgalpha="0" bgbordermode="outside" bgroundedge="25" bgborder="1"  flowspacing="5" onclick="park();">
-				 	<layer name="parkchild" type="text" width="100%" height="auto" enabled="false" bgalpha="0" align="center" css.mobile="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 50%;" text="Parks &amp; leisure" background="true" />
-				</layer>
-				
-		</layer>
-			<layer type="container" width="auto" height="3" />
-
-		<layer type="container" align="center" width="auto" height="auto" bgcolor="0xFFFFF" flowspacing="5" bgalpha="0" flowoverflow="true"  flowchildren="h" >
-
-		<layer name="art" type="container" align="center" width.desktop="140" width.tablet="180" width.mobile="120" height="40" bgcapture="true" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgbordermode="outside" bgroundedge="25" bgborder="1" flowspacing="5" onclick="art();">
-				 	<layer name="artchild" type="text" width="100%" height="auto" enabled="false" bgalpha="0" align="center" css.mobile="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 50%;" text="Arts &amp; Culture" background="true" />
-				</layer>
-				<layer name="safety" type="container" align="center" width.desktop="150" width.tablet="170" width.mobile="150"  height="40" bgcolor="0xBC0F42" bgcapture="true" alpha=".70" bgalpha="0" bgbordermode="outside" bgroundedge="25" bgborder="1" flowspacing="5" onclick="safety();">
-				 	<layer name="safetychild" type="text" width="100%" height="auto" bgalpha="0" enabled="false" align="center" css.mobile="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 50%;" text="Services &amp; Safety" background="true" />
-				</layer>
-				
+	<layer name="burgerni" type="container" width="12%" height="5%" bgcolor="0x000000" bgalpha="0" devices="mobile" keep="true">
+		<layer url="skin/burger.png" y="5" x="5" width="80%" align="center" height="prop" zorder="1" onclick="tween(layer[filter].x , 0% , 1);gehmobile1"/>
 	</layer>
-		<layer type="container" align="center" width="auto" height="auto" bgcolor="0xFFFFF" flowspacing="5" bgalpha="0" flowoverflow="true"  flowchildren="h" >
-			<layer name="school" type="container" align="center" width.desktop="100" width.tablet="170" width.mobile="90"  height="40" bgcolor="0xBC0F42" bgcapture="true" alpha=".70" bgalpha="0" bgbordermode="outside" bgroundedge="25" bgborder="1" flowspacing="5" onclick="school();">
-					 	<layer name="schoolchild" type="text" width="100%" height="auto" bgalpha="0" enabled="false" align="center" css.mobile="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 50%;" text="School" background="true" />
+
+<action name="gehmobile1">
+	tween(layer[bg].bgalpha, .3, 0.5);
+	set(layer[bg].visible, true);
+</action>
+<action name="gehmobile2">
+	tween(layer[bg].bgalpha, .0, 0.5);
+	tween(layer[filter].x , -100% , 1.5);
+	delayedcall(.3,
+	set(layer[bg].visible, false););
+</action>
+<action name="gehmobile3">
+	tween(layer[bg2].bgalpha, .3, 0.5);
+	set(layer[bg2].visible, true);
+</action>
+<action name="gehmobile4">
+	tween(layer[bg2].bgalpha, .0, 0.5);
+	tween(layer[parent].x , -100% , 1.5);
+	delayedcall(.3,
+	set(layer[bg2].visible, false););
+</action>
+
+<layer name="bg" type="container" devices="mobile" visible="false" bgalpha="0" bgcapture="true" bgcolor="0x000000" width="100%" height="100%" keep="true" onclick="gehmobile2"/>
+<layer name="bg2" type="container" devices="mobile" visible="false" bgalpha=".3" bgcapture="true" bgcolor="0x000000" width="100%" height="100%" keep="true" onclick="gehmobile4"/>
+
+
+	<layer type="container" name="filter" width="50%"  height.mobile="100%" x="-100%" zorder="2" align.mobile="bottom" bgcapture="true" align="left" keep="true" bgalpha="1" bgcolor="0xFFFFFF"  devices="mobile">
+
+		<layer type="container" width="100%" height="100%" bgcolor="0x000000" bgalpha="0" flowchildren="v">
+			<layer type="container" width="100%" height="15%" bgcolor="0xFFFFFF" bgalpha="0">
+				<layer text="FILTERS" type="text" scale="1" width="full"  height="auto" bgalpha="0" align="center" css="fontfamily:Roboto; font-weight: bold; color: #BC0F42;text-align:center;letter-spacing: 12%; font-size: 18px;text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); " background="true" />
+				<layer  type="container"  width="70%" y="30" height=".5" bgcolor="0x000000" bgalpha=".5" align="center" />
+				<layer url="skin/exit.png" onclick="tween(layer[filter].x , -100% , 1.5);gehmobile2" bgroundedge="full" width="prop" height="20%" align="topright" y="10" x="10" devices="mobile"/>
+			</layer>
+			<layer type="container" width="100%" height="70%" bgcolor="0xFFFFF" bgalpha="0">
+				<layer type="container" width="90%" align="center" height="100%" bgcolor="0xFFFFFF" bgalpha=".5" flowchildren="v" >
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="all" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="all();">
+						<layer name="allchild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="All" background="true" />
 					</layer>
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="healthcare" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="healthcare();">
+						<layer name="healthcarechild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Healthcare" background="true" />
+					</layer>
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="shopping" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="shopping();">
+						<layer name="shoppingchild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Shopping &amp; Malls" background="true" />
+					</layer>
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="park" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="park();">
+						<layer name="parkchild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Park &amp; Leisure" background="true" />
+					</layer>
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="nightlife" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="nightlife();">
+						<layer name="nightlifechild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Dining &amp; Nightlife" background="true" />
+					</layer>
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="art" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="art();">
+						<layer name="artchild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Arts &amp; Culture" background="true" />
+					</layer>
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="safety" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="safety();">
+						<layer name="safetychild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Safety" background="true" />
+					</layer>
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="school" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="school();">
+						<layer name="schoolchild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Schools" background="true" />
+					</layer>
+				</layer>
+			</layer>
+			<layer type="container" width="100%" height="10%" bgcolor="0xFFFF" bgalpha="0">
+				<layer url="skin/logo2.png" width="80%" align="center" height="prop" zorder="1"/>
+			</layer>
 		</layer>
-</layer>
-</layer>
+	</layer>
+
+
+
 	<layer type="container" name="filter" width.desktop="355" width.tablet="30%" width.mobile="95%" align.desktop="bottomleft" align.tablet="bottom" align.mobile="bottom" y.mobile="10" y.desktop="15" x.desktop="15" y.tablet="15" x.tablet="0" bgroundedge="15"  minwidth.tablet="650" minheight.tablet="115"  height.desktop="85" height.tablet="10%" height.mobile="16%" bgcolor="0xffffff" bgalpha="1" keep="true" flowchildren="v" devices="desktop|tablet">
 		<layer type="container" align="center" width="95%" height="10" />
 		<layer type="container" align="center" width="auto" height="auto" height.desktop="27"  bgcolor="0xFFFFF"  bgalpha="0" flowspacing="5" flowoverflow="true"  flowchildren="h" >
@@ -362,12 +393,12 @@
 				 	<layer name="shoppingchild" type="text" scale=".6" width="130" height="auto" enabled="false" bgalpha="0" align="center" css="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 5px;" text="Shopping &amp; Malls" background="true" />
 				</layer>
 				<layer name="park" type="container" align="center" width.desktop="85" width.tablet="140" width.mobile="80" height="27" bgcolor="0xBC0F42" bgcapture="true" alpha=".70" bgalpha="0" bgbordermode="outside" bgroundedge="25" bgborder="1"  flowspacing="5" onclick="park();">
-				 	<layer name="parkchild" type="text" scale=".6" width="120" height="auto" enabled="false" bgalpha="0" align="center" css="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 5px;" text="Parks &amp; leisure" background="true" />
+				 	<layer name="parkchild" type="text" scale=".6" width="120" height="auto" enabled="false" bgalpha="0" align="center" css="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 5px;" text="Park &amp; Leisure" background="true" />
 				</layer>
 			</layer>
 		<layer type="container" align="center" width="auto" height="auto" height.desktop="27" bgcolor="0xFFFFF" bgalpha="0" flowoverflow="true"  flowchildren="h" >
-				<layer name="nightlife" type="container" align="center" width.desktop="90" width.tablet="140" width.mobile="90" height="27" bgcolor="0xBC0F42" bgcapture="true" alpha=".70" bgalpha="0" bgbordermode="outside" bgroundedge="25" bgborder="1" flowspacing="5" onclick="nightlife">
-				 	<layer name="nightlifechild" scale=".6" type="text" width="120" height="auto" bgalpha="0" enabled="false" align="center" css="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 5px;" text="Food &amp; Nightlife" background="true" />
+				<layer name="nightlife" type="container" align="center" width.desktop="95" width.tablet="140" width.mobile="90" height="27" bgcolor="0xBC0F42" bgcapture="true" alpha=".70" bgalpha="0" bgbordermode="outside" bgroundedge="25" bgborder="1" flowspacing="5" onclick="nightlife">
+				 	<layer name="nightlifechild" scale=".6" type="text" width="130" height="auto" bgalpha="0" enabled="false" align="center" css="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 5px;" text="Dining &amp; Nightlife" background="true" />
 				</layer>
 				<layer name="art" type="container" align="center" width.desktop="80" width.tablet="180" width.mobile="90" height="27" bgcapture="true" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgbordermode="outside" bgroundedge="25" bgborder="1" flowspacing="5" onclick="art();">
 				 	<layer name="artchild" type="text" width="120" scale=".6" height="auto" enabled="false" bgalpha="0" align="center" css="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 5px;" text="Arts &amp; Culture" background="true" />
@@ -376,7 +407,7 @@
 				 	<layer name="safetychild" type="text" scale=".6" width="60" height="auto" bgalpha="0" enabled="false" align="center" css="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 5px;" text="Safety" background="true" />
 				</layer>
 				<layer name="school" type="container" align="center" width.desktop="60" width.tablet="110" width.mobile="90"  height="27" bgcolor="0xBC0F42" bgcapture="true" alpha=".70" bgalpha="0" bgbordermode="outside" bgroundedge="25" bgborder="1" flowspacing="5" onclick="school();">
-				 	<layer name="schoolchild" type="text" scale=".6" width="60" height="auto" bgalpha="0" enabled="false" align="center" css="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 5px;" text="School" background="true" />
+				 	<layer name="schoolchild" type="text" scale=".6" width="60" height="auto" bgalpha="0" enabled="false" align="center" css="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 5px;" text="Schools" background="true" />
 				</layer>
 		</layer>
 	</layer>
@@ -399,15 +430,15 @@
 		<layer url="skin/11.png" width="18%" height="prop" zorder="3" align="center" x="24%" y="-23%"/>
 	</layer>
 
-	<layer name="sceneonly" type="container" width="5%" height="5%" zorder="2" maxwidth="75" maxheight="75" minheight="40" minwidth="40" align="topright" y="30" x="20" visible="true" keep="true">
+	<layer name="sceneonly" type="container" width="5%" height="5%" zorder="2" maxwidth="75" maxheight="75" minheight="40" minwidth="40" align="topright" y="20" x="20" visible="true" keep="true">
 			<layer url="skin/exit.png" width="100%" height="prop" zorder="2"  align="center" onclick="check();loadscene(scene_gh_map, null, MERGE, BLEND(get(transitiontime),get(transitiontweentype)));" onover="tween(scale ,1.1)" onout="tween(scale ,1)"/>
 		</layer>
 
 	<layer name="logo" url="skin/logo.png" scale="1" height="20%" width="prop" keep="true" zorder="999" align="topleft" visible="true" x="2.5%" devices="desktop|tablet"/>
-	<layer name="logo" url="skin/logo2.png" scale="1" y="5" height="8%" width="prop" keep="true" zorder="999" align="centertop" visible="true" x="2.5%" devices="mobile"/>
+	<!-- <layer name="logo" url="skin/logo2.png" scale="1" y="5" height="8%" width="prop" keep="true" zorder="999" align="centertop" visible="true" x="2.5%" devices="mobile"/> -->
 
 	
-	<scene name="scene_gh_map" title="gh-map" onstart="forscene1();check();hotspot[dapatclicked].onclick();" thumburl="panos/gh_map.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+	<scene name="scene_gh_map" title="gh-map" onstart="set(layer[burgerni].visible, true);forscene1();check();hotspot[dapatclicked].onclick();" thumburl="panos/gh_map.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
 
 		<control bouncinglimits="calc:image.cube ? true : false" />
 
@@ -432,13 +463,13 @@
 		<hotspot name="mitsoki" url="skin/mitsoki.png" ath="0.21927532909983471" atv="-0.1812526691317358" scale="0.1247999999999993" zorder="100" visible="false"/>
 		<hotspot name="palace" url="skin/palace.png" ath="0.30156737054953336" atv="-0.12864710092518442" scale="0.1247999999999993" zorder="100" visible="false"/>
 		<hotspot name="mind" url="skin/mind.png" ath="-0.2880246271142797" atv="-0.0630217942390318" scale="0.1247999999999993" zorder="100" visible="false"/>
-		<hotspot name="bgc" url="skin/bgc.png" ath="-0.1404539932525195" atv="0.11614793965884612" scale="0.1247999999999993" zorder="100" visible="false"/>
+		<hotspot name="bgc" url="skin/bgc.png" ath="-0.18029853647791114" atv="0.15026289309098115" scale="0.1247999999999993" zorder="100" visible="false"/>
 		<hotspot name="global" url="skin/global.png" ath="-0.2369831916363176" atv="0.05104221877519574" scale="0.1247999999999993" zorder="100" visible="false"/>
 		<!-- <hotspot name="convenience1" url="skin/convenience.png"  ath="0.0" atv="0.0" scale="0.17599999999999916" zorder="100" visible="false"/>
 		<hotspot name="convenience2" url="skin/convenience.png" ath="0.0" atv="0.0" scale="0.17599999999999916" zorder="100" visible="false"/> -->
-
+		<hotspot name="logoni" url="skin/logo2.png" devices="mobile" ath="0.14291066743615444" atv="-0.2560934817074346" scale="1" zorder="100" visible="true" />
     
-    	<hotspot url="grand.png" ath="0.20127426988075992" atv="-0.20992001024874482" scale=".00038" zoom="true" distorted="true"  />
+    	<!-- <hotspot url="grand.png" ath="0.20127426988075992" atv="-0.20992001024874482" scale=".00038" zoom="true" distorted="true"  /> -->
 
  		<hotspot name="sm_aura" style="hs_circle2"  baw="sm_aura2" scale="0.5" ath="-0.03814622145810905" atv="0.18712449845924167" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_gh_map" linkedscene_hoffset="0.0" use3dtransition="false" tag="SM Aura SMX Convention IMAX"
  		onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1634+Metro+Manila/SMX+Convention+Center+Aura,+McKinley+Parkway,+Taguig,+Metro+Manila/@14.5506825,121.0462543,1926m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0520219!2d14.5565544!1m5!1m1!1s0x3397c9d0310c16bf:0x9a50ec9927a31d00!2m2!1d121.0533795!2d14.5455538?entry=ttu&amp;g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3D')"	
@@ -463,14 +494,13 @@
 		/>
 		<!-- <hotspot name="boni_hight_street2" url="bonifacio.png" baw2="boni_hight_street" ath="-0.04949269891819294" atv="-0.05695185748216312" scale="0.0010550" onout="hide_info_card(get(hotspot[get(name)].baw));trythistwo(get(hotspot[get(name)].baw2));set(hotspot[boni_hight_street2].visible,false);" zorder="9999999" depth="1000.0" visible="false" distorted="true" zoom="true" linkedscene="scene_gh_map" linkedscene_hoffset="0.0" use3dtransition="false" onclick="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1634+Metro+Manila/Bonifacio+High+Street,+Taguig,+Metro+Manila/@14.5535711,121.0486434,963m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0520219!2d14.5565544!1m5!1m1!1s0x3397c8eef441243d:0x4b1c29972e8861c9!2m2!1d121.0503969!2d14.5507296?entry=ttu&amp;g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3DD')"  /> -->
 
-		<hotspot name="terra28" style="hs_circle2" baw="terra282"  scale="0.5" ath="-0.11210822847395953" atv="0.05208805703992066" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_gh_map" linkedscene_hoffset="0.0" use3dtransition="false" tag="Terra 28th"
+		<hotspot name="terra28" style="hs_circle2" baw="terra282"  scale="0.5" ath="-0.09135627443443078" atv="0.04598456223642919" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_gh_map" linkedscene_hoffset="0.0" use3dtransition="false" tag="Terra 28th"
 		onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1634+Metro+Manila/Terra+28th,+28th+Street,+Makati+City,+Metro+Manila/@14.5529713,121.0481252,963m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0520219!2d14.5565544!1m5!1m1!1s0x3397c8f1e552073f:0x332e830b141e1773!2m2!1d121.0500827!2d14.5493883?entry=ttu&amp;g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3D')"	 
 		/>
 		<!-- <hotspot name="terra282" url="terra.png" baw2="terra28" ath="0.006758716678139841" atv="0.12846925989762845" scale="0.0010550" onout="hide_info_card(get(hotspot[get(name)].baw));trythistwo(get(hotspot[get(name)].baw2));set(hotspot[terra282].visible,false);" zorder="9999999" depth="1000.0" visible="false" distorted="true" zoom="true" linkedscene="scene_gh_map" linkedscene_hoffset="0.0" use3dtransition="false" onclick="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1634+Metro+Manila/Terra+28th,+28th+Street,+Makati+City,+Metro+Manila/@14.5529713,121.0481252,963m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0520219!2d14.5565544!1m5!1m1!1s0x3397c8f1e552073f:0x332e830b141e1773!2m2!1d121.0500827!2d14.5493883?entry=ttu&amp;g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3D')" /> -->
 
 		<hotspot name="track30" style="hs_circle2" baw="track302" scale="0.5" ath="-0.02813800021194735" atv="0.009633117321971776" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_gh_map" linkedscene_hoffset="0.0" use3dtransition="false" tag="Track 30th"
 		onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1634+Metro+Manila/Track+30th,+30th+Street,+Taguig,+Metro+Manila/@14.5545748,121.0466023,963m/data=!3m1!1e3!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0520219!2d14.5565544!1m5!1m1!1s0x3397c8f3d8fdbde1:0x9c4b1e671e138f93!2m2!1d121.0508889!2d14.552098?entry=ttu&amp;g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3D')" />	
-		/>
 		<!-- <hotspot name="track302" url="track.png" baw2="track30" ath="-0.029179693061252805" atv="-0.0007004694582341406" scale="0.0010550" onout="hide_info_card(get(hotspot[get(name)].baw));trythistwo(get(hotspot[get(name)].baw2));set(hotspot[track302].visible,false);" zorder="9999999" depth="1000.0" visible="false" distorted="true" zoom="true" linkedscene="scene_gh_map" linkedscene_hoffset="0.0" use3dtransition="false" onclick="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1634+Metro+Manila/Track+30th,+30th+Street,+Taguig,+Metro+Manila/@14.5545748,121.0466023,963m/data=!3m1!1e3!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0520219!2d14.5565544!1m5!1m1!1s0x3397c8f3d8fdbde1:0x9c4b1e671e138f93!2m2!1d121.0508889!2d14.552098?entry=ttu&amp;g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3D')" /> -->
 
 		<hotspot name="mind_museum" style="hs_circle2" baw="mind_museum2" scale="0.5" ath="-0.2994963298163738" atv="-0.04345095662315778" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_gh_map" linkedscene_hoffset="0.0" use3dtransition="false" tag="The Mind Museum"
@@ -478,7 +508,7 @@
 		/>
 		<!-- <hotspot name="mind_museum2" url="mind.png" baw2="mind_museum" ath="-0.203141593745546" atv="-0.13507778147308133" scale="0.0010550" onout="hide_info_card(get(hotspot[get(name)].baw));trythistwo(get(hotspot[get(name)].baw2));set(hotspot[mind_museum2].visible,false);" zorder="9999999" depth="1000.0" visible="false" distorted="true" zoom="true" linkedscene="scene_gh_map" linkedscene_hoffset="0.0" use3dtransition="false" onclick="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1634+Metro+Manila/Mind+Museum,+3rd+Avenue,+Taguig,+Metro+Manila/@14.5545748,121.0466023,963m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0520219!2d14.5565544!1m5!1m1!1s0x3397c8f0861622bf:0x5c9160ca6f3177a1!2m2!1d121.046099!2d14.5529041?entry=ttu&amp;g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3D')" /> -->
 
-		<hotspot name="lukes_hospital" style="hs_circle2" baw="lukes_hospital2" scale="0.5" ath="-0.09949389474141287" atv="-0.1079945722873829" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_gh_map" linkedscene_hoffset="0.0" use3dtransition="false" tag="St. Luke's Hospital" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1635+Metro+Manila/Terra+Park+28th+Street,+G3X2%2BP43,+Taguig,+Metro+Manila/@14.5520314,121.0460681,1875m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0522929!2d14.5564879!1m5!1m1!1s0x3397c9e693f19351:0x6aa6cf18e143d0c5!2m2!1d121.0503114!2d14.5492568?entry=ttu&amp;g_ep=EgoyMDI2MDIyNS4wIKXMDSoASAFQAw%3D%3D')"  
+		<hotspot name="lukes_hospital" style="hs_circle2" baw="lukes_hospital2" scale="0.5" ath="-0.09949389474141287" atv="-0.1079945722873829" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_gh_map" linkedscene_hoffset="0.0" use3dtransition="false" tag="St. Luke's Hospital" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1635+Metro+Manila/St.+Luke%27s+Medical+Center+-+BGC,+5th+Ave,+Taguig,+1634+Metro+Manila/@14.555859,121.0489573,546m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0522254!2d14.5565667!1m5!1m1!1s0x3397c8f6d97d4a9b:0x185dbfb0e8c281cd!2m2!1d121.0482642!2d14.5550704?entry=ttu&amp;g_ep=EgoyMDI2MDMxMS4wIKXMDSoASAFQAw%3D%3D');"  
 		/>
 		<!-- <hotspot name="lukes_hospital2" url="luke.png" baw2="lukes_hospital" ath="-0.203141593745546" atv="-0.13507778147308133" scale="0.0010550" onout="hide_info_card(get(hotspot[get(name)].baw));trythistwo(get(hotspot[get(name)].baw2));set(hotspot[lukes_hospital2].visible,false);" zorder="9999999" depth="1000.0" visible="false" distorted="true" zoom="true" linkedscene="scene_gh_map" linkedscene_hoffset="0.0" use3dtransition="false" onclick="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+35th+Street,+Bonifacio+Global+City,+Taguig,+Metro+Manila/St.+Luke%E2%80%99s+Medical+Center,+E+Rodriguez+Sr.+Ave,+Quezon+City,+Metro+Manila/@14.5559704,121.0487988,904m/data=!3m1!1e3!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0520219!2d14.5565544!1m5!1m1!1s0x3397b6379e5ccf3f:0xde1ba0020c2f2350!2m2!1d121.0232452!2d14.6225328?entry=ttu&amp;g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3D')" /> -->
 
@@ -557,8 +587,8 @@ Arts Center" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Mani
 		<hotspot name="mike" style="hs_circle2" ath="0.38600216806476007" atv="-0.12385478724920648" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_ninort" linkedscene_hoffset="0.0" use3dtransition="true"  tag="Japanese School Manila" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1635+Metro+Manila/St.+Michael+the+Archangel+Parish,+1928+10th+Ave,+Taguig,+Metro+Manila/@14.5593103,121.0514319,843m/data=!3m2!1e3!4b1!4m14!4m13!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0521212!2d14.5565294!1m5!1m1!1s0x3397c85fc770a3a5:0xc789b843a2966a65!2m2!1d121.0552038!2d14.5599521!3e0?entry=ttu&amp;g_ep=EgoyMDI2MDIwOC4wIKXMDSoASAFQAw%3D%3D')"/>
 		<hotspot name="mike2" url="skin/mike.png" ath="0.3620442567311542" atv="-0.15166779019469664" scale="0.1247999999999993" zorder="100" visible="false"/>
 
-		<hotspot name="astronaut" style="hs_circle2" ath="-0.26921497689783286" atv="0.03239581448482942" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_ninort" linkedscene_hoffset="0.0" use3dtransition="true"  tag="Japanese School Manila" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1635+Metro+Manila/Astronaut+Mural+at+The+Courtyard,+Icon+Plaza,+Federacion+Dr,+Taguig,+Metro+Manila/@14.5523773,121.0443288,1875m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0521212!2d14.5565294!1m5!1m1!1s0x3397c90012d317d1:0xd3f8a475977ed360!2m2!1d121.0480596!2d14.5481123?entry=ttu&amp;g_ep=EgoyMDI2MDIwOC4wIKXMDSoASAFQAw%3D%3D')"/>
-		<hotspot name="astronaut2" url="skin/astronaut.png" ath="-0.29838165887383933" atv="0.022812112964509294" scale="0.1247999999999993" zorder="100" visible="false"/>
+		<hotspot name="astronaut" style="hs_circle2" ath="-0.30515247308446164" atv="0.03239571080453046" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_ninort" linkedscene_hoffset="0.0" use3dtransition="true"  tag="Japanese School Manila" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1635+Metro+Manila/Astronaut+Mural+at+The+Courtyard,+Icon+Plaza,+Federacion+Dr,+Taguig,+Metro+Manila/@14.5523773,121.0443288,1875m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0521212!2d14.5565294!1m5!1m1!1s0x3397c90012d317d1:0xd3f8a475977ed360!2m2!1d121.0480596!2d14.5481123?entry=ttu&amp;g_ep=EgoyMDI2MDIwOC4wIKXMDSoASAFQAw%3D%3D')"/>
+		<hotspot name="astronaut2" url="skin/astronaut.png" ath="-0.3015066525597861" atv="0.01343699922797977" scale="0.1247999999999993" zorder="100" visible="false"/>
 
 		<hotspot name="magsasaka" style="hs_circle2" ath="-0.2431731702759503" atv="-0.06708488158821706" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_ninort" linkedscene_hoffset="0.0" use3dtransition="true"  tag="Japanese School Manila" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1635+Metro+Manila/BGC+Magsasaka+Mural,+6+Rizal+Dr,+New+Manila,+Taguig,+Metro+Manila/@14.5546956,121.0461337,938m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0521212!2d14.5565294!1m5!1m1!1s0x3397c934074e7e51:0x2019372523ca178b!2m2!1d121.045296!2d14.552789?entry=ttu&amp;g_ep=EgoyMDI2MDIwOC4wIKXMDSoASAFQAw%3D%3D')"/>
 		<hotspot name="magsasaka2" url="skin/magsasaka.png" ath="-0.22963138156980195" atv="-0.08396038584248461" scale="0.1247999999999993" zorder="100" visible="false"/>
@@ -566,7 +596,7 @@ Arts Center" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Mani
 		<hotspot name="interconnect" style="hs_circle2" ath="-0.19317262916681252" atv="-0.08218954304136307" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_ninort" linkedscene_hoffset="0.0" use3dtransition="true"  tag="Japanese School Manila" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1635+Metro+Manila/Interconnected+Art+Mural,+H23W%2B8F4,+Taguig,+Metro+Manila/@14.5543801,121.0465923,938m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0521212!2d14.5565294!1m5!1m1!1s0x3397c900348ef44d:0x979149e5b1e8331d!2m2!1d121.0462133!2d14.553258?entry=ttu&amp;g_ep=EgoyMDI2MDIwOC4wIKXMDSoASAFQAw%3D%3D')"/>
 		<hotspot name="interconnect2" url="skin/interconnect.png" ath="-0.18171411875791194" atv="-0.09958591578074033" scale="0.1247999999999993" zorder="100" visible="false"/>
 
-		<hotspot name="art" style="hs_circle2" ath="-0.008272834026553091" atv="0.11000217594067098" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_ninort" linkedscene_hoffset="0.0" use3dtransition="true"  tag="Japanese School Manila" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1635+Metro+Manila/Rizal+Dr+%26+5th+Ave,+Post+Proper+Northside,+Taguig,+Metro+Manila/@14.5559973,121.0493999,469m/data=!3m2!1e3!4b1!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0521212!2d14.5565294!1m5!1m1!1s0x3397c8f6ed20093b:0x953179f0adce42fb!2m2!1d121.0492535!2d14.5559527?entry=ttu&amp;g_ep=EgoyMDI2MDIwOC4wIKXMDSoASAFQAw%3D%3D')"/>
+		<hotspot name="art" style="hs_circle2" ath="-0.008272834026553091" atv="0.11000217594067098" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_ninort" linkedscene_hoffset="0.0" use3dtransition="true"  tag="Japanese School Manila" onclick2="openurl('https://maps.app.goo.gl/QMJYeigpnE54ARJ99')"/>
 		<hotspot name="art2" url="skin/art.png" ath="-0.004626899313249478" atv="0.07906380100796014" scale="0.1247999999999993" zorder="100" visible="false"/>
 
 		<!-- <hotspot name="art22" style="hs_circle2" ath="-0.2739024947499111" atv="0.0995841426019668" depth="1000.0" visible="false" distorted="false" zoom="false" linkedscene="scene_ninort" linkedscene_hoffset="0.0" use3dtransition="true"  tag="Japanese School Manila" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Manila,+8th+Avenue,+corner+35th+St,+Bonifacio+Global+City,+Taguig,+1635+Metro+Manila/BGC+Community+Farm+by+Urban+Farmers+PH,+34th+Street,+corner+5th+Ave,+Taguig,+Metro+Manila/@14.555927,121.0497164,183m/data=!3m1!1e3!4m13!4m12!1m5!1m1!1s0x3397c8f5cbbe8761:0x39bf92861a28ef77!2m2!1d121.0521212!2d14.5565294!1m5!1m1!1s0x3397c91ae512771d:0x5299182191b899b9!2m2!1d121.04942!2d14.5560464?entry=ttu&amp;g_ep=EgoyMDI2MDIwOC4wIKXMDSoASAFQAw%3D%3D')"/>
@@ -575,7 +605,7 @@ Arts Center" onclick2="openurl('https://www.google.com/maps/dir/Grand+Hyatt+Mani
 
 	</scene>
 
-	<scene name="scene_ninort" title="ninort" onstart="forscene2();" thumburl="panos/ninort.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+	<scene name="scene_ninort" title="ninort" onstart="set(layer[burgerni].visible, false);forscene2();set(layer[bg2].visible ,true);" thumburl="panos/ninort.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
 		
 		<control bouncinglimits="calc:image.cube ? true : false" />
 

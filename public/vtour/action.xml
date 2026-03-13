@@ -759,12 +759,12 @@
 		   set(layer[tablet].bgcapture , true);
 	</action>
 	<action name="closem" devices="mobile">
-		   tween(layer[parent].y ,100% , 1);
-		   delayedcall(1,
+		   tween(layer[parent].x ,-100% , .8);
+		   delayedcall(.8,
 		   set(layer[parent].visible , false););
 	</action>
 	<action name="open" devices="mobile">
-		   tween(layer[parent].y ,0% , 1);
+		   tween(layer[parent].x ,0% , 1);
 		   set(layer[parent].visible , true);
 	</action>
 	
@@ -794,7 +794,7 @@
 
 	<action name="forAV6">
 		if(layer[up6].visible == false,
-		tween(layer[submenu6].height , 124);
+		tween(layer[submenu6].height , 120);
 		set(layer[down6].visible , false);
 		tween(layer[down6].rotate , 180);
 		set(layer[up6].visible , true);
@@ -818,7 +818,7 @@
 
 	<action name="forAV2">
 		if(layer[up2].visible == false,
-		tween(layer[submenu2].height , 217);
+		tween(layer[submenu2].height , 210);
 		set(layer[down2].visible , false);
 		tween(layer[down2].rotate , 180);
 		set(layer[up2].visible , true);
@@ -842,7 +842,7 @@
 
 	<action name="forAV3">
 		if(layer[up3].visible == false,
-		tween(layer[submenu3].height , 61);
+		tween(layer[submenu3].height , 60);
 		set(layer[down3].visible , false);
 		tween(layer[down3].rotate , 180);
 		set(layer[up3].visible , true);
@@ -866,7 +866,7 @@
 
 	<action name="forAV4">
 		if(layer[up4].visible == false,
-		tween(layer[submenu4].height , 186);
+		tween(layer[submenu4].height , 180);
 		set(layer[down4].visible , false);
 		tween(layer[down4].rotate , 180);
 		set(layer[up4].visible , true);
@@ -889,7 +889,7 @@
 	</action>
 	<action name="forAV5">
 		if(layer[up5].visible == false,
-		tween(layer[submenu5].height , 92);
+		tween(layer[submenu5].height , 105);
 		set(layer[down5].visible , false);
 		tween(layer[down5].rotate , 180);
 		set(layer[up5].visible , true);
@@ -912,7 +912,7 @@
 	</action>
 	<action name="forAV7">
 		if(layer[up7].visible == false,
-		tween(layer[submenu7].height , 92);
+		tween(layer[submenu7].height , 102);
 		set(layer[down7].visible , false);
 		tween(layer[down7].rotate , 180);
 		set(layer[up7].visible , true);
@@ -935,7 +935,7 @@
 	</action>
 	<action name="forAV8">
 		if(layer[up8].visible == false,
-		tween(layer[submenu8].height , 32);
+		tween(layer[submenu8].height , 30);
 		set(layer[down8].visible , false);
 		tween(layer[down8].rotate , 180);
 		set(layer[up8].visible , true);
