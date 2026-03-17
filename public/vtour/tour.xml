@@ -355,7 +355,7 @@
 						<layer name="shoppingchild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Shopping &amp; Malls" background="true" />
 					</layer>
 					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="park" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="park();">
-						<layer name="parkchild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Park &amp; Leisure" background="true" />
+						<layer name="parkchild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Parks &amp; Leisure" background="true" />
 					</layer>
 					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="nightlife" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="nightlife();">
 						<layer name="nightlifechild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Dining &amp; Nightlife" background="true" />
@@ -393,7 +393,7 @@
 				 	<layer name="shoppingchild" type="text" scale=".6" width="130" height="auto" enabled="false" bgalpha="0" align="center" css="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 5px;" text="Shopping &amp; Malls" background="true" />
 				</layer>
 				<layer name="park" type="container" align="center" width.desktop="85" width.tablet="140" width.mobile="80" height="27" bgcolor="0xBC0F42" bgcapture="true" alpha=".70" bgalpha="0" bgbordermode="outside" bgroundedge="25" bgborder="1"  flowspacing="5" onclick="park();">
-				 	<layer name="parkchild" type="text" scale=".6" width="120" height="auto" enabled="false" bgalpha="0" align="center" css="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 5px;" text="Park &amp; Leisure" background="true" />
+				 	<layer name="parkchild" type="text" scale=".6" width="120" height="auto" enabled="false" bgalpha="0" align="center" css="fontfamily:Roboto ;color: #000000;text-align:center; font-size: 5px;" text="Parks &amp; Leisure" background="true" />
 				</layer>
 			</layer>
 		<layer type="container" align="center" width="auto" height="auto" height.desktop="27" bgcolor="0xFFFFF" bgalpha="0" flowoverflow="true"  flowchildren="h" >
