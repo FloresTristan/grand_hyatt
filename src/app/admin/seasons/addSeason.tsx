@@ -104,8 +104,6 @@ export default function AddSeasonModal({ open, onClose, onCreate }: AddSeasonMod
     setGifFile(f);
   }
 
-  console.log({ name, imageFile, gifFile });
-
   async function handleCreate() {
     try {
       setError(null);
@@ -171,6 +169,7 @@ export default function AddSeasonModal({ open, onClose, onCreate }: AddSeasonMod
                   ref={imageInputRef}
                   type="file"
                   accept="image/*"
+                  aria-label="Upload season image"
                   onChange={onFileSelectImage}
                   className="hidden"
                 />
@@ -216,6 +215,7 @@ export default function AddSeasonModal({ open, onClose, onCreate }: AddSeasonMod
                   ref={gifInputRef}
                   type="file"
                   accept="image/*"
+                  aria-label="Upload season GIF frame"
                   onChange={onFileSelectGif}
                   className="hidden"
                 />

@@ -207,38 +207,32 @@ export default function AddHotspotModal({
   
               <div className="grid grid-cols-2 mt-1 gap-2">
                 <label className="block">
-                  <div className="text-sm mb-1 text-white/80">
-                    Start time
-                  </div>
+                  <div className="text-sm mb-1 text-white/80">Start time</div>
                   <input
-                    style={{ colorScheme: 'dark' }}
                     type="time"
                     value={starttime}
                     onChange={(e) => setStarttime(e.target.value)}
-                    className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                    className="dark-scheme w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2.5 outline-none focus:border-white/30 transition-colors duration-150 min-h-[44px]"
                   />
                 </label>
                 <label className="block">
-                  <div className="text-sm mb-1 text-white/80">
-                    End time
-                  </div>
+                  <div className="text-sm mb-1 text-white/80">End time</div>
                   <input
-                    style={{ colorScheme: 'dark' }}
                     type="time"
                     value={endtime}
                     onChange={(e) => setEndtime(e.target.value)}
-                    className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                    className="dark-scheme w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2.5 outline-none focus:border-white/30 transition-colors duration-150 min-h-[44px]"
                   />
                 </label>
               </div>
               <div className='grid grid-cols-2 mt-1 gap-2'>
                 <label className="block">
                   <div className="text-sm mb-1 text-white/80">CTA Label</div>
-                  <input value={cta_label || ''} onChange={()=>{}} placeholder="Learn More" className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
+                  <input value={cta_label || ''} onChange={(e) => setCta_label(e.target.value)} placeholder="Learn More" className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2.5 outline-none focus:border-white/30 transition-colors duration-150 min-h-[44px]" />
                 </label>
                 <label className="block">
                   <div className="text-sm mb-1 text-white/80">CTA Link</div>
-                  <input value={cta_href || ''} onChange={()=>{}} placeholder="https://example.com" className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
+                  <input value={cta_href || ''} onChange={(e) => setCta_href(e.target.value)} placeholder="https://example.com" className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2.5 outline-none focus:border-white/30 transition-colors duration-150 min-h-[44px]" />
                 </label>
               </div>
 
@@ -278,6 +272,7 @@ export default function AddHotspotModal({
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
+                  aria-label="Upload hotspot image"
                   onChange={onFileSelect}
                   className="hidden"
                 />
@@ -305,7 +300,7 @@ export default function AddHotspotModal({
                   type="button"
                   onClick={onClose}
                   disabled={busy}
-                  className="rounded-lg px-3 py-2 text-sm bg-white/10 hover:bg-white/20 disabled:opacity-50"
+                  className="btn-press rounded-lg px-4 py-2.5 text-sm bg-white/10 hover:bg-white/20 transition-colors duration-150 disabled:opacity-50 min-h-[44px]"
                 >
                   Cancel
                 </button>
@@ -313,7 +308,7 @@ export default function AddHotspotModal({
                   type="button"
                   onClick={handleCreate}
                   disabled={busy || !name.trim()}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-black bg-green-400 hover:bg-green-500 disabled:opacity-50"
+                  className="btn-press rounded-lg px-4 py-2.5 text-sm font-medium text-black bg-green-400 hover:bg-green-500 transition-colors duration-150 disabled:opacity-50 min-h-[44px]"
                 >
                   {busy ? "Saving…" : "Create"}
                 </button>

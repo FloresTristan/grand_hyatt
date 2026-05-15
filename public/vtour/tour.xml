@@ -7,7 +7,7 @@
 	<include url="plugins/circle_hotspots.xml"/>
 	<include url="plugins/circle_hotspots2.xml"/>
 	<include url="%SWFPATH%/plugins/callout.xml" />
-  	<callout key="U2FsdGVkX1+f4RYPoc7n1knq0x6sbpZV5R5gx+ibTBX/HrU/7+qcOKMGbUpO8SPH" size="10" size.mobile="7" color="0xffffff" rotate="45" distancepopup="5" min_fov="180" max_fov="0" line_lenght="50" line_width="2" shape="round" circle_active_width="65" animation="center_screen" text_width="300" callout_bg_border="0,0,0,2" text_x="10" css_title="font-family: 'Bodoni Moda', serif;color:#fff;font-size:5px;" css_title.mobile="color:#fff;font-size:10px;" css_text="color:#fff;font-size:16px;text-shadow: 3px 3px 8px #000000;" title_background="0x012067" text_background="" title_padding="5" text_padding="10 10 0 0" bgcapture="true" />
+  	<callout key="U2FsdGVkX1+f4RYPoc7n1knq0x6sbpZV5R5gx+ibTBX/HrU/7+qcOKMGbUpO8SPH" size="10" size.mobile="9" color="0xffffff" rotate="45" distancepopup="5" min_fov="180" max_fov="0" line_lenght="50" line_width="2" shape="round" circle_active_width="65" animation="center_screen" text_width="300" callout_bg_border="0,0,0,2" text_x="10" css_title="font-family: 'Bodoni Moda', serif;color:#fff;font-size:5px;" css_title.mobile="color:#fff;font-size:10px;" css_text="color:#fff;font-size:16px;text-shadow: 3px 3px 8px #000000;" title_background="0x012067" text_background="" title_padding="5" text_padding="10 10 0 0" bgcapture="true" />
 
 <events onstart="kinaunhan();"/>
 
@@ -68,10 +68,10 @@
 	               design_text_shadow="1"
 	               />
 
-	               <style name="header" type="text" align="lefttop" alpha="1"   
+	               <style name="header" type="text" align="lefttop" alpha="1" minheight.mobile="44"
                 onover="if(bgalpha != 1, set(bgalpha, 0.8));"
-                onout="if(bgalpha == 0.8, set(bgalpha, 0));"  
-        
+                onout="if(bgalpha == 0.8, set(bgalpha, 0));"
+
        />
 
        <layer name="open" url="skin/open.png" width="prop" height="8%" onclick="open();" minwidth="30" minheight="50" align="left" visible="true" zorder="-1" keep="true" devices="tablet|desktop"/>
@@ -81,7 +81,7 @@
 </layer>
 
 
-	<layer type="container" name="parent" width.desktop="17%" width.tablet="23%"  width.mobile="60%" height="100%" maxwidth.desktop="350" zorder="999999" minwidth.desktop="300" minwidth.tablet="350" x.mobile="0%" y.mobile="0%" x.desktop="0%" x.tablet="-50%" bgcolor="0xBC0F42" bgalpha="1" keep="true" visible="false"  css="box-shadow: 8px 0px 12px -2px rgba(0,0,0,0.6);">
+	<layer type="container" name="parent" width.desktop="17%" width.tablet="23%"  width.mobile="82%" height="100%" maxwidth.desktop="350" zorder="999999" minwidth.desktop="300" minwidth.tablet="350" x.mobile="0%" y.mobile="0%" x.desktop="0%" x.tablet="-50%" bgcolor="0xBC0F42" bgalpha="1" keep="true" visible="false"  css="box-shadow: 8px 0px 12px -2px rgba(0,0,0,0.6);">
 		<layer type="container" onclick="closem();gehmobile4" width="100%" height="100%" align="center" y="15" x="15" devices="mobile">
 			<layer url="skin/closem.png" onclick="closem();gehmobile4" width="13%" height="prop" align="right" x="-6" y="-15"/>
 		</layer>
@@ -306,28 +306,28 @@
 	<!-- <include url="skin/vtourskin_design_117.xml"         /> -->
 	<!-- <include url="skin/vtourskin_design_117round.xml"    /> -->
 	<!-- <include url="skin/vtourskin_design_black.xml"       /> -->
-	<layer name="burgerni" type="container" width="12%" height="5%" bgcolor="0x000000" bgalpha="0" devices="mobile" keep="true">
-		<layer url="skin/burger.png" y="5" x="5" width="80%" align="center" height="prop" zorder="1" onclick="tween(layer[filter].x , 0% , 1);gehmobile1"/>
+	<layer name="burgerni" type="container" width="14%" height="6%" minwidth="48" minheight="48" bgcolor="0x000000" bgalpha="0" devices="mobile" keep="true">
+		<layer url="skin/burger.png" y="5" x="5" width="80%" align="center" height="prop" zorder="1" onclick="tween(layer[filter].x , 0% , 0.4);gehmobile1"/>
 	</layer>
 
 <action name="gehmobile1">
-	tween(layer[bg].bgalpha, .3, 0.5);
+	tween(layer[bg].bgalpha, .3, 0.25);
 	set(layer[bg].visible, true);
 </action>
 <action name="gehmobile2">
-	tween(layer[bg].bgalpha, .0, 0.5);
-	tween(layer[filter].x , -100% , 1.5);
-	delayedcall(.3,
+	tween(layer[bg].bgalpha, .0, 0.3);
+	tween(layer[filter].x , -100% , 0.35);
+	delayedcall(.35,
 	set(layer[bg].visible, false););
 </action>
 <action name="gehmobile3">
-	tween(layer[bg2].bgalpha, .3, 0.5);
+	tween(layer[bg2].bgalpha, .3, 0.25);
 	set(layer[bg2].visible, true);
 </action>
 <action name="gehmobile4">
-	tween(layer[bg2].bgalpha, .0, 0.5);
-	tween(layer[parent].x , -100% , 1.5);
-	delayedcall(.3,
+	tween(layer[bg2].bgalpha, .0, 0.3);
+	tween(layer[parent].x , -100% , 0.35);
+	delayedcall(.35,
 	set(layer[bg2].visible, false););
 </action>
 
@@ -341,32 +341,32 @@
 			<layer type="container" width="100%" height="15%" bgcolor="0xFFFFFF" bgalpha="0">
 				<layer text="FILTERS" type="text" scale="1" width="full"  height="auto" bgalpha="0" align="center" css="fontfamily:Roboto; font-weight: bold; color: #BC0F42;text-align:center;letter-spacing: 12%; font-size: 18px;text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); " background="true" />
 				<layer  type="container"  width="70%" y="30" height=".5" bgcolor="0x000000" bgalpha=".5" align="center" />
-				<layer url="skin/exit.png" onclick="tween(layer[filter].x , -100% , 1.5);gehmobile2" bgroundedge="full" width="prop" height="20%" align="topright" y="10" x="10" devices="mobile"/>
+				<layer url="skin/exit.png" onclick="tween(layer[filter].x , -100% , 0.4);gehmobile2" bgroundedge="full" width="prop" height="20%" align="topright" y="10" x="10" devices="mobile"/>
 			</layer>
 			<layer type="container" width="100%" height="70%" bgcolor="0xFFFFF" bgalpha="0">
 				<layer type="container" width="90%" align="center" height="100%" bgcolor="0xFFFFFF" bgalpha=".5" flowchildren="v" >
-					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="all" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="all();">
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="16" name="all" type="container" align="center" width="100%" height="46" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="all();">
 						<layer name="allchild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="All" background="true" />
 					</layer>
-					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="healthcare" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="healthcare();">
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="16" name="healthcare" type="container" align="center" width="100%" height="46" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="healthcare();">
 						<layer name="healthcarechild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Healthcare" background="true" />
 					</layer>
-					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="shopping" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="shopping();">
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="16" name="shopping" type="container" align="center" width="100%" height="46" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="shopping();">
 						<layer name="shoppingchild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Shopping &amp; Malls" background="true" />
 					</layer>
-					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="park" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="park();">
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="16" name="park" type="container" align="center" width="100%" height="46" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="park();">
 						<layer name="parkchild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Parks &amp; Leisure" background="true" />
 					</layer>
-					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="nightlife" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="nightlife();">
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="16" name="nightlife" type="container" align="center" width="100%" height="46" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="nightlife();">
 						<layer name="nightlifechild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Dining &amp; Nightlife" background="true" />
 					</layer>
-					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="art" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="art();">
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="16" name="art" type="container" align="center" width="100%" height="46" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="art();">
 						<layer name="artchild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Arts &amp; Culture" background="true" />
 					</layer>
-					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="safety" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="safety();">
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="16" name="safety" type="container" align="center" width="100%" height="46" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="safety();">
 						<layer name="safetychild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Safety" background="true" />
 					</layer>
-					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="25" name="school" type="container" align="center" width="100%" height="38" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="school();">
+					<layer bgshadow="0 3 5 0x000000 0.5" flowspacing="16" name="school" type="container" align="center" width="100%" height="46" bgcolor="0xBC0F42" alpha=".70" bgalpha="0" bgcapture="true" enabled="true" bgbordermode="outside" bgroundedge="25" bgborder="1" onclick="school();">
 						<layer name="schoolchild" type="text" width="auto" scale=".9" height="auto" enabled="false" bgalpha="0" align="center" css="font-size: 5px;fontfamily:Roboto ;color: #000000;text-align:center; " text="Schools" background="true" />
 					</layer>
 				</layer>

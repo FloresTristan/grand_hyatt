@@ -10,7 +10,9 @@ import { Refresh, ArrowBackOutlined } from "@mui/icons-material";
 import UpdateHotspotPage from "./UpdateHotspotPage";
 import AccordionGroup from "./AccordionGroup";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
-import KrpanoViewer from "@/app/components/KrpanoViewer";
+import dynamic from 'next/dynamic';
+
+const KrpanoViewer = dynamic(() => import('@/app/components/KrpanoViewer'), { ssr: false });
 
 export default function GrandHyattContentPage(){
     const previewRef = useRef<HTMLIFrameElement | null>(null);
@@ -133,9 +135,7 @@ export default function GrandHyattContentPage(){
         fetchHotspots({setHotspots, setLoading})
     },[])
 
-    console.log({open})
     const isHotspotModalOpen = Boolean(selectedHotspot) && open;
-    console.log({isHotspotModalOpen})
 
     useEffect(() => {
         if (!selectedHotspot) return;

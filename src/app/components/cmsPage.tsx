@@ -20,7 +20,9 @@ import { LabeledDate, LabeledInput, LabeledTextarea,
   toUtcIso, applyFilter, toLocalInputValue} from './helpersAndInputs';
 import { StatusPill } from './statusPill';
 import { ArrowBackOutlined } from '@mui/icons-material';
-import KrpanoViewerAdmin from './KrpanoViewerAdmin';
+import dynamic from 'next/dynamic';
+
+const KrpanoViewerAdmin = dynamic(() => import('./KrpanoViewerAdmin'), { ssr: false });
 
 export default function CMSPage() {
   const [mounted, setMounted] = useState(false);
@@ -279,9 +281,6 @@ export default function CMSPage() {
       };
   }, [tab]);
 
-  console.log('time', toUtcIso(publishAt), publishAt+':00.000Z')
-  console.log('utctest', toLocalInputValue(toUtcIso(publishAt)))
-
   // async function onSave() {
   //   // Reset loading state at the start
   //   setButtonLoading(true);
@@ -536,8 +535,6 @@ export default function CMSPage() {
     };
   }, []);
 
-  console.log(selectedEvent)
-
   async function onDelete(id: string) {
     setPendingDeleteId(id); 
     setSnackbarSettings({
@@ -581,7 +578,6 @@ export default function CMSPage() {
     });
   }
   
-  console.log('id', eventId)
   const dbEvents = events.map(e => ({
     id: e.id,
     imageUrl: e.image_url ?? undefined,
@@ -636,9 +632,9 @@ export default function CMSPage() {
   const filteredEvents = useMemo(() => applyFilter(events, filterTab, setDisableDrag), [ events, filterTab]);
   if (!mounted) return null;
   return (
-    <div className="font-sans flex flex-col gap-4 md:flex-row md:h-[90vh] p-8 md:gap-8 sm:px-20 bg-[#151c2f]">
+    <div className="font-sans flex flex-col gap-4 md:flex-row md:h-[90vh] p-4 sm:p-6 md:p-8 md:gap-8 bg-[#151c2f]">
       {/* editor side ni */}
-      <div className="md:w-[30%] text-white md:overflow-scroll custom-scrollbar shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-4">
+      <div className="md:w-[30%] text-white md:overflow-y-auto custom-scrollbar shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-4">
         {/* tabs header */}
         <Box sx={{ borderBottom: 1, borderColor: 'rgba(255,255,255,0.1)' }}>
           <Tabs
@@ -699,7 +695,6 @@ export default function CMSPage() {
                   value={filterTab}
                   onChange={(_, v) => {
                     setFilterTab(v);
-                    console.log(v)
                   }}
                   variant="scrollable"
                   scrollButtons="auto"
@@ -735,7 +730,7 @@ export default function CMSPage() {
                     <ul
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      className="divide-y divide-white/10 rounded-lg h-[150px] md:h-[420px]  overflow-scroll custom-scrollbar"
+                      className="divide-y divide-white/10 rounded-lg h-[220px] md:h-[420px] overflow-y-auto custom-scrollbar"
                     >
                       {filteredEvents.map((e, index) => (
                         <Draggable key={e.id} draggableId={e.id} index={index} isDragDisabled={disableDrag} >
@@ -758,7 +753,6 @@ export default function CMSPage() {
                                   onClick={()=>{
                                     const id = e.id
                                     const ev = events.find(x => x.id === id);
-                                    console.log("here ev", ev)
                                     if (ev) {
                                       setEventId(ev.id);
                                       setTitle(ev.title || '');
@@ -932,11 +926,10 @@ export default function CMSPage() {
                   Start time
                 </div>
                 <input
-                  style={{ colorScheme: 'dark' }}
                   type="time"
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
-                  className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                  className="dark-scheme w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
                 />
               </label>
               <label className="block">
@@ -944,11 +937,10 @@ export default function CMSPage() {
                   End time
                 </div>
                 <input
-                  style={{ colorScheme: 'dark' }}
                   type="time"
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
-                  className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                  className="dark-scheme w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
                 />
               </label>
             </div>
@@ -973,22 +965,20 @@ export default function CMSPage() {
               <label className="block">
                 <div className="text-sm mb-1 text-white/80">Publish at</div>
                 <input
-                  style={{ colorScheme: 'dark' }}
                   type="datetime-local"
                   value={publishAt}
                   onChange={(e) => setPublishAt(e.target.value)}
-                  className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                  className="dark-scheme w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
                 />
               </label>
               <label className="block">
                 <div className="text-sm mb-1 text-white/80">Unpublish at</div>
                 <input
-                  style={{ colorScheme: 'dark' }}
                   type="datetime-local"
                   value={unpublishAt}
                   min={publishAt || undefined}
                   onChange={(e) => setUnpublishAt(e.target.value)}
-                  className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+                  className="dark-scheme w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
                 />
               </label>
             </div>
@@ -1015,9 +1005,9 @@ export default function CMSPage() {
       </div>
 
       {/* RIGHT: live website preview + modal overlay */}
-      <div className="md:w-[70%] md:overflow-scroll custom-scrollbar text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
+      <div className="md:w-[70%] md:overflow-y-auto custom-scrollbar text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
         <div className="mb-2 text-sm text-white/60">Live preview from website</div>
-        <div className="relative w-full h-[720px] md:h-full border border-white/10 bg-white rounded-xl overflow-hidden">
+        <div className="relative w-full h-[420px] sm:h-[520px] md:h-full border border-white/10 bg-white rounded-xl overflow-hidden">
           {/* <iframe ref={previewRef} src="/" title="Website Live Preview" className="absolute inset-0 object-contain h-full w-full" /> */}
           <KrpanoViewerAdmin
             xml="/vtour/tour.xml"

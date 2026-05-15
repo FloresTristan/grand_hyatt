@@ -15,11 +15,10 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     .from('profiles')
     .select('id', { head: true, count: 'exact' });
   if (profilesErr) {
-    console.log("error", profilesErr)
+    console.error("profiles count error:", profilesErr);
   }
   if ((profilesCount ?? 0) === 0) {
-    console.log(profilesCount)
-    redirect('/signup'); 
+    redirect('/signup');
   }
 
   const supabase = await createSupabaseServer();

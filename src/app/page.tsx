@@ -1,27 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-// import Image from 'next/image';
-// import grandhyattmodel from "../app/assets/grandhyatt-resized.png"
+import dynamic from 'next/dynamic';
 import EventModalOverlay from './components/EventModalOverlay';
-import { fetchEventsForClient, EventType, formatDateRange, to12h, fetchSeasons, Season, formatTimeRange } from './components/helpersAndInputs';
+import { fetchEventsForClient, EventType, formatDateRange, fetchSeasons, Season, formatTimeRange } from './components/helpersAndInputs';
 import { useEffect, useState } from 'react';
 import { IoInformationCircleSharp } from "react-icons/io5";
 import SeasonOverlay from './components/SeasonOverlay';
-import KrpanoViewer from './components/KrpanoViewer';
+
+const KrpanoViewer = dynamic(() => import('./components/KrpanoViewer'), { ssr: false });
 
 export default function Home() {
   const [events, setEvents] = useState<EventType[]>([]);
   const [loadingEvents, setLoadingEvents] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(true);
-  const [seasons, setSeasons] = useState<Season[]>([])
-  const [loading, setLoading] = useState(false)
+  const [seasons, setSeasons] = useState<Season[]>([]);
+  const [loading, setLoading] = useState(false);
   const [selectedSeason, setSelectedSeason] = useState<Season>();
 
   useEffect(() => {
-    fetchEventsForClient({ setEvents, setLoadingEvents});
-    fetchSeasons({setSeasons, setLoading})
+    fetchEventsForClient({ setEvents, setLoadingEvents });
+    fetchSeasons({ setSeasons, setLoading });
     const isInIframe = window.self !== window.top;
     if (!isInIframe) {
       setShowModal(true);
@@ -29,36 +29,25 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if(!seasons) return;
-    const activeSeason = seasons.find((season)=> season.is_active === true)
-    console.log({activeSeason})
-    setSelectedSeason(activeSeason)
+    if (!seasons) return;
+    const activeSeason = seasons.find((season) => season.is_active === true);
+    setSelectedSeason(activeSeason);
   }, [seasons]);
 
   const onClose = () => setOpen(false);
-
-  console.log({seasons})
-  console.log({selectedSeason})
-  // console.log(events)
-
   const frameSrc = selectedSeason?.gif_url ?? null;
-
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
 
-      {/* Optional seasonal frame overlay (doesn't pan/zoom) */}
       {showModal && frameSrc && (
         <div className="pointer-events-none absolute inset-0 z-20">
           <SeasonOverlay show={true} frameSrc={frameSrc} />
         </div>
       )}
 
-      <KrpanoViewer
-        xml="/vtour/tour.xml"
-      />
+      <KrpanoViewer xml="/vtour/tour.xml" />
 
-      {/* Events modal */}
       {showModal && events.length > 0 && (
         <EventModalOverlay
           container="fullscreen"
@@ -79,14 +68,14 @@ export default function Home() {
         />
       )}
 
-      {/* Manual open button */}
-      <button onClick={() => setOpen(true)}>
-        <IoInformationCircleSharp className="absolute
-          top-auto bottom-4 right-4 left-auto
-          h-12 w-12 cursor-pointer
-          text-[#B30D3B] hover:text-red-500
-          duration-300
-          z-30" />
+      <button
+        type="button"
+        aria-label="View events"
+        onClick={() => setOpen(true)}
+        className="absolute bottom-4 right-4 z-30 relative rounded-full btn-press focus-visible:ring-2 focus-visible:ring-white"
+      >
+        <span className="attention-ring pointer-events-none absolute inset-0 rounded-full text-[#B30D3B]" />
+        <IoInformationCircleSharp className="relative h-14 w-14 sm:h-12 sm:w-12 text-[#B30D3B] hover:text-red-400 transition-colors duration-200 drop-shadow-lg" />
       </button>
     </div>
   );

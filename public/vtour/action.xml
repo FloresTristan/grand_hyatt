@@ -736,41 +736,41 @@
 		check_scene_visible();
 	</action>
 	<action name="close" devices="desktop">
-		   tween(layer[parent].x ,-50% , 1);
-		   tween(layer[forlogo].x ,25 , 1);
-		   delayedcall(1,
+		   tween(layer[parent].x ,-50% , 0.4);
+		   tween(layer[forlogo].x ,25 , 0.4);
+		   delayedcall(0.4,
 		   set(layer[parent].visible , false););
 	</action>
 	<action name="closem" devices="tablet">
-		   tween(layer[parent].x ,-50% , 1);
-		   tween(layer[forlogo].x , 25 , 1);
-		   delayedcall(1,
+		   tween(layer[parent].x ,-50% , 0.4);
+		   tween(layer[forlogo].x , 25 , 0.4);
+		   delayedcall(0.4,
 		   set(layer[parent].visible , false););
 		   tween(layer[tablet].bgalpha , 0 );
 		   set(layer[tablet].bgcapture , false);
 		   delayedcall(.4, set(layer[tablet].visible , false);
 	</action>
 	<action name="open" devices="tablet|desktop">
-		   tween(layer[parent].x ,0% , 1);
-		   tween(layer[forlogo].x ,-30% , 1);
+		   tween(layer[parent].x ,0% , 0.4);
+		   tween(layer[forlogo].x ,-30% , 0.4);
 		   set(layer[parent].visible , true);
 		   tween(layer[tablet].bgalpha , .5 );
 		   set(layer[tablet].visible , true);
 		   set(layer[tablet].bgcapture , true);
 	</action>
 	<action name="closem" devices="mobile">
-		   tween(layer[parent].x ,-100% , .8);
-		   delayedcall(.8,
+		   tween(layer[parent].x ,-100% , 0.35);
+		   delayedcall(0.35,
 		   set(layer[parent].visible , false););
 	</action>
 	<action name="open" devices="mobile">
-		   tween(layer[parent].x ,0% , 1);
+		   tween(layer[parent].x ,0% , 0.4);
 		   set(layer[parent].visible , true);
 	</action>
 	
 <action name="forAV1">
 		if(layer[up1].visible == false,
-		tween(layer[submenu1].height , 92);
+		if(device.mobile, tween(layer[submenu1].height, 132), tween(layer[submenu1].height, 92));
 		set(layer[down1].visible , false);
 		tween(layer[down1].rotate , 180);
 		set(layer[up1].visible , true);
@@ -794,7 +794,7 @@
 
 	<action name="forAV6">
 		if(layer[up6].visible == false,
-		tween(layer[submenu6].height , 120);
+		if(device.mobile, tween(layer[submenu6].height, 176), tween(layer[submenu6].height, 120));
 		set(layer[down6].visible , false);
 		tween(layer[down6].rotate , 180);
 		set(layer[up6].visible , true);
@@ -818,7 +818,7 @@
 
 	<action name="forAV2">
 		if(layer[up2].visible == false,
-		tween(layer[submenu2].height , 210);
+		if(device.mobile, tween(layer[submenu2].height, 308), tween(layer[submenu2].height, 210));
 		set(layer[down2].visible , false);
 		tween(layer[down2].rotate , 180);
 		set(layer[up2].visible , true);
@@ -842,7 +842,7 @@
 
 	<action name="forAV3">
 		if(layer[up3].visible == false,
-		tween(layer[submenu3].height , 60);
+		if(device.mobile, tween(layer[submenu3].height, 88), tween(layer[submenu3].height, 60));
 		set(layer[down3].visible , false);
 		tween(layer[down3].rotate , 180);
 		set(layer[up3].visible , true);
@@ -866,7 +866,7 @@
 
 	<action name="forAV4">
 		if(layer[up4].visible == false,
-		tween(layer[submenu4].height , 180);
+		if(device.mobile, tween(layer[submenu4].height, 264), tween(layer[submenu4].height, 180));
 		set(layer[down4].visible , false);
 		tween(layer[down4].rotate , 180);
 		set(layer[up4].visible , true);
@@ -889,7 +889,7 @@
 	</action>
 	<action name="forAV5">
 		if(layer[up5].visible == false,
-		tween(layer[submenu5].height , 105);
+		if(device.mobile, tween(layer[submenu5].height, 132), tween(layer[submenu5].height, 105));
 		set(layer[down5].visible , false);
 		tween(layer[down5].rotate , 180);
 		set(layer[up5].visible , true);
@@ -912,7 +912,7 @@
 	</action>
 	<action name="forAV7">
 		if(layer[up7].visible == false,
-		tween(layer[submenu7].height , 102);
+		if(device.mobile, tween(layer[submenu7].height, 132), tween(layer[submenu7].height, 102));
 		set(layer[down7].visible , false);
 		tween(layer[down7].rotate , 180);
 		set(layer[up7].visible , true);
@@ -935,7 +935,7 @@
 	</action>
 	<action name="forAV8">
 		if(layer[up8].visible == false,
-		tween(layer[submenu8].height , 30);
+		if(device.mobile, tween(layer[submenu8].height, 44), tween(layer[submenu8].height, 30));
 		set(layer[down8].visible , false);
 		tween(layer[down8].rotate , 180);
 		set(layer[up8].visible , true);
@@ -960,6 +960,9 @@
 		set(layer[parent].visible ,false);
 		set(layer[filter].visible , true);
 		set(layer[sceneonly].visible , false);
+		if(device.mobile,
+			tween(view.fov, 135);
+		);
 	</action>
 	<action name="forscene2">
 		set(layer[open].visible ,true);

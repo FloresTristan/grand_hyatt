@@ -63,11 +63,6 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
     };
   }, [initial]);
 
-  useEffect(() => {
-    console.log('🔄 Rerender:', { file, currentImageUrl });
-  }, [file, currentImageUrl]);
-
-
   function updateField<K extends keyof UpdateDraft>(key: K, value: UpdateDraft[K]) {
     const updated = { ...draft, [key]: value };
     setDraft(updated);
@@ -128,7 +123,6 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
     fileInputRef.current?.click();
   }
 
-  console.log('file', file)
   function onFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
     if (!f) return;
@@ -182,17 +176,13 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
       fd.append('title', draft.title ?? '');
       fd.append('cta_label', draft.cta_label ?? '');
       fd.append('cta_href', draft.cta_href ?? '');
-      // console.log("file", file)
       if (file) {
-        console.log("file", file)
-
         fd.append('file', file);
       }
       else if (!file && !currentImageUrl) {
         fd.append('clearImage', 'true');
       }
 
-      console.log("fd", fd)
       const res = await fetch(`/api/admin/hotspots/${id}`, { method: 'PATCH', body: fd });
       const data: unknown = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -203,7 +193,6 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
             }))
         throw new Error((data as { error?: string })?.error || 'Update failed')
       }
-      console.log ({data})
 
       const updated = (data as { item?: Hotspots })?.item;
       if (updated) {
@@ -335,11 +324,11 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
         <div className="grid grid-cols-2 gap-2">
           <label className="block">
             <div className="text-sm mb-1 text-white/80">Start date</div>
-            <input style={{ colorScheme: 'dark' }} type="date" value={draft.startdate || ''} onChange={(e) => updateField("startdate", e.target.value)} className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
+            <input type="date" value={draft.startdate || ''} onChange={(e) => updateField("startdate", e.target.value)} className="dark-scheme w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2.5 outline-none focus:border-white/30 transition-colors duration-150 min-h-[44px]" />
           </label>
           <label className="block">
             <div className="text-sm mb-1 text-white/80">End date</div>
-            <input style={{ colorScheme: 'dark' }} type="date" value={draft.enddate || ''} onChange={(e) => updateField("enddate", e.target.value)} className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
+            <input type="date" value={draft.enddate || ''} onChange={(e) => updateField("enddate", e.target.value)} className="dark-scheme w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2.5 outline-none focus:border-white/30 transition-colors duration-150 min-h-[44px]" />
           </label>
           {/* <LabeledDate label="End date" value={enddate} onChange={setEnddate} min={startdate || undefined} /> */}
         </div>
@@ -357,11 +346,10 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
               Start time
             </div>
             <input
-              style={{ colorScheme: 'dark' }}
               type="time"
               value={draft.starttime || ''}
-              onChange={(e) => updateField("starttime",e.target.value)}
-              className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+              onChange={(e) => updateField("starttime", e.target.value)}
+              className="dark-scheme w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2.5 outline-none focus:border-white/30 transition-colors duration-150 min-h-[44px]"
             />
           </label>
           <label className="block">
@@ -369,11 +357,10 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
               End time
             </div>
             <input
-              style={{ colorScheme: 'dark' }}
               type="time"
               value={draft.endtime || ''}
-              onChange={(e) => updateField("endtime",e.target.value)}
-              className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30"
+              onChange={(e) => updateField("endtime", e.target.value)}
+              className="dark-scheme w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2.5 outline-none focus:border-white/30 transition-colors duration-150 min-h-[44px]"
             />
           </label>
         </div>
@@ -443,6 +430,7 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
           ref={fileInputRef}
           type="file"
           accept="image/*"
+          aria-label="Upload hotspot image"
           onChange={onFileSelect}
           className="hidden"
         />
@@ -469,7 +457,7 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
           type="button"
           onClick={handleCancel}
           disabled={busy}
-          className="rounded-lg px-3 py-2 text-sm bg-white/10 hover:bg-white/20 disabled:opacity-50"
+          className="btn-press rounded-lg px-4 py-2.5 text-sm bg-white/10 hover:bg-white/20 transition-colors duration-150 disabled:opacity-50 min-h-[44px]"
         >
           Cancel
         </button>
@@ -477,7 +465,7 @@ export default function UpdateHotspotPage({ initial, hotspotId, onSaved, onCance
           type="button"
           onClick={handleUpdate}
           disabled={busy || !id}
-          className="rounded-lg px-3 py-2 text-sm font-medium text-black bg-green-400 hover:bg-green-500 disabled:opacity-50"
+          className="btn-press rounded-lg px-4 py-2.5 text-sm font-medium text-black bg-green-400 hover:bg-green-500 transition-colors duration-150 disabled:opacity-50 min-h-[44px]"
         >
           {busy ? 'Saving…' : 'Update'}
         </button>

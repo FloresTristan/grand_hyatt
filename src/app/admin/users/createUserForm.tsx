@@ -54,7 +54,7 @@ export default function UsersPage() {
         .sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
       setUsers(sorted);
     } catch (e: unknown) {
-      console.log(e)
+      console.error(e);
       setErr('Load failed');
     } finally {
       setLoading(false);
@@ -90,7 +90,7 @@ export default function UsersPage() {
       if (!res.ok) throw new Error(data?.error || 'Delete failed');
       setUsers(prev => prev.filter(u => u.uid !== user.uid));
     } catch (e: unknown) {
-      console.log(e)
+      console.error(e);
       alert('Delete failed');
     }
   }
@@ -140,7 +140,6 @@ export default function UsersPage() {
           body: JSON.stringify(body),
         });
         const data = await res.json();
-        console.log({data})
         if (!res.ok){
           setSnackbarSettings((prev) => ({...prev,
             open: true,

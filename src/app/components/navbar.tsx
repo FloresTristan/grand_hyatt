@@ -39,7 +39,7 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
       if (typeof window !== 'undefined') {
         localStorage.clear();
         sessionStorage.clear();
-        
+
         document.cookie.split(';').forEach(cookie => {
           const eqPos = cookie.indexOf('=');
           const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
@@ -48,11 +48,11 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
           }
         });
       }
-      
+
       supabase.auth.signOut().catch(() => {});
-      
+
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
     } finally {
       window.location.replace('/login');
     }
@@ -60,67 +60,75 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
 
   const isRoleSuperAdminOrAdmin = role === 'super-admin' || role === 'admin';
 
+  function navLinkClass(href: string, exact = false) {
+    const active = exact ? pathname === href : pathname.startsWith(href);
+    return `rounded-md border-2 px-3 py-2 text-sm transition-all duration-150 ${
+      active
+        ? 'border-blue-500 bg-blue-500/10 text-blue-300'
+        : 'border-transparent hover:border-blue-500 hover:bg-white/5'
+    }`;
+  }
+
+  function mobileNavLinkClass(href: string, exact = false) {
+    const active = exact ? pathname === href : pathname.startsWith(href);
+    return `block rounded-lg px-4 py-3 min-h-[48px] flex items-center text-sm transition-colors duration-150 ${
+      active
+        ? 'bg-blue-500/20 text-blue-300'
+        : 'hover:bg-white/10'
+    }`;
+  }
+
   return (
     <nav
-      className={`sticky md:h-[10vh] top-0 z-50 bg-[#212e3f] text-white transition-colors
+      className={`sticky top-0 z-50 bg-[#212e3f] text-white transition-colors
         ${isScrolled ? 'bg-opacity-90 backdrop-blur-md' : ''}`}
     >
-      <div className="mx-auto  px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
+      <div className="mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2 btn-press">
           <Image src={grandhyattmodel} alt="Grand Hyatt" priority width={100} />
         </Link>
 
-        {/* Desktop ni */}
-        <ul className="hidden md:flex items-center gap-4 font-[family-name:var(--font-geist-sans)]">
+        {/* Desktop */}
+        <ul className="hidden md:flex items-center gap-1 font-[family-name:var(--font-geist-sans)]">
           <li>
-            <Link
-              href="/admin"
-              className="rounded-md border-2 border-transparent px-3 py-2 hover:border-blue-500 transition"
-            >
+            <Link href="/admin" className={navLinkClass('/admin', true)}>
               Pop-up Content
             </Link>
           </li>
           <li>
-            <Link
-              href="/admin/grandhyatt"
-              className="rounded-md border-2 border-transparent px-3 py-2 hover:border-blue-500 transition"
-            >
+            <Link href="/admin/grandhyatt" className={navLinkClass('/admin/grandhyatt')}>
               Grand Hyatt Content
             </Link>
           </li>
           <li>
-            <Link
-              href="/admin/seasons"
-              className="rounded-md border-2 border-transparent px-3 py-2 hover:border-blue-500 transition"
-            >
+            <Link href="/admin/seasons" className={navLinkClass('/admin/seasons')}>
               Seasons
             </Link>
           </li>
           {isRoleSuperAdminOrAdmin && (
             <li>
-              <Link 
-                href="/admin/users" 
-                className="rounded-md border-2 border-transparent px-3 py-2 hover:border-blue-500"
-              >
+              <Link href="/admin/users" className={navLinkClass('/admin/users')}>
                 Users
               </Link>
             </li>
           )}
           <li>
             <button
+              type="button"
+              disabled={loggingOut}
               onClick={async () => {
-                if (loggingOut) return;       
+                if (loggingOut) return;
                 setLoggingOut(true);
                 try {
-                  await logout();                 
+                  await logout();
                 } finally {
                   setLoggingOut(false);
                 }
               }}
-              className="ml-2 rounded-lg bg-red-500 px-3 py-2 text-sm hover:opacity-95 hover:cursor-pointer"
+              className="btn-press ml-2 rounded-lg bg-red-500 hover:bg-red-600 px-4 py-2 text-sm transition-colors duration-150 disabled:opacity-60 min-w-[72px]"
             >
               {loggingOut ? (
-                <span className="inline-flex items-center px-3 gap-2">
+                <span className="inline-flex items-center justify-center gap-2">
                   <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 004 12z" />
@@ -133,23 +141,22 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
           </li>
         </ul>
 
-        {/* Para mobile ni */}
+        {/* Mobile hamburger */}
         <button
-          className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-white/10"
-          aria-label="Open menu"
-          aria-expanded={open}
+          type="button"
+          className="btn-press md:hidden inline-flex h-11 w-11 items-center justify-center rounded-md hover:bg-white/10 transition-colors"
+          aria-label={open ? "Close menu" : "Open menu"}
           onClick={() => setOpen((v) => !v)}
         >
           <span className="sr-only">Open menu</span>
-          {/* icons / X */}
           <svg
-            className={`h-6 w-6 transition-transform ${open ? 'rotate-90 opacity-0' : 'opacity-100'}`}
+            className={`h-6 w-6 transition-transform duration-200 ${open ? 'rotate-90 opacity-0' : 'opacity-100'}`}
             viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
           >
             <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" />
           </svg>
           <svg
-            className={`absolute h-6 w-6 transition-opacity ${open ? 'opacity-100' : 'opacity-0'}`}
+            className={`absolute h-6 w-6 transition-opacity duration-200 ${open ? 'opacity-100' : 'opacity-0'}`}
             viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
           >
             <path d="M6 6l12 12M18 6l-12 12" strokeLinecap="round" />
@@ -157,60 +164,46 @@ export default function NavBar({ role = 'editor' }: { role?: Role }) {
         </button>
       </div>
 
-      {/* menu overlay */}
+      {/* Backdrop */}
       <div
-        className={`md:hidden fixed inset-0 bg-black/40 transition-opacity ${open ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+        className={`md:hidden fixed inset-0 bg-black/40 transition-opacity duration-200 ${open ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
         onClick={() => setOpen(false)}
       />
 
-      {/* panel */}
+      {/* Mobile panel */}
       <div
-        className={`md:hidden absolute left-3 right-3 top-[72px] rounded-2xl border border-white/10 bg-[#212e3f] shadow-xl transition
+        id="mobile-nav-panel"
+        className={`md:hidden absolute left-3 right-3 top-full mt-1 rounded-2xl border border-white/10 bg-[#212e3f] shadow-xl transition-all duration-200
           ${open ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0 pointer-events-none'}`}
       >
-        <ul className="flex flex-col p-3 font-[family-name:var(--font-geist-sans)]">
+        <ul className="flex flex-col p-2 font-[family-name:var(--font-geist-sans)]">
           <li>
-            <Link
-              href="/admin"
-              onClick={() => setOpen(false)}
-              className="block rounded-md px-3 py-2 hover:bg-white/10"
-            >
+            <Link href="/admin" onClick={() => setOpen(false)} className={mobileNavLinkClass('/admin', true)}>
               Pop-up Content
             </Link>
           </li>
           <li>
-            <Link
-              href="/admin/grandhyatt"
-              onClick={() => setOpen(false)}
-              className="block rounded-md px-3 py-2 hover:bg-white/10"
-            >
+            <Link href="/admin/grandhyatt" onClick={() => setOpen(false)} className={mobileNavLinkClass('/admin/grandhyatt')}>
               Grand Hyatt
             </Link>
           </li>
           <li>
-            <Link
-              href="/admin/seasons"
-              onClick={() => setOpen(false)}
-              className="block rounded-md px-3 py-2 hover:bg-white/10"
-            >
+            <Link href="/admin/seasons" onClick={() => setOpen(false)} className={mobileNavLinkClass('/admin/seasons')}>
               Seasons
             </Link>
           </li>
           {isRoleSuperAdminOrAdmin && (
             <li>
-              <Link
-                href="/admin/users"
-                onClick={() => setOpen(false)}
-                className="block rounded-md px-3 py-2 hover:bg白/10 hover:bg-white/10"
-              >
+              <Link href="/admin/users" onClick={() => setOpen(false)} className={mobileNavLinkClass('/admin/users')}>
                 Users
               </Link>
             </li>
           )}
-          <li className="mt-1 border-t border-white/10 pt-2">
+          <li className="mt-1 border-t border-white/10 pt-2 px-1 pb-1">
             <button
+              type="button"
               onClick={logout}
-              className="w-full rounded-lg bg-red-600 px-3 py-2 text-sm hover:opacity-95"
+              className="btn-press w-full rounded-lg bg-red-600 hover:bg-red-500 px-4 py-3 text-sm transition-colors duration-150"
             >
               Logout
             </button>

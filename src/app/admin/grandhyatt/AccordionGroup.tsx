@@ -30,7 +30,6 @@ export default function AccordionGroup({
 
   if (!items.length) return null;
 
-  console.log({selectedHotspot})
   return (
     <div className="border border-white/10 rounded-lg overflow-hidden">
       {/* Accordion Header */}

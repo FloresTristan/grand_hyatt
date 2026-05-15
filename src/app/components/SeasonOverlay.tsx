@@ -1,16 +1,22 @@
-import Image, {StaticImageData} from "next/image"
+import { memo } from "react";
+import Image, { StaticImageData } from "next/image";
 
-type OverlayProps ={
-    show: boolean;
-    frameSrc: string | StaticImageData;
-}
+type OverlayProps = {
+  show: boolean;
+  frameSrc: string | StaticImageData;
+};
 
-export default function SeasonOverlay({show, frameSrc}:OverlayProps){
+const SeasonOverlay = memo(function SeasonOverlay({ show, frameSrc }: OverlayProps) {
+  if (!show) return null;
+  return (
+    <Image
+      unoptimized
+      src={frameSrc}
+      alt="Seasonal frame overlay"
+      fill
+      className="object-fill object-center"
+    />
+  );
+});
 
-    if(show === false ) return null;
-    return (
-        <>
-            <Image unoptimized src={frameSrc} alt={'sample'} fill className="object-fill object-center" />
-        </>
-    )
-}
+export default SeasonOverlay;

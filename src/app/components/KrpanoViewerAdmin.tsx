@@ -6,7 +6,6 @@ import { fetchHotspots, Hotspots } from "./helpersAndInputs";
 import HotspotModalOverlay from "../admin/grandhyatt/HotspotModal";
 import { usePathname } from "next/navigation";
 
-/** Minimal krpano API we use */
 interface Krpano {
   call(cmd: string): void;
   set(path: string, value: string | number | boolean): void;
@@ -43,13 +42,13 @@ type Props = {
   whichPage?: 'default' | 'popup' | 'grandhyatt' | 'seasons';
 };
 
-export default function KrpanoViewer({
+export default function KrpanoViewerAdmin({
   xml,
   viewerId = "krpano1",
   targetId = "pano1",
   style,
   options,
-  container= 'fullscreen',
+  container = 'fullscreen',
   whichPage = 'default',
 }: Props) {
   const [scriptReady, setScriptReady] = useState(false);
@@ -61,51 +60,33 @@ export default function KrpanoViewer({
   const krpanoRef = useRef<Krpano | null>(null);
   const pathname = usePathname();
 
-  // ==============================
-  //  FETCH HOTSPOTS
-  // ==============================
   useEffect(() => {
     fetchHotspots({ setHotspots, setLoading });
   }, []);
 
-
-  const callKrpanoAction = (action: string) => {
+  const callKrpanoAction = useCallback((action: string) => {
     const k = krpanoRef.current ?? window.getkrpano?.(viewerId);
     if (k) k.call(`${action}()`);
-  };
+  }, [viewerId]);
 
-  //  LAYER CLICK HANDLER (submenu)
   useEffect(() => {
-    console.log("before")
     window.ReactKrpanoLayerClick = (layerName: string) => {
-      console.log("after")
       const k = krpanoRef.current ?? window.getkrpano?.(viewerId);
-      console.log("layer clicked:", layerName)
       if (!k) return;
-
-      // Only respond to submenu layers (submenu10, submenu11, etc)
       if (!layerName.startsWith("submenu")) return;
 
-      // Get the visible text (HTML) from that submenu layer
       const html = k.get(`layer[${layerName}].html`);
       if (!html) return;
 
-      // Match it to your fetched hotspot names
       const match = hotspots.find(
-        (h) =>
-          h.name?.trim().toLowerCase() ===
-          String(html).trim().toLowerCase()
+        (h) => h.name?.trim().toLowerCase() === String(html).trim().toLowerCase()
       );
 
       if (match) {
-        console.log("🟢 Submenu clicked:", html, "→ hotspot:", match);
         setSelectedHotspot(match);
         setModalOpen(true);
-
         k.call("closem()");
         k.call("close()");
-      } else {
-        console.warn("⚠️ No hotspot matched submenu:", html);
       }
     };
 
@@ -114,15 +95,6 @@ export default function KrpanoViewer({
     };
   }, [hotspots, viewerId]);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      console.log("Path:", window.location.pathname);
-    }
-  }, []);
-
-  // ==============================
-  //  EMBED KRPANO
-  // ==============================
   useEffect(() => {
     if (!scriptReady || loading) return;
     if (!window.embedpano) return;
@@ -136,35 +108,20 @@ export default function KrpanoViewer({
       target: targetId,
       xml,
       html5: "only",
-      consolelog: true,
+      consolelog: false,
       debugmode: false,
       passQueryParameters: true,
       jsaccess: "full",
       onready: (k: Krpano) => {
         krpanoRef.current = k;
-        console.log(k)
-
-        // Register global click listener for all KRPano layers
-        // Ensure submenu layers can capture clicks
-        // console.log(pathname)
-        // if (pathname.includes("grandhyatt") ) {
-        //   console.log("🌇 Loading admin default scene: ninort");
-        //   k.call(`
-        //      delayedcall(1,
-        //       loadscene(scene_ninort, null, MERGE, BLEND(get(transitiontime),get(transitiontweentype)));
-        //     );
-        //   `);
-        // }
 
         if (pathname.includes("admin")) {
           k.call(`set(admin_mode, true);`);
-
           k.call(`
             loadscene(scene_gh_map, null, MERGE,
               BLEND(get(transitiontime),get(transitiontweentype))
             );
           `);
-
           k.call(`
             delayedcall(0.2,
               if(hotspot[building],
@@ -173,15 +130,11 @@ export default function KrpanoViewer({
                 set(hotspot[building].onclick, );
                 set(hotspot[building].onover, );
                 set(hotspot[building].onout, );
-                trace('✅ admin: disabled hotspot building');
-              ,
-                trace('⚠️ admin: hotspot building not found yet');
               );
             );
           `);
-
           k.call(`delayedcall(0.25, forpopup());`);
-      }
+        }
 
         k.call(`
           for(set(i,0), i LT layer.count, inc(i),
@@ -192,21 +145,6 @@ export default function KrpanoViewer({
             );
           );
         `);
-
-        
-
-        // if (container === 'fullscreen') {
-        //   k.call(`
-        //     if(hotspot[building],
-        //       set(hotspot[building].enabled, true);
-        //       set(hotspot[building].onclick,
-        //         loadscene(scene_ninort, null, MERGE, BLEND(get(transitiontime),get(transitiontweentype)));
-        //       );
-        //       set(hotspot[building].cursor, pointer);
-        //     );
-        //   `);
-        // }
-        console.log("✅ KRPano ready, XML loaded");
       },
       ...(options || {}),
     });
@@ -214,12 +152,6 @@ export default function KrpanoViewer({
     embeddedRef.current = true;
   }, [scriptReady, loading, xml, viewerId, targetId, options, pathname, whichPage]);
 
-  console.log({hotspots})
-  console.log({selectedHotspot})
-
-  // ==============================
-  //  CLEANUP ON UNMOUNT
-  // ==============================
   useEffect(() => {
     return () => {
       try {
@@ -230,38 +162,26 @@ export default function KrpanoViewer({
     };
   }, [viewerId]);
 
-  // ==============================
-  //  RENDER
-  // ==============================
   return (
     <>
-      {/* Load the krpano engine */}
       <Script
         src="/vtour/tour.js"
         strategy="afterInteractive"
         onReady={() => setScriptReady(true)}
       />
 
-      {/* The actual pano container */}
       <div
         id={targetId}
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "relative",
-          ...style,
-        }}
+        className="w-full h-full relative"
+        style={style}
       />
 
-      {/* Hotspot Modal */}
       {container === 'fullscreen' && selectedHotspot && (
         <HotspotModalOverlay
           open={modalOpen}
           onClose={() => {
             setModalOpen(false);
-            // setTimeout(() => {
-              callKrpanoAction("open")
-            // }, 100);
+            callKrpanoAction("open");
           }}
           hotspot={selectedHotspot}
           container={container}

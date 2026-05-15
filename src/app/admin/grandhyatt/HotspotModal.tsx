@@ -38,12 +38,9 @@ export default function HotspotModalOverlay({
     })
   }, [hotspot?.startdate, hotspot?.enddate, hotspot?.starttime, hotspot?.endtime]);
 
-  console.log({hotspot})
   if (!hotspot) return null;
   if (!hotspot.title && !hotspot.description && !hotspot.image_url && !current.dateRange && !current.timeText) return null;
   if (!open) return null;
-
-  console.log({hotspot})
 
 
 
@@ -51,21 +48,27 @@ export default function HotspotModalOverlay({
   const z   = container === 'contained' ? 'z-10' : 'z-[50]';
 
   return (
-    <div id="hotspotModal" className={`${pos} inset-0 ${z} flex p-4 lg:p-0 items-center justify-center`} role="dialog" aria-modal="true">
+    <div
+      id="hotspotModal"
+      className={`${pos} inset-0 ${z} flex items-start sm:items-center justify-center overflow-y-auto p-4`}
+      role="dialog"
+      aria-modal="true"
+    >
       <div className={`${pos} inset-0 bg-black/60 backdrop-blur-[1px]`} onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-[400px] md:max-w-[560px] rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="relative z-10 w-full max-w-[400px] md:max-w-[560px] my-auto rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
         <button
+          type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute -right-3 -top-3 flex h-10 w-10 items-center justify-center rounded-full bg-red-500 hover:bg-red-600 text-white shadow-lg cursor-pointer ring-4 ring-white"
+          className="btn-press absolute -right-3 -top-3 flex h-11 w-11 items-center justify-center rounded-full bg-red-500 hover:bg-red-600 text-white shadow-lg cursor-pointer ring-4 ring-white text-2xl leading-none"
         >
           ×
         </button>
 
         <div className="px-5 pb-5 pt-6">
           {hotspot?.image_url && (
-            <div className={`relative mx-auto mb-4 h-32 w-full overflow-hidden rounded-xl  ${container === 'fullscreen'? 'md:h-60' : 'md:h-32' }`}>
+            <div className={`relative mx-auto mb-4 w-full overflow-hidden rounded-xl ${container === 'fullscreen' ? 'h-44 sm:h-52 md:h-60' : 'h-32 md:h-40'}`}>
               <Image
                 src={hotspot.image_url}
                 alt={hotspot.title || ''}
@@ -125,12 +128,12 @@ export default function HotspotModalOverlay({
                   href={hotspot?.cta_href}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-full bg-red-600 hover:bg-red-500 hover:shadow-2xl duration-300 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow hover:opacity-95"
+                  className="btn-press inline-flex items-center justify-center rounded-full bg-red-600 hover:bg-red-500 hover:shadow-2xl transition-all duration-200 px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-white shadow-md"
                 >
                   {hotspot?.cta_label ?? 'Learn more'}
                 </a>
               ) : (
-                <button className="inline-flex items-center justify-center rounded-full bg-red-600 hover:bg-red-500 hover:shadow-2xl duration-300 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow hover:opacity-95" >
+                <button type="button" className="btn-press inline-flex items-center justify-center rounded-full bg-red-600 hover:bg-red-500 hover:shadow-2xl transition-all duration-200 px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-white shadow-md">
                   {hotspot?.cta_label ?? 'Learn more'}
                 </button>
               )}

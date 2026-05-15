@@ -64,6 +64,7 @@ export const ImageDropzone: React.FC<ImageDropzoneProps> = ({
         ref={inputRef}
         type="file"
         accept="image/*"
+        aria-label="Upload image"
         onChange={onFileSelect}
         className="hidden"
       />
@@ -76,18 +77,10 @@ export async function fetchEventsForClient({ setEvents, setLoadingEvents }: { se
   try {
     const res = await fetch('/api/events', { cache: 'no-store' });
     const data = await res.json();
-    console.log(data, 'fetched data for homepage');
-    console.log(
-      'ANON key fingerprint:',
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(0, 6),
-      '…',
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(-6)
-    );
     if (!res.ok) throw new Error(data?.error || 'Failed to load events');
     const items = (data.items || []).sort(
-    (a: EventType, b: EventType) => (a.order ?? 0) - (b.order ?? 0)
-  );
-    // console.log(items, 'fetched items for homepage');
+      (a: EventType, b: EventType) => (a.order ?? 0) - (b.order ?? 0)
+    );
     setEvents(items);
   } catch (e) {
     console.error(e);
@@ -192,7 +185,7 @@ export function LabeledInput({ label, value, onChange, placeholder }: { label: s
   return (
     <label className="block">
       <div className="text-sm mb-1 text-white/80">{label}</div>
-      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
+      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2.5 outline-none focus:border-white/30 transition-colors duration-150 min-h-[44px]" />
     </label>
   );
 }
@@ -201,7 +194,7 @@ export function LabeledTextarea({ label, value, onChange, placeholder, rows = 5 
   return (
     <label className="block">
       <div className="text-sm mb-1 text-white/80">{label}</div>
-      <textarea value={value} maxLength={500} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} rows={rows} className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30 resize-y" />
+      <textarea value={value} maxLength={500} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} rows={rows} className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2.5 outline-none focus:border-white/30 resize-y transition-colors duration-150" />
     </label>
   );
 }
@@ -210,7 +203,7 @@ export function LabeledDate({ label, value, onChange, min, max }: { label: strin
   return (
     <label className="block">
       <div className="text-sm mb-1 text-white/80">{label}</div>
-      <input style={{ colorScheme: 'dark' }} type="date" value={value} min={min} max={max} onChange={(e) => onChange(e.target.value)} className="w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2 outline-none focus:border-white/30" />
+      <input type="date" value={value} min={min} max={max} onChange={(e) => onChange(e.target.value)} className="dark-scheme w-full rounded-lg bg-[#131a2a] border border-white/10 px-3 py-2.5 outline-none focus:border-white/30 transition-colors duration-150 min-h-[44px]" />
     </label>
   );
 }
@@ -233,10 +226,8 @@ export const applyFilter = (items: EventType[], tabIdx: number, setDisableDrag: 
     setDisableDrag(false)
     return items ?? []
   }else{
-    console.log({ tabIdx })
     setDisableDrag(true)
     const wanted = TAB_TO_STATUS[tabIdx] ?? 'live';
-    console.log({ wanted })
     return (items ?? []).filter(e => computeStatus(e) === wanted);
   }
 };

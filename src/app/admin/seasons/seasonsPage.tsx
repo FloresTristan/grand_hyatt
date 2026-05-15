@@ -30,7 +30,6 @@ export default function SeasonsPage(){
         if (imageFile) body.append('image', imageFile);
         if (gifFile) body.append('gif', gifFile);
         const res = await fetch('/api/admin/seasons/create', { method: 'POST', body });
-        console.log({res})
         if (!res.ok) {
             setSnackbarSettings((prev) => ({...prev,
                 open: true,
@@ -61,7 +60,6 @@ export default function SeasonsPage(){
         }
 
         const data = await res.json();
-        console.log({data})
         if (!res.ok){
             setSnackbarSettings((prev) => ({...prev,
                 open: true,
@@ -134,33 +132,25 @@ export default function SeasonsPage(){
 
         const currentActive = seasons.find((season)=> season.is_active === true)
 
-        console.log({currentActive})
         setSelectedSeason(currentActive?.image_url || '')
         setSelectedSeasonId(currentActive?.id || '')
     }, [seasons]);
 
-    console.log({seasons})
-
-    // console.log("user", user)
-    console.log("profile", profile)
-
-    console.log("role", profile?.role)
-    console.log(selectedSeason)
-    console.log({selectedSeasonId})
-
     return(
-        <div className="font-sans flex flex-col gap-4 md:flex-row md:h-[90vh] p-8 md:gap-8 sm:px-20 bg-[#151c2f]">
-            <div className="md:w-[25%] text-white md:overflow-scroll custom-scrollbar shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-4">
+        <div className="font-sans flex flex-col gap-4 md:flex-row md:h-[90vh] p-4 sm:p-6 md:p-8 md:gap-8 bg-[#151c2f]">
+            <div className="md:w-[25%] text-white md:overflow-y-auto custom-scrollbar shadow-xl rounded-xl bg-[#212e3f] p-3 md:p-5 space-y-4">
                {profile?.role === 'super-admin' && (
                     <div className='sticky w-full top-0 bg-[#212e3f] z-20 rounded-lg flex justify-between'>
                         <div className='flex gap-x-2'>
                             <button
+                                type="button"
                                 onClick={() => setOpen(true)}
                                 className='px-3 py-2 rounded-lg bg-blue-400 hover:bg-blue-500 hover:cursor-pointer text-black font-medium disabled:cursor-not-allowed'
                             >
                                 Add
                             </button>
                             <button
+                                type="button"
                                 onClick={() => onDelete(selectedSeasonId)}
                                 className='px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 hover:cursor-pointer font-medium disabled:cursor-not-allowed'
                             >
@@ -202,6 +192,7 @@ export default function SeasonsPage(){
                }
                 <div className="flex mt-4 gap-2">
                     <button
+                        type="button"
                         onClick={()=>{
                             setActiveSeason(selectedSeasonId)
                         }}
@@ -217,6 +208,7 @@ export default function SeasonsPage(){
                         }
                     </button>
                     <button
+                        type="button"
                         className='px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white hover:cursor-pointer'
                         onClick={() => {
                             setSelectedSeason('')
@@ -227,11 +219,11 @@ export default function SeasonsPage(){
                     </button>
                 </div>
             </div>
-            <div className="md:w-[75%] md:overflow-scroll custom-scrollbar text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
+            <div className="md:w-[75%] md:overflow-y-auto custom-scrollbar text-white shadow-xl rounded-xl bg-[#212e3f] gap-4 p-3 md:p-5">
                 <div className="mb-2 text-sm text-white/60">
                     Live preview from website with frames
                 </div>
-                <div className="relative w-full h-[720px] md:h-full border border-white/10 bg-white rounded-xl overflow-hidden">
+                <div className="relative w-full h-[420px] sm:h-[520px] md:h-full border border-white/10 bg-white rounded-xl overflow-hidden">
                     {selectedSeason !== '' && (
                         <div className="relative aspect-video inset-0 w-full z-30 h-full pointer-events-none">
                             {/* <Image unoptimized src={selectedSeason} alt="Season Overlay" fill  className=" object-cover object-center" /> */}
