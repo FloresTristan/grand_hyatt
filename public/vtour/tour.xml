@@ -451,7 +451,7 @@
 		</image>
 		<!-- loadscene(scene_ninort, null, MERGE, BLEND(get(transitiontime),get(transitiontweentype))); -->
 		<!-- set(layer[ninort].visible , true);tween(layer[ninort].alpha , 1); -->
-		<hotspot name="building" url="skin/building2.png"  ath="0.14149898777018266" atv="-0.15850038661535854" scale="0.00145" scenename="ninort"  alpha="0" distorted="true" zoom="true" onover="tween(alpha , 1);" onout="tween(alpha , 0);" onclick="loadscene(scene_ninort, null, MERGE, BLEND(get(transitiontime),get(transitiontweentype)));"/>
+		<hotspot name="building" url="skin/building2.png"  ath="0.14149898777018266" atv="-0.15850038661535854" scale="0.00145" scenename="ninort"  alpha="0" distorted="true" zoom="true" onover="tween(alpha, 1, 0.25); tween(scale, 0.00165, 0.25, easeOutBack);" onout="tween(alpha, 0, 0.25); tween(scale, 0.00145, 0.2, easeIn);" onclick="openBuilding();"/>
 		<hotspot name="bonifacio" url="skin/bonifacio.png"  ath="-0.153128522575083" atv="-0.012500272477701472" scale="0.1247999999999993" zorder="100" visible="false"/>
 		<hotspot name="highstreet" url="skin/highstreet.png" ath="-0.050743036930886505" atv="0.05318615081182742" scale="0.1247999999999993" zorder="100" visible="false"/>
 		<hotspot name="terra280" url="skin/terra28.png" ath="-0.10385028060358352" atv="0.029138226095209628" scale="0.1247999999999993" zorder="100" visible="false"/>

@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import EventModalOverlay from './components/EventModalOverlay';
 import { fetchEventsForClient, EventType, formatDateRange, fetchSeasons, Season, formatTimeRange } from './components/helpersAndInputs';
 import { useEffect, useState } from 'react';
-import { IoInformationCircleSharp } from "react-icons/io5";
 import SeasonOverlay from './components/SeasonOverlay';
 
 const KrpanoViewer = dynamic(() => import('./components/KrpanoViewer'), { ssr: false });
@@ -72,10 +71,10 @@ export default function Home() {
         type="button"
         aria-label="View events"
         onClick={() => setOpen(true)}
-        className="absolute bottom-4 right-4 z-30 relative rounded-full btn-press focus-visible:ring-2 focus-visible:ring-white"
+        className="absolute bottom-6 right-6 z-30 h-11 w-11 rounded-full bg-[#BC0F42] shadow-lg btn-press hover:bg-[#a00d38] transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-white flex items-center justify-center"
       >
-        <span className="attention-ring pointer-events-none absolute inset-0 rounded-full text-[#B30D3B]" />
-        <IoInformationCircleSharp className="relative h-14 w-14 sm:h-12 sm:w-12 text-[#B30D3B] hover:text-red-400 transition-colors duration-200 drop-shadow-lg" />
+        <span className="attention-ring pointer-events-none absolute inset-0 rounded-full text-[#BC0F42]" />
+        <span className="relative text-white font-serif font-bold text-xl leading-none select-none">i</span>
       </button>
     </div>
   );

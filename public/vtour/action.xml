@@ -955,6 +955,18 @@
 		);
 	</action>
 
+	<!-- Called when the building hotspot is clicked on the map -->
+	<action name="openBuilding">
+		<!-- Press-down scale on the building sprite -->
+		tween(hotspot[building].scale, 0.0010, 0.18, easeIn);
+		<!-- Camera zooms toward building before transition -->
+		tween(view.fov, 88, 0.55, easeIn);
+		<!-- After the zoom settles, blend into the building scene -->
+		delayedcall(0.5,
+			loadscene(scene_ninort, null, MERGE, BLEND(1.0, easeInOutSine));
+		);
+	</action>
+
 	<action name="forscene1">
 		set(layer[open].visible ,false);
 		set(layer[parent].visible ,false);
@@ -966,9 +978,32 @@
 	</action>
 	<action name="forscene2">
 		set(layer[open].visible ,true);
-		set(layer[parent].visible ,true);
 		set(layer[filter].visible , false);
 		set(layer[sceneonly].visible , true);
+
+		<!-- Slide the accordion panel in from off-screen left -->
+		if(device.mobile,
+			set(layer[parent].x, -100%);
+		,
+			set(layer[parent].x, -50%);
+		);
+		set(layer[parent].visible, true);
+		tween(layer[parent].x, 0%, 0.45, easeOutQuad);
+
+		<!-- Building zoom-in: panorama starts wider then eases to normal FOV -->
+		set(view.fov, 148);
+		delayedcall(0.15, tween(view.fov, 120, 0.65, easeOutCubic););
+	</action>
+
+	<!-- Opens the accordion panel in admin mode (called after scene_gh_map loads) -->
+	<action name="forpopup">
+		if(device.mobile,
+			set(layer[parent].x, -100%);
+		,
+			set(layer[parent].x, -50%);
+		);
+		set(layer[parent].visible, true);
+		tween(layer[parent].x, 0%, 0.4, easeOutQuad);
 	</action>
 
 
