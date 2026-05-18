@@ -83,7 +83,7 @@
 
 	<layer type="container" name="parent" width.desktop="17%" width.tablet="23%"  width.mobile="82%" height="100%" maxwidth.desktop="350" zorder="999999" minwidth.desktop="300" minwidth.tablet="350" x.mobile="0%" y.mobile="0%" x.desktop="0%" x.tablet="-50%" bgcolor="0xBC0F42" bgalpha="1" keep="true" visible="false"  css="box-shadow: 8px 0px 12px -2px rgba(0,0,0,0.6);">
 		<layer type="container" onclick="closem();gehmobile4" width="100%" height="100%" align="center" y="15" x="15" devices="mobile">
-			<layer url="skin/closem.png" onclick="closem();gehmobile4" width="13%" height="prop" align="right" x="-6" y="-15"/>
+			<layer url="skin/closem.png" onclick="closem();gehmobile4" width="10%" height="prop" align="right" x="-6" y="-15"/>
 		</layer>
 		<layer type="container" width="100%" height="100%" bgcolor="0x000000" bgalpha="0" flowchildren="v">
 			<layer type="container" width="100%" height="25%" bgcolor="0xFFFFF" bgalpha="0">
@@ -293,7 +293,7 @@
 			</layer>
 		</layer>
 		<layer type="container" width="100%" height="100%" minwidth="250"  >
-			<layer url="skin/close.png" width="prop" height="8%" x="94%" onclick="close();closem();" minwidth="30" minheight="50" align="left" visible="true" zorder="-3" keep="true" devices="tablet|desktop"/>
+			<layer url="skin/close.png" width="prop" height="6%" x="94%" onclick="close();closem();" minwidth="30" minheight="38" align="left" visible="true" zorder="-3" keep="true" devices="tablet|desktop"/>
 		</layer>
 			</layer>
 	<!--
